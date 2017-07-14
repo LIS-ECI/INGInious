@@ -1,0 +1,25 @@
+$def with (open_contests)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: My contests
+
+$# Start content
+<h2>My contests</h2>
+<div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">
+	$if len(open_contests) != 0:
+        $ username = user_manager.session_username()
+        $for courseid, scoreboard in open_contests.items():
+            $for sid, name in scoreboard.items():
+                <a href="$get_homepath()/contest/$courseid/$sid" class="list-group-item row">
+                    <div class="col-xs-12 col-md-8">
+                        $name
+                    </div>
+                </a>
+    $else:
+        <a href="#register" class="list-group-item row disabled">You are not registered to any contest.</a>
+</div>
+<hr/>
