@@ -1,0 +1,113 @@
+$def with (course, data, errors, saved, AccessibleTime, problems, problemdump)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+$var title: Edit contest $data.get('name', '')
+
+$def ColumnF():
+    $:template_helper.call('course_admin_menu',course=course,current='contest')
+    <a href="#contest_edit_submit_status" class="btn btn-primary btn-block task_edit_submit_button" type="button" onclick="studio_contest_submit()"><i class="fa fa-save"></i> Save changes</a>
+$var Column: $:ColumnF()
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name()</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" title="Administration" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-user-secret"></i></a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()/contest" title="Contests" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-trophy"></i></a></li>
+        <li class="active"><a href="#">Edit contest "$data.get('name', 'new contest')" <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+<h2>
+    Edit contest "$data.get('name', 'new contest')"
+
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-primary btn-success btn-sm task_edit_submit_button" type="button" onclick="studio_contest_submit()"><i class="fa fa-save"></i> Save changes</button>
+        </div>
+    </div>
+</h2>
+$if errors is not None:
+    $for error in errors:
+        <div class="alert alert-danger" role="alert">$error</div>
+$elif saved:
+    <div class="alert alert-success" role="alert">Settings saved.</div>
+<div id="contest_edit_submit_status"></div>
+<form id="edit_contest_form" method="post" enctype="multipart/form-data" class="form-horizontal">
+    <input type="hidden" name="@action" value="edit_task"/>
+
+    <div role="tabpanel">
+        <ul class="nav nav-tabs" id="edit_task_tabs" role="tablist">
+            <li role="presentation" class="active"><a href="#tab_basic" aria-controls="basicinfo" role="tab" data-toggle="tab"><i class="fa
+                fa-cog fa-fw"></i>&nbsp; Basic settings</a></li>
+            <li role="presentation"><a href="#tab_container" aria-controls="container" role="tab" data-toggle="tab"><i class="fa
+                fa-cube fa-fw"></i>&nbsp; Problems</a></li>
+        </ul>
+        <div id="edit_task_tabs_content" class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="tab_basic">
+                $:include.course_admin.contest_tabs.basic(course, data, AccessibleTime)
+            </div>
+
+            <div role="tabpanel" class="tab-pane" id="tab_container">
+                $:include.course_admin.contest_tabs.problems(course, data, problems)
+            </div>
+
+        </div>
+    </div>
+    <a href="#contest_edit_submit_status" class="btn btn-primary btn-block task_edit_submit_button" type="button" onclick="studio_contest_submit()"><i class="fa fa-save"></i> Save changes</a>
+</form>
+<div id="delete_modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Delete contest</h4>
+                </div>
+                <div class="modal-body">
+                    <p>This will <b>permanently</b> remove the contest from the course.</p>
+                    <div class="checkbox">
+                        <label>
+                          <input type="checkbox" name="wipe"> Wipe all submissions
+                        </label>
+                      </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="submit" name="delete" class="btn btn-danger">Delete contest</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Must be out of the form -->
+<div id="subproblem_templates" style="display:none">
+    <div id="problem_basic">
+        <div class="panel panel-default" id="subproblem_well_PID" >
+            <div class="panel-heading" role="tab" id="heading_PID">
+                <div class="row">
+                    <div class="col-md-10" >
+                        <span role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse_PID" aria-controls="collapse_PID">
+                            <i class="fa fa-bars"></i> Problem id: <span id="pid-PID">PID</span>
+                        </span>
+                    </div>
+                    <input type="hidden" class="form-control" id="name-PID" name="problem[PID][name]"/>
+                    <div class="col-md-2">
+                        <a style="margin: 0px 4px 0px; cursor:pointer;" class="pull-right" type="button" onclick="studio_contest_problem_delete('PID')"><i class="fa fa-lg fa-trash-o"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Init the javascript for the subproblem tab -->
+<script type="text/javascript">
+    problem_data = $:{problemdump};
+    $$ (function(){ studio_contest_load(problem_data); });
+</script>

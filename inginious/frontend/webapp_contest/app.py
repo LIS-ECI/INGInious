@@ -18,6 +18,7 @@ from inginious.frontend.webapp_contest.courses import WebAppCourse
 from inginious.frontend.webapp_contest.submission_manager import WebAppSubmissionManager
 from inginious.frontend.common.template_helper import TemplateHelper
 from inginious.frontend.webapp_contest.user_manager import UserManager
+from inginious.frontend.webapp_contest.contest_manager import ContestManager
 from inginious.frontend.common.session_mongodb import MongoStore
 import inginious.frontend.webapp_contest.pages.course_admin.utils as course_admin_utils
 from inginious.frontend.common.submission_manager import update_pending_jobs
@@ -25,12 +26,14 @@ from inginious.frontend.common.submission_manager import update_pending_jobs
 urls = (
     r'/', 'inginious.frontend.webapp_contest.pages.index.IndexPage',
     r'/index', 'inginious.frontend.webapp_contest.pages.index.IndexPage',
+    r'/contest/([^/]+)/([^/]+)/overview', 'inginious.frontend.webapp_contest.pages.overview.OverviewPage',
     r'/course/([^/]+)', 'inginious.frontend.webapp_contest.pages.course.CoursePage',
     r'/course/([^/]+)/([^/]+)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPage',
     r'/course/([^/]+)/([^/]+)/(.*)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPageStaticDownload',
     r'/aggregation/([^/]+)', 'inginious.frontend.webapp_contest.pages.aggregation.AggregationPage',
     r'/queue', 'inginious.frontend.webapp_contest.pages.queue.QueuePage',
     r'/admin/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.utils.CourseRedirect',
+    r'/admin/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contests.ContestsPageAdmin',
     r'/admin/([^/]+)/settings', 'inginious.frontend.webapp_contest.pages.course_admin.settings.CourseSettings',
     r'/admin/([^/]+)/students', 'inginious.frontend.webapp_contest.pages.course_admin.student_list.CourseStudentListPage',
     r'/admin/([^/]+)/student/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.student_info.CourseStudentInfoPage',
@@ -118,6 +121,8 @@ def get_app(config):
 
     user_manager = UserManager(web.session.Session(appli, MongoStore(database, 'sessions')), database, config.get('superadmins', []))
 
+    contest_manager = ContestManager(user_manager, database, course_factory)
+
     update_pending_jobs(database)
 
     client = create_arch(config, task_directory, zmq_context)
@@ -162,6 +167,7 @@ def get_app(config):
     appli.task_factory = task_factory
     appli.submission_manager = submission_manager
     appli.user_manager = user_manager
+    appli.contest_manager = contest_manager
     appli.template_helper = template_helper
     appli.database = database
     appli.gridfs = gridfs

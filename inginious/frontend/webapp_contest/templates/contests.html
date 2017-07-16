@@ -14,7 +14,7 @@ $# Start content
         $ username = user_manager.session_username()
         $for courseid, scoreboard in open_contests.items():
             $for sid, name in scoreboard.items():
-                <a href="$get_homepath()/contest/$courseid/$sid" class="list-group-item row">
+                <a href="$get_homepath()/contest/$courseid/$sid/overview" class="list-group-item row">
                     <div class="col-xs-12 col-md-8">
                         $name
                     </div>

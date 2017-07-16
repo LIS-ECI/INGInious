@@ -1,0 +1,24 @@
+$def with (course, data, problems)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+</div>
+
+<div class="row" id="new_subproblem">
+    <div class="form-group col-sm-12">
+        <label for="problem_id" class="col-sm-3 control-label">Select a problem from the list</label>
+        <div class="col-sm-6">
+            <select class="form-control" id="problem_id">
+                $for problem in problems:
+                    <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
+            </select>
+        </div>
+        <div class="col-sm-3">
+            <button type="button" class="btn btn-primary btn-block" onclick="studio_create_new_contest_problem();">Add</button>
+        </div>
+    </div>
+</div>

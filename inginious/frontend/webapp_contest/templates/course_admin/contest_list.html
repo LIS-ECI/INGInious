@@ -1,0 +1,94 @@
+$def with (course,contests_data,errors,AccessibleTime)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $:course.get_name()
+
+$var Column: $:template_helper.call('course_admin_menu',course=course,current='contest')
+$ is_admin = user_manager.has_admin_rights_on_course(course)
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name()</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" title="Administration" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-user-secret"></i></a></li>
+        <li class="active"><a href="#"><i class="fa fa-tasks"></i> Contests <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+<form method="post">
+<h2>Contests</h2>
+
+<table class="table sorted_table">
+    <thead>
+        <tr>
+            <th>Contest name</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Enabled</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    $for contestid, data in contests_data.items():
+    	<tr>
+    		<td>$data["name"]</td>
+    		<td>$AccessibleTime(data.get('start',True)).get_std_start_date()</td>
+            <td>$AccessibleTime(data.get('end',True)).get_std_start_date()</td>
+            <td>$data["enabled"]</td>
+    		<td style="min-width:120px">
+                <div class="btn-group" role="group">
+                    $if is_admin:
+                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/contest" class="btn btn-primary btn-xs" title="Edit task" data-toggle="tooltip"
+                           data-placement="bottom"><i class="fa fa-edit"></i></a>
+                </div>
+    		</td>
+    	</tr>
+    </tbody>
+</table>
+</form>
+
+<div class="row">
+    <div class="form-group">
+        <input type="hidden" class="form-control" id="new_contest_id" value="${len(contests_data)}"/>
+        <div class="col-sm-12"><a href="javascript:studio_create_new_contest();" class="btn btn-info btn-large btn-block">Create new contest</a></div>
+    </div>
+</div>
+$if errors != None:
+    <h3>Errors while loading contest</h3>
+    <table class="table">
+        <tr>
+            <th>contest name</th>
+            <th>error</th>
+        </tr>
+        $for task in errors:
+            <tr>
+                <td>$task['taskid']</td>
+                <td><pre>$task['error']</pre></td>
+            </tr>
+    </table>
+
+<script type="text/javascript">
+$$('.sorted_table').sortable({
+    containerSelector: 'table',
+    itemPath: '> tbody',
+    itemSelector: 'tr',
+    placeholder: '<tr class="placeholder"/>'
+});
+
+$$('.sorted_table').sortable("disable");
+
+$$("#switch").click(function  (e) {
+    if($$(this).hasClass("active")) {
+        $$(this).removeClass("active");
+        $$(".sorted_table tr").removeAttr("style");
+    } else {
+        $$(this).addClass("active");
+        $$(".sorted_table tr").attr("style", "cursor: pointer;");
+    }
+    $$('.sorted_table').sortable($$(this).hasClass("active") ? "enable" : "disable");
+});
+</script>

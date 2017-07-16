@@ -18,6 +18,7 @@ function studio_create_new_task()
     window.location.href = window.location.href + "/../edit/task/" + task_id.val()
 }
 
+
 /**
  * Load the studio, creating blocks for existing subproblems
  */

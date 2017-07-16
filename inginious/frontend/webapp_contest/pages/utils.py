@@ -16,6 +16,7 @@ from inginious.frontend.common.plugin_manager import PluginManager
 from inginious.frontend.common.submission_manager import SubmissionManager
 from inginious.frontend.common.template_helper import TemplateHelper
 from inginious.frontend.webapp_contest.user_manager import UserManager
+from inginious.frontend.webapp_contest.contest_manager import ContestManager
 
 
 class INGIniousPage(object):
@@ -53,6 +54,11 @@ class INGIniousPage(object):
     def user_manager(self) -> UserManager:
         """ Returns the user manager singleton """
         return self.app.user_manager
+
+    @property
+    def contest_manager(self) -> ContestManager:
+        """ Returns the user manager singleton """
+        return self.app.contest_manager
 
     @property
     def template_helper(self) -> TemplateHelper:

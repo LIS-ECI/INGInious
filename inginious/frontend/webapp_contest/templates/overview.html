@@ -5,12 +5,12 @@ $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 $# more information about the licensing of this file.
 $#
 
-$var title: $cname - Scoreboard
+$var title: $cname - Overview
 
 $def NavbarF():
     <ol class="nav navbar-nav nav-breadcrumb">
         <li><a href="$get_homepath()/contest/$course.get_id()/$cid/overview">$cname</a></li>
-        <li class="active"><a href="#"><i class="fa fa-trophy"></i> Scoreboard <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="#"><i class="fa fa-cog"></i> Overview <span class="sr-only">(current)</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 
@@ -21,36 +21,29 @@ $def ColumnF():
 
     <div class="list-group">
 
-    <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item active">
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item">
         <i class="fa fa-list-alt fa-fw"></i>&nbsp; Scoreboard</a>
-    <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item">
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item active">
         <i class="fa fa-cog fa-fw"></i>&nbsp; Overview</a>
     </div>
 
     $:template_helper.call('main_menu', template_helper=template_helper)
 $var Column: $:ColumnF()
 
-$if end > end.now():
-    <meta http-equiv="refresh" content="30" />
-
-<h2>$cname - Scoreboard</h2>
+<h2>$cname - Overview</h2>
 <div class="well">
     <div class="row">
-        <div class="col-md-4" style="margin-top:2px;">
+        <div class="col-md-6" style="margin-top:2px;">
             Contest starts: $start.strftime('%d/%m/%Y %H:%M:%S')<br/>
             Contest ends: $end.strftime('%d/%m/%Y %H:%M:%S')<br/>
         </div>
-        <div class="col-md-4" style="margin-top:2px;">
+        <div class="col-md-6" style="margin-top:2px;">
             $if start > start.now():
                 <span class="contest_starting_time" starts-at="$start.strftime('%Y-%m-%d %H:%M:%S')"></span>
             $else:
                 <span class="contest_remaining_time" ends-at="$end.strftime('%Y-%m-%d %H:%M:%S')"></span>
                 $if blackout != end:
                     <br/><span class="contest_blackout_time" blackout-at="$blackout.strftime('%Y-%m-%d %H:%M:%S')"></span>
-        </div>
-        <div class="col-md-4" style="margin-top:2px;">
-            $if end > end.now():
-                The scoreboard will refresh every 30 seconds.
         </div>
     </div>
 </div>
@@ -78,6 +71,22 @@ $if start <= start.now():
 	                    <td class="contest_task contest_wa_tle">$data['tasks'][taskid]['tries']</td>
 	                $else:
 	                    <td class="contest_task contest_na">0</td>
+	        </tr>
+	</table>
+	<h3>Activity</h3>
+	<table class="table table-centered table-condensed table-bordered">
+	    <tr><th>Time</th><th>Contestant</th><th>Problem</th><th>Result</th></tr>
+	    $for a in activity:
+	        <tr>
+	            <td>$a['when'].strftime("%d/%m/%Y %H:%M:%S")</td>
+	            <td>$a['user']</td>
+	            <td>$a['taskid']</td>
+	            <td>
+	                $if a['result']:
+	                    Succeeded
+	                $else:
+	                    Failed
+	            </td>
 	        </tr>
 	</table>
 $else:

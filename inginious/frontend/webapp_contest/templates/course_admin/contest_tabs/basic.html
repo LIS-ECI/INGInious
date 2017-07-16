@@ -1,0 +1,69 @@
+$def with (course,data, AccessibleTime)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+<div class="form-group">
+    <label for="name" class="col-sm-2 control-label">Name</label>
+    <div class="col-sm-7">
+        <input type="text" class="form-control" id="name" name="name" placeholder="title for this contest" value="${data.get('name','')}">
+    </div>
+    <div class="col-sm-3">
+        <button type="button" data-toggle="modal" data-target="#delete_modal" class="btn btn-block btn-danger">
+            <i class="fa fa-trash"></i> Delete contest
+        </button>
+    </div>
+</div>
+$ at = AccessibleTime(data.get('start',True))
+<div class="form-group">
+    <label for="accessible_start_picker" class="col-sm-2 control-label">Start time</label>
+    <div class="col-sm-10">
+        <div class='input-group date' id='accessible_start_picker'>
+            <input name="start" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00"
+                   type='text'
+                   class="form-control"/>
+            <span class="input-group-addon btn-xs" style="width:0px;"><i class="fa fa-calendar"></i></span>
+        </div>
+    </div>
+</div>
+$ at = AccessibleTime(data.get('end',True))
+<div class="form-group">
+    <label for="accessible_end_picker" class="col-sm-2 control-label">End time</label>
+    <div class="col-sm-10">
+        <div class='input-group date' id='accessible_end_picker'>
+            <input name="end" data-date-format="YYYY-MM-DD HH:mm:ss" value="${at.get_std_start_date()}" placeholder="2014-06-29 10:00"
+                   type='text'
+                   class="form-control"/>
+            <span class="input-group-addon btn-xs" style="width:0px;"><i class="fa fa-calendar"></i></span>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="penalty" class="col-sm-2 control-label">Penalty (in minutes, Wrong Answer)</label>
+    <div class="col-sm-10">
+        <input type="text" class="form-control" id="penalty" name="penalty" placeholder="" value="${data.get('penalty','')}">
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="accessible_end_picker" class="col-sm-2 control-label">Enabled</label>
+    <div class="col-sm-10">
+        <div class="checkbox">
+            <input id="enabled" name="enabled" type="checkbox" value="1"
+            $if data.get("enabled",False) == True:
+                checked="checked"
+            />
+        </div>
+    </div>
+</div>
+
+
+        <script type="text/javascript">
+            \$(function() {
+                \$('#accessible_start_picker').datetimepicker({useSeconds: true,sideBySide: true});
+                \$('#accessible_end_picker').datetimepicker({useSeconds: true,sideBySide: true});
+            });
+        </script>

@@ -6,11 +6,11 @@
 """ An algorithm contest plugin for INGInious. Based on the same principles than contests like ACM-ICPC. """
 
 from collections import OrderedDict
-import copy
 from datetime import datetime, timedelta
 
-import pymongo
 import web
+import json
+import re
 
 from inginious.frontend.webapp_contest.pages.utils import INGIniousAuthPage
 from inginious.frontend.webapp_contest.pages.course_admin.utils import INGIniousAdminPage
@@ -22,13 +22,13 @@ def add_admin_menu(course): # pylint: disable=unused-argument
     return ('contest', '<i class="fa fa-trophy fa-fw"></i>&nbsp; Contest')
 
 
-def task_accessibility(course, task, default): # pylint: disable=unused-argument
-    contest_data = get_contest_data(course)
+"""def task_accessibility(course, task, default): # pylint: disable=unused-argument
+    contest_data = self.get_contest_data(course)
     if contest_data['enabled']:
         return AccessibleTime(contest_data['start'] + '/')
     else:
         return default
-
+"""
 
 def additional_headers():
     """ Additional HTML headers """
@@ -38,182 +38,113 @@ def additional_headers():
              '<script src="' + web.ctx.homepath + '/static/webapp/plugins/contests/contests.js"></script>'
 
 
-def get_contest_data(course, contest):
-    """ Returns the settings of the contest for this course """
-    contests = course.get_descriptor().get('contest', {})
-    scorebs = {i: val for i, val in enumerate(contests)}
-    specific_contest = scorebs.get(int(contest))
-    return specific_contest
-
-
-def course_menu(course, template_helper):
-    """ Displays some informations about the contest on the course page"""
-    contest_data = get_contest_data(course)
-    if contest_data['enabled']:
-        start = datetime.strptime(contest_data['start'], "%Y-%m-%d %H:%M:%S")
-        end = datetime.strptime(contest_data['end'], "%Y-%m-%d %H:%M:%S")
-        blackout = end - timedelta(hours=contest_data['blackout'])
-        return str(template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests', layout=False).course_menu(course, start, end, blackout))
-    else:
-        return None
-
-
 class ContestScoreboard(INGIniousAuthPage):
     """ Displays the scoreboard of the contest """
 
     def GET_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
-        course = self.course_factory.get_course(courseid)
-        contest_data = get_contest_data(course, contestid)
-        if not contest_data['enabled']:
-            raise web.notfound()
-        start = datetime.strptime(contest_data['start'], "%Y-%m-%d %H:%M:%S")
-        end = datetime.strptime(contest_data['end'], "%Y-%m-%d %H:%M:%S")
-        blackout = end - timedelta(hours=contest_data['blackout'])
 
-        users = self.user_manager.get_course_registered_users(course)
-        #tasks = []
-        #for t in contest_data["content"]:
-            #tasks.append(course.get_task(t))
-        #tasks = list(course.get_tasks().keys())
-        tasks = contest_data["content"]
-        db_results = self.database.submissions.find({
-            "username": {"$in": users},
-            "courseid": courseid,
-            "submitted_on": {"$gte": start, "$lt": blackout},
-            "status": "done"},
-            {"username": True, "_id": False, "taskid": True, "result": True, "submitted_on": True}).sort([("submitted_on", pymongo.ASCENDING)])
-
-        task_status = {taskid: {"status": "NA", "tries": 0} for taskid in tasks}
-        results = {username: {"name": self.user_manager.get_user_realname(username), "tasks": copy.deepcopy(task_status)} for username in users}
-        activity = []
-        contest_name = contest_data["name"]
-        # Compute stats for each submission
-        task_succeeded = {taskid: False for taskid in tasks}
-        for submission in db_results:
-            for username in submission["username"]:
-                if submission['taskid'] not in tasks:
-                    continue
-                if username not in users:
-                    continue
-                status = results[username]["tasks"][submission['taskid']]
-                if status["status"] == "AC" or status["status"] == "ACF":
-                    continue
-                else:
-                    if submission['result'] == "success":
-                        if not task_succeeded[submission['taskid']]:
-                            status["status"] = "ACF"
-                            task_succeeded[submission['taskid']] = True
-                        else:
-                            status["status"] = "AC"
-                        status["tries"] += 1
-                        status["time"] = submission['submitted_on']
-                        status["score"] = (submission['submitted_on']
-                                           + timedelta(minutes=contest_data["penalty"]*(status["tries"] - 1))
-                                           - start).total_seconds() / 60
-                    elif submission['result'] == "failed" or submission['result'] == "killed":
-                        status["status"] = "WA"
-                        status["tries"] += 1
-                    elif submission['result'] == "timeout":
-                        status["status"] = "TLE"
-                        status["tries"] += 1
-                    else:  # other internal error
-                        continue
-                    activity.append({"user": results[username]["name"],
-                                     "when": submission['submitted_on'],
-                                     "result": (status["status"] == 'AC' or status["status"] == 'ACF'),
-                                     "taskid": submission['taskid']})
-        activity.reverse()
-        # Compute current score
-        for user in results:
-            score = [0, 0]
-            for data in list(results[user]["tasks"].values()):
-                if "score" in data:
-                    score[0] += 1
-                    score[1] += data["score"]
-            results[user]["score"] = tuple(score)
-
-        # Sort everybody
-        results = OrderedDict(sorted(list(results.items()), key=lambda t: (-t[1]["score"][0], t[1]["score"][1])))
-
-        # Compute ranking
-        old = None
-        current_rank = 0
-        for cid, user in enumerate(results.keys()):
-            if results[user]["score"] != old:
-                old = results[user]["score"]
-                current_rank = cid + 1
-                results[user]["rank"] = current_rank
-                results[user]["displayed_rank"] = str(current_rank)
-            else:
-                results[user]["rank"] = current_rank
-                results[user]["displayed_rank"] = ""
-
-        return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').\
+        course, start, end, blackout, tasks, results, activity, contestid, contest_name = self.contest_manager.get_data(courseid, contestid, False)
+        return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests'). \
             scoreboard(course, start, end, blackout, tasks, results, activity, contestid, contest_name)
-
 
 class ContestAdmin(INGIniousAdminPage):
     """ Contest settings for a course """
 
-    def save_contest_data(self, course, contest_data):
+    @classmethod
+    def dict_from_prefix(cls, prefix, dictionary):
+        """
+            >>> from collections import OrderedDict
+            >>> od = OrderedDict()
+            >>> od["problem[q0][a]"]=1
+            >>> od["problem[q0][b][c]"]=2
+            >>> od["problem[q1][first]"]=1
+            >>> od["problem[q1][second]"]=2
+            >>> AdminCourseEditTask.dict_from_prefix("problem",od)
+            OrderedDict([('q0', OrderedDict([('a', 1), ('b', OrderedDict([('c', 2)]))])), ('q1', OrderedDict([('first', 1), ('second', 2)]))])
+        """
+        o_dictionary = OrderedDict()
+        for key, val in dictionary.items():
+            if key.startswith(prefix):
+                o_dictionary[key[len(prefix):].strip()] = val
+        dictionary = o_dictionary
+
+        if len(dictionary) == 0:
+            return None
+        elif len(dictionary) == 1 and "" in dictionary:
+            return dictionary[""]
+        else:
+            return_dict = OrderedDict()
+            for key, val in dictionary.items():
+                ret = re.search(r"^\[([^\]]+)\](.*)$", key)
+                if ret is None:
+                    continue
+                return_dict[ret.group(1)] = cls.dict_from_prefix("[{}]".format(ret.group(1)), dictionary)
+            return return_dict
+
+    def save_contest_data(self, course, contest_data, contestid):
         """ Saves updated contest data for the course """
         course_content = self.course_factory.get_course_descriptor_content(course.get_id())
-        course_content["contest_settings"] = contest_data
+        if int(contestid)==len(course_content["contest"]):
+            course_content["contest"].append(contest_data)
+        else:
+            course_content["contest"][int(contestid)] = contest_data
         self.course_factory.update_course_descriptor_content(course.get_id(), course_content)
 
-    def GET_AUTH(self, courseid):  # pylint: disable=arguments-differ
+    def GET_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
         """ GET request: simply display the form """
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
-        contest_data = get_contest_data(course)
-        return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, None, False)
+        contest_data = self.contest_manager.get_contest_data(course, contestid)
+        problems = [self.task_factory.get_task(self.course_factory.get_course('bank'), x) for x in self.course_factory.get_course('bank').get_tasks()]
+        problemdump = json.dumps({x: {"id": x} for x in contest_data["content"]})
+        #return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, None, False)
+        return self.template_helper.get_renderer().course_admin.contest_edit(course, contest_data, None, False, AccessibleTime, problems, problemdump)
 
-    def POST_AUTH(self, courseid):  # pylint: disable=arguments-differ
+    def POST_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
         """ POST request: update the settings """
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
-        contest_data = get_contest_data(course)
-
+        contest_data = self.contest_manager.get_contest_data(course, contestid)
         new_data = web.input()
-        errors = []
+
+        # Delete task ?
+        if "delete" in new_data:
+            self.contest_manager.delete_contest(courseid, contestid)
+            raise web.seeother("/admin/"+courseid+"/contest")
         try:
             contest_data['enabled'] = new_data.get('enabled', '0') == '1'
             contest_data['start'] = new_data["start"]
             contest_data['end'] = new_data["end"]
+            contest_data['name'] = new_data["name"]
+            try:
+                problems = [key for key, val in self.dict_from_prefix("problem", new_data).items()]
+            except:
+                return json.dumps({"status": "error", "message": "You cannot create a contest without problems"})
+
+            # Order the problems (this line also deletes @order from the result)
+            contest_data["content"] = problems
 
             try:
                 start = datetime.strptime(contest_data['start'], "%Y-%m-%d %H:%M:%S")
             except:
-                errors.append('Invalid start date')
-
+                return json.dumps({"status": "error", "message": "Invalid start date"})
             try:
                 end = datetime.strptime(contest_data['end'], "%Y-%m-%d %H:%M:%S")
             except:
-                errors.append('Invalid end date')
+                return json.dumps({"status": "error", "message": "Invalid end date"})
 
-            if len(errors) == 0:
-                if start >= end:
-                    errors.append('Start date should be before end date')
-
-            try:
-                contest_data['blackout'] = int(new_data["blackout"])
-                if contest_data['blackout'] < 0:
-                    errors.append('Invalid number of hours for the blackout: should be greater than 0')
-            except:
-                errors.append('Invalid number of hours for the blackout')
-
+            if start >= end:
+                return json.dumps({"status": "error", "message": "Start date should be before end date"})
+                    
             try:
                 contest_data['penalty'] = int(new_data["penalty"])
                 if contest_data['penalty'] < 0:
-                    errors.append('Invalid number of minutes for the penalty: should be greater than 0')
+                    return json.dumps({"status": "error", "message": "Invalid number of minutes for the penalty: should be greater than 0"})
             except:
-                errors.append('Invalid number of minutes for the penalty')
+                return json.dumps({"status": "error", "message": "Invalid number of minutes for the penalty"})
         except:
-            errors.append('User returned an invalid form')
+            return json.dumps({"status": "error", "message": "User returned an invalid form"})
 
-        if len(errors) == 0:
-            self.save_contest_data(course, contest_data)
-            return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, None, True)
-        else:
-            return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, errors, False)
+        self.save_contest_data(course, contest_data, contestid)
+        return json.dumps({"status": "ok"})
 
 
 def init(plugin_manager, course_factory, client, config):  # pylint: disable=unused-argument
@@ -227,9 +158,8 @@ def init(plugin_manager, course_factory, client, config):  # pylint: disable=unu
             }
     """
 
-    plugin_manager.add_page('/contest/([^/]+)/([^/]+)', ContestScoreboard)
-    plugin_manager.add_page('/admin/([^/]+)/contest', ContestAdmin)
+    plugin_manager.add_page('/contest/([^/]+)/([^/]+)/scoreboard', ContestScoreboard)
+    plugin_manager.add_page('/admin/([^/]+)/([^/]+)/contest', ContestAdmin)
     plugin_manager.add_hook('course_admin_menu', add_admin_menu)
-    plugin_manager.add_hook('task_accessibility', task_accessibility)
+    #plugin_manager.add_hook('task_accessibility', task_accessibility)
     plugin_manager.add_hook('header_html', additional_headers)
-    plugin_manager.add_hook('course_menu', course_menu)
