@@ -4,6 +4,10 @@
 # more information about the licensing of this file.
 
 """ Course page """
+
+from collections import OrderedDict
+
+
 import web
 
 from inginious.frontend.webapp_contest.pages.utils import INGIniousAuthPage
@@ -43,30 +47,11 @@ class CoursePage(INGIniousAuthPage):
         if not self.user_manager.course_is_open_to_user(course):
             return self.template_helper.get_renderer().course_unavailable()
         else:
-            tasks = course.get_tasks()
-            last_submissions = self.submission_manager.get_user_last_submissions(5, {"courseid": course.get_id(), "taskid": {"$in": list(tasks.keys())}})
+            username = self.user_manager.session_username()
+            realname = self.user_manager.session_realname()
+            email = self.user_manager.session_email()
 
-            for submission in last_submissions:
-                    submission["taskname"] = tasks[submission['taskid']].get_name()
+            scoreboard = course.get_descriptor().get('contest', [])
+            names = {i: val for i, val in enumerate(scoreboard)}
 
-            tasks_data = {}
-            user_tasks = self.database.user_tasks.find({"username": username, "courseid": course.get_id(), "taskid": {"$in": list(tasks.keys())}})
-            is_admin = self.user_manager.has_staff_rights_on_course(course, username)
-
-            tasks_score = [0.0, 0.0]
-
-            for taskid, task in tasks.items():
-                tasks_data[taskid] = {"visible": task.get_accessible_time().after_start() or is_admin, "succeeded": False,
-                                      "grade": 0.0}
-                tasks_score[1] += task.get_grading_weight() if tasks_data[taskid]["visible"] else 0
-
-            for user_task in user_tasks:
-                tasks_data[user_task["taskid"]]["succeeded"] = user_task["succeeded"]
-                tasks_data[user_task["taskid"]]["grade"] = user_task["grade"]
-
-                weighted_score = user_task["grade"]*tasks[user_task["taskid"]].get_grading_weight()
-                tasks_score[0] += weighted_score if tasks_data[user_task["taskid"]]["visible"] else 0
-
-            course_grade = round(tasks_score[0]/tasks_score[1]) if tasks_score[1] > 0 else 0
-
-            return self.template_helper.get_renderer().course(course, last_submissions, tasks, tasks_data, course_grade)
+            return self.template_helper.get_renderer().course(course, names)

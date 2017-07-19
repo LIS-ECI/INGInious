@@ -253,7 +253,8 @@ def get_menu(course, current, renderer, plugin_manager, user_manager):
     default_entries += [("students", "<i class='fa fa-user fa-fw'></i>&nbsp; Students"),
                         ("aggregations", "<i class='fa fa-group fa-fw'></i>&nbsp; " +
                          ("Classrooms" if course.use_classrooms() else "Teams")),
-                        ("tasks", "<i class='fa fa-tasks fa-fw'></i>&nbsp; Tasks"),
+                        ("tasks", "<i class='fa fa-tasks fa-fw'></i>&nbsp; Problems"),
+                        ("contest", "<i class='fa fa-trophy fa-fw'></i>&nbsp; Contest"),
                         ("download", "<i class='fa fa-download fa-fw'></i>&nbsp; Download submissions")]
 
     if user_manager.has_admin_rights_on_course(course):

@@ -71,6 +71,11 @@ class INGIniousPage(object):
         return self.app.database
 
     @property
+    def bank_name(self):
+        """ Returns the bank name """
+        return self.app.bank_name
+
+    @property
     def gridfs(self) -> GridFS:
         """ Returns the GridFS singleton """
         return self.app.gridfs

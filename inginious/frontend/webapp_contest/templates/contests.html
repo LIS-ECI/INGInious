@@ -11,15 +11,28 @@ $# Start content
 <h2>My contests</h2>
 <div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">
 	$if len(open_contests) != 0:
+        <a class="list-group-item row">
+            <div class="col-sm-4">
+                <label>Contest name</label>
+            </div>
+            <div class="col-sm-4">
+                <label>Start date</label>
+            </div>
+            <div class="col-sm-4">
+                <label>End date</label>
+            </div>
+        </a>
         $ username = user_manager.session_username()
         $for courseid, scoreboard in open_contests.items():
-            $for sid, name in scoreboard.items():
+            $for sid, val in scoreboard.items():
                 <a href="$get_homepath()/contest/$courseid/$sid/overview" class="list-group-item row">
-                    <div class="col-xs-12 col-md-8">
-                        $name
+                    <div class="col-sm-4">
+                        <label>$val["name"]</label>
                     </div>
+                    <div class="col-sm-4">$val["start"]</div>
+                    <div class="col-sm-4">$val["end"]</div>
                 </a>
     $else:
-        <a href="#register" class="list-group-item row disabled">You are not registered to any contest.</a>
+        <a class="list-group-item row disabled">You are not registered to any contest.</a>
 </div>
 <hr/>

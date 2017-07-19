@@ -7,18 +7,28 @@ import web
 
 class ContestManager():
 
-    def __init__(self, user_manager, database, course_factory):
+    def __init__(self, user_manager, database, course_factory, template_helper):
         self.user_manager = user_manager
         self.database = database
         self.course_factory = course_factory
+        self.template_helper = template_helper
 
+    def contest_is_enabled(self, courseid, contestid):
+        course = self.course_factory.get_course(courseid)
+        data = self.get_contest_data(course, contestid)
+        return data["enabled"]==True
 
     def get_all_contest_data(self, course):
         contests = course.get_descriptor().get('contest', {})
         scorebs = {i: val for i, val in enumerate(contests)}
-        if scorebs == None:
+        if scorebs is None:
             scorebs = {}
         return scorebs
+
+    def add_headers(self):
+        self.template_helper.add_css(web.ctx.homepath + '/static/webapp/plugins/contests/scoreboard.css')
+        self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/plugins/contests/jquery.countdown.min.js', "header")
+        self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/plugins/contests/contests.js', "header")
 
     def delete_contest(self, course, contestid):
         course_content = self.course_factory.get_course_descriptor_content(course)
@@ -30,7 +40,7 @@ class ContestManager():
         contests = course.get_descriptor().get('contest', {})
         scorebs = {i: val for i, val in enumerate(contests)}
         specific_contest = scorebs.get(int(contestid))
-        if specific_contest == None:
+        if specific_contest is None:
             specific_contest = {}
         return specific_contest
 

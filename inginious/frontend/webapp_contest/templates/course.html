@@ -1,4 +1,4 @@
-$def with (course,submissions, tasks, tasks_data, grade)
+$def with (course, scoreboard)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -10,40 +10,10 @@ $var title: $:course.get_name()
 $# Left column content
 $def ColumnF():
     $:template_helper.call('course_menu', course=course, template_helper=template_helper)
-    <h3>Current grade</h3>
-    <div class="progress">
-        <div class="progress-bar progress-bar-success" aria-valuenow="$int(grade)" aria-valuemin="0" aria-valuemax="100" style="width: $grade%">
-            $int(grade)%
-        </div>
-    </div>
 
-    <h3>Last tried exercises</h3>
-    
-    <div class="list-group">
-        $if submissions:
-            $for submission in submissions:
-                <a class="list-group-item 
-                    $if submission['status'] == 'done' and submission['result'] == 'success':
-                        list-group-item-success
-                    $elif submission['status'] == 'done' and submission['result'] == 'save':
-                        list-group-item-info
-                    $elif submission['status'] == 'waiting':
-                        list-group-item-warning
-                    $else:
-                        list-group-item-danger
-                    "
-                    href="$get_homepath()/course/$submission['courseid']/$submission['taskid']">
-                    $submission['taskname']
-                </a>
-        $else:
-            <a class="list-group-item disabled submission-empty">No submissions</a>
-    </div>
+    <h3>Course management</h3>
+
     $if user_manager.has_staff_rights_on_course(course):
-        $if not course.is_open_to_non_staff():
-            <div class="alert alert-warning" role="alert">
-                This course is currently invisible for students. 
-                You can change this by modifying the "accessibility" option in the configuration of the course.
-            </div>
         <div class="list-group">
             <a class="list-group-item list-group-item-info" href="$get_homepath()/admin/$course.get_id()">
                 <i class="fa fa-user-secret fa-fw"></i>&nbsp; Course administration
@@ -73,31 +43,29 @@ $def NavbarF():
 $var Navbar: $:NavbarF()
 
 $# Start content
-<h2>$course.get_name() - List of exercises</h2>
+<h2>Contests</h2>
 <div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">
-    $for taskid, task in tasks.items()
-        $if tasks_data[taskid]["visible"]:
-            $ succeeded=tasks_data[taskid]["succeeded"]
-            $ completion=tasks_data[taskid]["grade"]
-            <a href="$get_homepath()/course/$course.get_id()/$taskid" class="row list-group-item
-                $if not task.is_visible_by_students() or not task.get_accessible_time().is_open():
-                    disabled
-                ">
-                <div class="col-xs-12 col-md-7">
-                    $if succeeded:
-                        <i style="color:#468847; position: absolute; left: -5px;" class="fa fa-check"></i>
-                    $task.get_name()
-                    $if not task.is_visible_by_students():
-                        - <b>(task hidden to students)</b>
-                    $if not task.get_accessible_time().is_open():
-                        - <b>deadline reached</b>
+	$if len(scoreboard) != 0:
+        <a class="list-group-item row">
+            <div class="col-sm-4">
+                <label>Contest name</label>
+            </div>
+            <div class="col-sm-4">
+                <label>Start date</label>
+            </div>
+            <div class="col-sm-4">
+                <label>End date</label>
+            </div>
+        </a>
+        $for sid, val in scoreboard.items():
+            <a href="$get_homepath()/contest/$course.get_id()/$sid/scoreboard" class="list-group-item row $('disabled' if not val['enabled'] else '')">
+                <div class="col-sm-4">
+                    <label>$val["name"]</label>
                 </div>
-                <div class="col-xs-12 col-md-5">
-                    <div class="progress">
-                        <div class="progress-bar progress-bar-success" aria-valuenow="$int(completion)" aria-valuemin="0" aria-valuemax="100" style="width: $completion%">
-                            $(int(completion) if completion.is_integer() else completion)%
-                        </div>
-                    </div>
-                </div>
+                <div class="col-sm-4">$val["start"]</div>
+                <div class="col-sm-4">$val["end"]</div>
             </a>
+    $else:
+        <a class="list-group-item row disabled">There are no contests.</a>
 </div>
+<hr/>

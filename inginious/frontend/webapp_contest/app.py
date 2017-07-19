@@ -27,6 +27,7 @@ urls = (
     r'/', 'inginious.frontend.webapp_contest.pages.index.IndexPage',
     r'/index', 'inginious.frontend.webapp_contest.pages.index.IndexPage',
     r'/contest/([^/]+)/([^/]+)/overview', 'inginious.frontend.webapp_contest.pages.overview.OverviewPage',
+    r'/contest/([^/]+)/([^/]+)/scoreboard', 'inginious.frontend.webapp_contest.pages.scoreboard.ContestScoreboard',
     r'/course/([^/]+)', 'inginious.frontend.webapp_contest.pages.course.CoursePage',
     r'/course/([^/]+)/([^/]+)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPage',
     r'/course/([^/]+)/([^/]+)/(.*)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPageStaticDownload',
@@ -34,6 +35,7 @@ urls = (
     r'/queue', 'inginious.frontend.webapp_contest.pages.queue.QueuePage',
     r'/admin/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.utils.CourseRedirect',
     r'/admin/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contests.ContestsPageAdmin',
+    r'/admin/([^/]+)/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestAdmin',
     r'/admin/([^/]+)/settings', 'inginious.frontend.webapp_contest.pages.course_admin.settings.CourseSettings',
     r'/admin/([^/]+)/students', 'inginious.frontend.webapp_contest.pages.course_admin.student_list.CourseStudentListPage',
     r'/admin/([^/]+)/student/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.student_info.CourseStudentInfoPage',
@@ -121,8 +123,6 @@ def get_app(config):
 
     user_manager = UserManager(web.session.Session(appli, MongoStore(database, 'sessions')), database, config.get('superadmins', []))
 
-    contest_manager = ContestManager(user_manager, database, course_factory)
-
     update_pending_jobs(database)
 
     client = create_arch(config, task_directory, zmq_context)
@@ -131,6 +131,8 @@ def get_app(config):
 
     template_helper = TemplateHelper(plugin_manager, 'frontend/webapp_contest/templates', 'frontend/webapp_contest/templates/layout',
                                      config.get('use_minified_js', True))
+
+    contest_manager = ContestManager(user_manager, database, course_factory, template_helper)
 
     # Init web mail
     smtp_conf = config.get('smtp', None)
@@ -175,7 +177,7 @@ def get_app(config):
     appli.default_max_file_size = default_max_file_size
     appli.backup_dir = config.get("backup_directory", './backup')
     appli.webterm_link = config.get("webterm", None)
-
+    appli.bank_name = config.get("bank", "bank")
     # Init the mapping of the app
     appli.init_mapping(urls)
 

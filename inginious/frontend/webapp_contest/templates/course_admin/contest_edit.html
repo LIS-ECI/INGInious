@@ -5,7 +5,6 @@ $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 $# more information about the licensing of this file.
 $#
 $var title: Edit contest $data.get('name', '')
-
 $def ColumnF():
     $:template_helper.call('course_admin_menu',course=course,current='contest')
     <a href="#contest_edit_submit_status" class="btn btn-primary btn-block task_edit_submit_button" type="button" onclick="studio_contest_submit()"><i class="fa fa-save"></i> Save changes</a>
