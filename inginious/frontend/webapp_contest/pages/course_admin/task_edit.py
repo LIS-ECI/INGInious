@@ -74,7 +74,7 @@ class CourseEditTask(INGIniousAdminPage):
             current_filetype,
             available_filetypes,
             AccessibleTime,
-            CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid))
+            CourseTaskFiles.convert_to_set(CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid)))
 
     @classmethod
     def contains_is_html(cls, data):
@@ -118,8 +118,6 @@ class CourseEditTask(INGIniousAdminPage):
             return return_dict
 
     def parse_problem(self, problem_content):
-        """ Parses a problem, modifying some data """
-        del problem_content["@order"]
 
         # store boolean fields as booleans
         for field in ["optional", "multiple", "centralize"]:
@@ -195,6 +193,14 @@ class CourseEditTask(INGIniousAdminPage):
                 self.wipe_task(courseid, taskid)
             raise web.seeother("/admin/"+courseid+"/tasks")
 
+        # Task exists?
+        try:
+            self.task_factory.get_task(course, taskid)
+        except:
+            # If doesn't, use bank instead
+            courseid = self.bank_name
+            course = self.course_factory.get_course(courseid)
+
         # Else, parse content
         try:
             try:
@@ -213,22 +219,26 @@ class CourseEditTask(INGIniousAdminPage):
                 return json.dumps({"status": "error", "message": "Invalid file type: {}".format(str(data["@filetype"]))})
             file_ext = data["@filetype"]
             del data["@filetype"]
-
             if problems is None:
-                return json.dumps({"status": "error", "message": "You cannot create a task without subproblems"})
+                problems = {'1': {"type": "code-file", "header": "", "allowed_exts": ".py"}}
+                #return json.dumps({"status": "error", "message": "You cannot create a task without subproblems"})
 
             # Order the problems (this line also deletes @order from the result)
-            data["problems"] = OrderedDict([(key, self.parse_problem(val))
-                                            for key, val in sorted(iter(problems.items()), key=lambda x: int(x[1]['@order']))])
+            data["problems"] = OrderedDict([(key, self.parse_problem(val)) for key, val in problems.items()])
             data["limits"] = limits
             if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
                 del data["limits"]["hard_time"]
 
             # Weight
             try:
-                data["weight"] = float(data["weight"])
+                data["weight"] = 1.0
             except:
                 return json.dumps({"status": "error", "message": "Grade weight must be a floating-point number"})
+
+            try:
+                data["authenticity_percentage"] = float(data["authenticity_percentage"])
+            except:
+                return json.dumps({"status": "error", "message": "Authenticity percentage must be a floating-point number"})
 
             # Groups
             if "groups" in data:
@@ -268,15 +278,7 @@ class CourseEditTask(INGIniousAdminPage):
                 del data["submission_limit_soft_1"]
                 data["submission_limit"] = result
 
-            # Accessible
-            if data["accessible"] == "custom":
-                data["accessible"] = "{}/{}".format(data["accessible_start"], data["accessible_end"])
-            elif data["accessible"] == "true":
-                data["accessible"] = True
-            else:
-                data["accessible"] = False
-            del data["accessible_start"]
-            del data["accessible_end"]
+            data["accessible"] = True
 
             # Checkboxes
             if data.get("responseIsHTML"):
@@ -284,6 +286,7 @@ class CourseEditTask(INGIniousAdminPage):
 
             # Network grading
             data["network_grading"] = "network_grading" in data
+            data["code_analysis"] = "code_analysis" in data
         except Exception as message:
             return json.dumps({"status": "error", "message": "Your browser returned an invalid form ({})".format(str(message))})
 

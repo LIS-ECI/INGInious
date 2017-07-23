@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 import web
 import json
 import re
+import shutil
 
 from inginious.frontend.webapp_contest.pages.course_admin.utils import INGIniousAdminPage
 from inginious.frontend.webapp_contest.accessible_time import AccessibleTime
@@ -63,8 +64,27 @@ class ContestAdmin(INGIniousAdminPage):
         if problemdump is None:
             problemdump = json.dumps({})
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/studio_contest.js', 'header')
+        self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/selectize.min.js', "header")
+        self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
+
         return self.template_helper.get_renderer().course_admin.contest_edit(course, contest_data, None, False,
                                                                              AccessibleTime, problems, problemdump)
+
+    def migrate_data(self, course, dest_course, dest_tasks):
+        """ migrate tasks """
+
+        web.debug("hola")
+        for task in dest_tasks:
+            web.debug(task)
+            try:
+                path = self.task_factory.get_directory_path(course, task)
+                dest_path = self.task_factory.get_directory_path(dest_course, task)
+                shutil.copytree(path, dest_path)
+            except Exception as e:
+                web.debug(e)
+                continue
+            web.debug(task)
+        return 0
 
     def POST_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
         """ POST request: update the contest settings """
@@ -81,6 +101,7 @@ class ContestAdmin(INGIniousAdminPage):
             contest_data['start'] = new_data["start"]
             contest_data['end'] = new_data["end"]
             contest_data['name'] = new_data["name"]
+            contest_data['description'] = new_data["description"]
             try:
                 problems = [key for key, val in self.dict_from_prefix("problem", new_data).items()]
             except:
@@ -88,6 +109,9 @@ class ContestAdmin(INGIniousAdminPage):
 
             # Save the problems
             contest_data["content"] = problems
+
+            # Copy problems
+            self.migrate_data(self.bank_name, course.get_id(), problems)
 
             # Save start date
             try:
@@ -112,6 +136,8 @@ class ContestAdmin(INGIniousAdminPage):
                                        "message": "Invalid number of minutes for the penalty: should be greater than 0"})
             except:
                 return json.dumps({"status": "error", "message": "Invalid number of minutes for the penalty"})
+
+
         except:
             return json.dumps({"status": "error", "message": "User returned an invalid form"})
 

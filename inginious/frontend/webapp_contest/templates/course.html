@@ -47,23 +47,27 @@ $# Start content
 <div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">
 	$if len(scoreboard) != 0:
         <a class="list-group-item row">
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <label>Contest name</label>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
+                <label>Description</label>
+            </div>
+            <div class="col-sm-3">
                 <label>Start date</label>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-3">
                 <label>End date</label>
             </div>
         </a>
         $for sid, val in scoreboard.items():
             <a href="$get_homepath()/contest/$course.get_id()/$sid/scoreboard" class="list-group-item row $('disabled' if not val['enabled'] else '')">
-                <div class="col-sm-4">
+                <div class="col-sm-3">
                     <label>$val["name"]</label>
                 </div>
-                <div class="col-sm-4">$val["start"]</div>
-                <div class="col-sm-4">$val["end"]</div>
+                <div class="col-sm-3">$val.get('description','')</div>
+                <div class="col-sm-3">$val["start"]</div>
+                <div class="col-sm-3">$val["end"]</div>
             </a>
     $else:
         <a class="list-group-item row disabled">There are no contests.</a>

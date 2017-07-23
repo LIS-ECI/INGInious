@@ -39,6 +39,7 @@ class Task(object):
                 self._limits['hard_time'] = int(self._data["limits"].get("hard_time", 3 * self._limits['time']))
                 self._limits['memory'] = int(self._data["limits"].get("memory", 1024))
                 self._limits['disk'] = int(self._data["limits"].get("disk", 1024))
+                self._limits['output'] = int(self._data["limits"].get("output", 2))
 
                 if self._limits['time'] <= 0 or self._limits['hard_time'] <= 0 or self._limits['memory'] <= 0 or self._limits['disk'] <= 0:
                     raise Exception("Invalid limit")

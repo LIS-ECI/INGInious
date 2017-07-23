@@ -59,6 +59,7 @@ $if start <= start.now():
 	    <tr>
 	        <th class="contest_rank">Rank</th>
 	        <th class="contest_contestant">Contestant</th>
+            <th class="contest_contestant">Real name</th>
 	        <th colspan="2" class="contest_score_header">Score</th>
 	        $for taskid in tasks:
 	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid">$taskid</a></th>
@@ -67,6 +68,7 @@ $if start <= start.now():
 	        <tr>
 	            <td class="contest_rank">$data['displayed_rank']</td>
 	            <td class="contest_contestant">$data['name']</td>
+                <td class="contest_contestant">$data['realname']</td>
 	            <td class="contest_score_task">$data['score'][0]</td>
 	            <td class="contest_score_time">$int(data['score'][1])</td>
 	            $for taskid in tasks:

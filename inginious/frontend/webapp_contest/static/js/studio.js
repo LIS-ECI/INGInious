@@ -669,3 +669,35 @@ function studio_get_feedback(sid)
         loadingSomething = false;
     });
 }
+
+
+//------TESTCASES---------
+
+/**
+ * Upload a new test case for a problem
+ */
+function studio_testcase_file_upload()
+{
+    $('#modal_file_upload').modal('hide');
+    $('#testcase_upload_form').ajaxSubmit({
+        beforeSend: function()
+                    {
+                        $("#tab_file_list").html('Loading');
+                    },
+        success:    function(data)
+                    {
+                        $("#tab_file_list").replaceWith(data);
+                    },
+        url:        location.pathname + "/files"
+    });
+}
+
+/**
+ * Delete a test case related to a problem
+ */
+function studio_task_file_delete(path)
+{
+    if(!confirm("Are you sure you want to delete this?") || !studio_task_file_delete_tab(path))
+        return;
+    studio_update_file_tabs({"action": "delete", "path": path});
+}

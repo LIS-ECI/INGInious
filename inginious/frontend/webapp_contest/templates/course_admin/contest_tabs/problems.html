@@ -12,7 +12,7 @@ $#
     <div class="form-group col-sm-12">
         <label for="problem_id" class="col-sm-3 control-label">Select a problem from the list</label>
         <div class="col-sm-6">
-            <select class="form-control" id="problem_id">
+            <select class="form-control" id="problem_id" placeholder="Select a problem...">
                 $for problem in problems:
                     <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
             </select>

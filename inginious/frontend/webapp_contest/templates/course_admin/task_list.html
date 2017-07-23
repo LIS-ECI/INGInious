@@ -20,44 +20,31 @@ $def NavbarF():
 $var Navbar: $:NavbarF()
 
 <form method="post">
-<h2>Tasks
-    <div class="pull-right">
-        <div class="btn-group">
-            <button type="button" id="switch" class="btn-sm btn btn-default"><i class="fa fa-list-ol"></i> Change task order</button>
-            <button type="submit" id="switch" class="btn-sm btn btn-success"><i class="fa fa-check"></i> Update task order</button>
-        </div>
-    </div>
+<h2>Problems
 </h2>
 
 <table class="table sorted_table">
     <thead>
         <tr>
-            <th>task name</th>
-            <th># student viewed</th>
-            <th># student attempted</th>
-            <th># student succeeded</th>
-            <th># attempts</th>
-            <th>
-                <div class="btn-group" role="group">
-                    <a href="$get_homepath()/admin/${course.get_id()}/download?format=taskid%2Fusername" class="btn btn-danger btn-xs" title="Download
-                       all submissions" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download"></i></a>
-                    <a href="$get_homepath()/admin/${course.get_id()}/tasks?csv" class="btn btn-info btn-xs" title="Download
-                       CSV" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-table"></i></a>
-                </div>
-            </th>
+            <th>Problem name</th>
+            <th>Time limit</th>
+            <th>Memory limit</th>
+            <th>Output limit</th>
+            <th># test cases</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     $for taskid in data:
     	<tr>
     		<td>
-    			<a href="$get_homepath()/admin/${course.get_id()}/task/$taskid">$data[taskid]["name"]</a>
+    			<a href="$get_homepath()/admin/${course.get_id()}/task/$taskid">$data[taskid].get_name()</a>
                 <input type="hidden" name="task" value="$taskid">
     		</td>
-    		<td>$data[taskid]["viewed"]</td>
-    		<td>$data[taskid]["attempted"]</td>
-            <td>$data[taskid]["succeeded"]</td>
-            <td>$data[taskid]["attempts"]</td>
+    		<td>$data[taskid].get_limits()["time"]</td>
+    		<td>$data[taskid].get_limits()["memory"]</td>
+            <td>$data[taskid].get_limits()["output"]</td>
+            <td>$data[taskid].get_limits()["time"]</td>
     		<td style="min-width:120px">
                 <div class="btn-group" role="group">
                     $if is_admin:
@@ -65,11 +52,6 @@ $var Navbar: $:NavbarF()
                            data-placement="bottom"><i class="fa fa-edit"></i></a>
                     <a href="$get_homepath()/admin/${course.get_id()}/task/$taskid" class="btn btn-default btn-xs" title="View results" data-toggle="tooltip"
                        data-placement="bottom"><i class="fa fa-users"></i></a>
-                    <a href="$get_homepath()/admin/${course.get_id()}/download$data[taskid]['url']" class="btn btn-default btn-xs" title="Download submissions"
-                       data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download"></i></a>
-                    $if is_admin:
-                        <a href="$get_homepath()/admin/${course.get_id()}/replay$data[taskid]['url']" class="btn btn-default btn-xs" title="Replay submissions"
-                           data-toggle="tooltip" data-placement="bottom"><i class="fa fa-refresh"></i></a>
                 </div>
     		</td>
     	</tr>
@@ -80,7 +62,7 @@ $var Navbar: $:NavbarF()
 <div class="row">
     <div class="form-group">
         <div class="col-sm-9"><input type="text" class="form-control" id="new_task_id" placeholder="New task id"/></div>
-        <div class="col-sm-3"><a href="javascript:studio_create_new_task();" class="btn btn-info btn-large btn-block">Create new task</a></div>
+        <div class="col-sm-3"><a href="javascript:studio_create_new_task();" class="btn btn-info btn-large btn-block">Create new problem</a></div>
     </div>
 </div>
 $if len(errors) != 0:
