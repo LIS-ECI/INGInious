@@ -48,7 +48,15 @@ class CourseTaskFiles(INGIniousAdminPage):
             raise Exception("Invalid task id")
 
         self.get_course_and_check_rights(courseid, allow_all_staff=False)
-
+        tmp = courseid
+        try:
+            self.task_factory.get_task_descriptor_content(courseid, taskid)
+        except:
+            try:
+                courseid = self.bank_name
+                self.task_factory.get_task_descriptor_content(courseid, taskid)
+            except:
+                courseid = tmp
         request = web.input(testcase_input={}, testcase_output={}, testcase_feedback={})
         if request.get("action") == "upload" and request.get('testcase_name') is not None and request.get('testcase_input') is not None and request.get('testcase_output') is not None:
             return self.action_upload_testcase(courseid, taskid, request.get('testcase_name'), request.get('testcase_input'), request.get('testcase_output'), request.get('testcase_feedback', {}))
@@ -170,7 +178,8 @@ class CourseTaskFiles(INGIniousAdminPage):
 
         wanted_path = self.verify_path(courseid, taskid, path, True)
         if wanted_path is None:
-            return "Invalid new path"
+            courseid = self.bank_name
+            wanted_path = self.verify_path(courseid, taskid, path, True)
         curpath = self.task_factory.get_directory_path(courseid, taskid)
         rel_path = os.path.relpath(wanted_path, curpath)
 

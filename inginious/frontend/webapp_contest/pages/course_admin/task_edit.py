@@ -37,7 +37,11 @@ class CourseEditTask(INGIniousAdminPage):
         try:
             task_data = self.task_factory.get_task_descriptor_content(courseid, taskid)
         except:
-            task_data = None
+            try:
+                courseid = self.bank_name
+                task_data = self.task_factory.get_task_descriptor_content(courseid, taskid)
+            except:
+                task_data = None
         if task_data is None:
             task_data = {}
 
