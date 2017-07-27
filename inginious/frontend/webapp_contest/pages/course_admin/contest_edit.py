@@ -73,17 +73,13 @@ class ContestAdmin(INGIniousAdminPage):
     def migrate_data(self, course, dest_course, dest_tasks):
         """ migrate tasks """
 
-        web.debug("hola")
         for task in dest_tasks:
-            web.debug(task)
             try:
                 path = self.task_factory.get_directory_path(course, task)
                 dest_path = self.task_factory.get_directory_path(dest_course, task)
                 shutil.copytree(path, dest_path)
             except Exception as e:
-                web.debug(e)
                 continue
-            web.debug(task)
         return 0
 
     def POST_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ

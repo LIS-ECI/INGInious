@@ -178,13 +178,61 @@ class CourseEditTask(INGIniousAdminPage):
 
         self._logger.info("Task %s/%s wiped.", courseid, taskid)
 
+    def verify_path(self, courseid, taskid, path, new_path=False):
+        """ Return the real wanted path (relative to the INGInious root) or None if the path is not valid/allowed """
+
+        task_dir_path = self.task_factory.get_directory_path(courseid, taskid)
+        # verify that the dir exists
+        if not os.path.exists(task_dir_path):
+            return None
+        wanted_path = os.path.normpath(os.path.join(task_dir_path, path))
+        rel_wanted_path = os.path.relpath(wanted_path, task_dir_path)  # normalized
+        # verify that the path we want exists and is withing the directory we want
+        if (os.path.islink(wanted_path) or rel_wanted_path.startswith('..')):
+            return None
+        # do not allow touching the task.* file
+        if os.path.splitext(rel_wanted_path)[0] == "task" and os.path.splitext(rel_wanted_path)[1][1:] in \
+                self.task_factory.get_available_task_file_extensions():
+            return None
+        # do not allow hidden dir/files
+        if rel_wanted_path != ".":
+            for i in rel_wanted_path.split(os.path.sep):
+                if i.startswith("."):
+                    return None
+        return wanted_path
+
+    def upload_pfile(self, courseid, taskid, path, fileobj):
+        """ Upload the problem text file """
+        wanted_path = self.verify_path(courseid, taskid, path, True)
+        if wanted_path is None:
+            return "Invalid new path"
+        curpath = self.task_factory.get_directory_path(courseid, taskid)
+        rel_path = os.path.relpath(wanted_path, curpath)
+
+        for i in rel_path.split(os.path.sep)[:-1]:
+            curpath = os.path.join(curpath, i)
+            if not os.path.exists(curpath):
+                os.mkdir(curpath)
+            if not os.path.isdir(curpath):
+                return i + " is not a directory!"
+
+        try:
+            to_write = fileobj.file.read()
+
+            open(wanted_path, "w+b").write(to_write)
+            web.debug("Golasdf")
+            return ""
+        except Exception as e:
+            web.debug(e)
+            return "An error occurred while writing the file"
+
     def POST_AUTH(self, courseid, taskid):  # pylint: disable=arguments-differ
         """ Edit a task """
         if not id_checker(taskid) or not id_checker(courseid):
             raise Exception("Invalid course/task id")
 
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
-        data = web.input(task_file={})
+        data = web.input(problem_file={}, task_file={})
 
         # Delete task ?
         if "delete" in data:
@@ -209,6 +257,14 @@ class CourseEditTask(INGIniousAdminPage):
                 task_zip = None
             del data["task_file"]
 
+
+            try:
+                problem_file = data.get('problem_file')
+            except Exception as e:
+                web.debug(e)
+                problem_file = None
+            del data["problem_file"]
+
             problems = self.dict_from_prefix("problem", data)
             limits = self.dict_from_prefix("limits", data)
 
@@ -228,6 +284,17 @@ class CourseEditTask(INGIniousAdminPage):
             data["limits"] = limits
             if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
                 del data["limits"]["hard_time"]
+
+
+            self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf", problem_file)
+
+            #Difficulty
+            try:
+                data["difficulty"] = int(data["difficulty"])
+                if not (data["difficulty"]>0 and data["difficulty"]<=10):
+                    return json.dumps({"status": "error", "message": "Difficulty level must be between 1 and 10"})
+            except:
+                return json.dumps({"status": "error", "message": "Difficulty level must be an integer number"})
 
             # Weight
             try:

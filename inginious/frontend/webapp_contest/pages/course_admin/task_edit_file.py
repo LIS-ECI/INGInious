@@ -67,7 +67,8 @@ class CourseTaskFiles(INGIniousAdminPage):
         res = set()
         for file in filelist:
             if not file[1]:
-                res.add(file[2].split(".")[0])
+                if not file[2].endswith(".pdf"):
+                    res.add(file[2].split(".")[0])
 
         return res
 
@@ -163,12 +164,12 @@ class CourseTaskFiles(INGIniousAdminPage):
         except:
             return json.dumps({"error": True})
 
+
     def action_upload(self, courseid, taskid, path, fileobj):
         """ Upload a file """
 
         wanted_path = self.verify_path(courseid, taskid, path, True)
         if wanted_path is None:
-            web.debug(courseid, taskid, path, wanted_path)
             return "Invalid new path"
         curpath = self.task_factory.get_directory_path(courseid, taskid)
         rel_path = os.path.relpath(wanted_path, curpath)
