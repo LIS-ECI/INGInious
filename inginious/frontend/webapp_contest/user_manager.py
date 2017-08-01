@@ -14,6 +14,7 @@ import pymongo
 
 from inginious.frontend.common.user_manager import AbstractUserManager
 
+import web
 
 class AuthInvalidInputException(Exception):
     pass
@@ -203,11 +204,15 @@ class UserManager(AbstractUserManager):
         for method in self._auth_methods:
             if method.should_cache() is False:
                 infos = method.get_users_info(remaining_users)
+                # web.debug("infos",infos)
                 if infos is not None:
+                    # web.debug("Entró")
                     for user, val in infos.items():
-                        retval[user] = val
+                        if retval[user]==None:
+                            retval[user] = val
 
         remaining_users = [username for username, val in retval.items() if val is None]
+        # web.debug("remaining_users", remaining_users)
         if len(remaining_users) == 0:
             return retval
 
@@ -215,11 +220,11 @@ class UserManager(AbstractUserManager):
         infos = self._database.user_info_cache.find({"_id": {"$in": remaining_users}})
         for info in infos:
             retval[info["_id"]] = (info["realname"], info["email"])
-
+        # web.debug(retval)
         remaining_users = [username for username, val in retval.items() if val is None]
         if len(remaining_users) == 0:
             return retval
-
+        # web.debug(retval)
         # If it's still not the case, ask the other auth methods
         for method in self._auth_methods:
             if method.should_cache() is True:
@@ -229,7 +234,7 @@ class UserManager(AbstractUserManager):
                         if val is not None:
                             retval[user] = val
                             self._database.user_info_cache.update_one({"_id": user}, {"$set": {"realname": val[0], "email": val[1]}}, upsert=True)
-
+        web.debug(retval)
         return retval
 
     def get_user_info(self, username):
@@ -238,7 +243,7 @@ class UserManager(AbstractUserManager):
         :return: a tuple (realname, email) if the user can be found, None else
         """
         info = self.get_users_info([username])
-        return info[username] if info is not None else None
+        return info[username] if info[username] is not None else None
 
     def get_user_realname(self, username):
         """

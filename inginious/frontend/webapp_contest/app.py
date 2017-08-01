@@ -178,6 +178,7 @@ def get_app(config):
     appli.backup_dir = config.get("backup_directory", './backup')
     appli.webterm_link = config.get("webterm", None)
     appli.bank_name = config.get("bank", "bank")
+    appli.run_file = config.get("run_file",None)
     # Init the mapping of the app
     appli.init_mapping(urls)
 

@@ -68,7 +68,7 @@ class ContestAdmin(INGIniousAdminPage):
         self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
 
         return self.template_helper.get_renderer().course_admin.contest_edit(course, contest_data, None, False,
-                                                                             AccessibleTime, problems, problemdump)
+                                                                             AccessibleTime, problems, problemdump, self.bank_name)
 
     def migrate_data(self, course, dest_course, dest_tasks):
         """ migrate tasks """

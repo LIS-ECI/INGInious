@@ -12,8 +12,10 @@ $#
         </div>
     <table class="table table-bordered table-condensed">
         <tr>
-            <th class="col-sm-7">Test case name</th>
+            <th class="col-sm-3">Test case identifier</th>
+            <th class="col-sm-3">Test case description</th>
             <th class="col-sm-1">Download</th>
+            <th class="col-sm-1">Edit description</th>
             <th class="col-sm-1">Edit input</th>
             <th class="col-sm-1">Edit output</th>
             <th class="col-sm-1">Edit feedback</th>
@@ -21,6 +23,7 @@ $#
         </tr>
         <tr>
             <td><i class="fa fa-folder-open"></i>&nbsp;/</td>
+            <td></td>
             <td><a href="$get_homepath()/admin/${course.get_id()}/edit/task/$taskid/files?action=download&path=."
                    onclick="studio_task_edit_downloadfile('/'); return false;" class="btn btn-sm btn-primary btn-block" title="download"><i
                     class="fa fa-cloud-download"></i></a></td>
@@ -28,15 +31,23 @@ $#
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
         </tr>
-        $for name in file_list:
+        $for name, desc in file_list.items():
             <tr data-x-path="$name">
                 <td>
                     $name
                 </td>
                 <td>
+                    $desc
+                </td>
+                <td>
                     <a href="$get_homepath()/admin/${course.get_id()}/edit/task/$taskid/files?action=download&path=$name"
                        class="btn btn-sm btn-primary btn-block" title="download"><i class="fa fa-cloud-download"></i></a>
+                </td>
+                <td>
+                    <a href="#" onclick="studio_task_file_open_tab('${name+".desc"}'); return false;" class="btn btn-sm btn-warning btn-block"
+                           title="edit"><i class="fa fa-edit"></i></a>
                 </td>
                 <td>
                     <a href="#" onclick="studio_task_file_open_tab('${name+".in"}'); return false;" class="btn btn-sm btn-warning btn-block"
@@ -57,7 +68,7 @@ $#
                 </td>
             </tr>
         <tr>
-            <th colspan="6" style="text-align:right">
+            <th colspan="9" style="text-align:right">
                 <a href="#" onclick="$$('#modal_file_upload').modal('show'); return false;" class="btn btn-sm btn-info">Upload a new test case</a>
             </th>
         </tr>

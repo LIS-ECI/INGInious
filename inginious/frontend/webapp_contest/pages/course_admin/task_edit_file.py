@@ -3,7 +3,8 @@
 # This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 # more information about the licensing of this file.
 
-""" Allow to create/edit/delete/move/download files associated to tasks """
+""" Allow to create/edit/delete/move/download files associated to problems """
+from collections import OrderedDict
 import codecs
 import json
 import mimetypes
@@ -27,7 +28,15 @@ class CourseTaskFiles(INGIniousAdminPage):
             raise Exception("Invalid task id")
 
         self.get_course_and_check_rights(courseid, allow_all_staff=False)
-
+        tmp = courseid
+        try:
+            self.task_factory.get_task_descriptor_content(courseid, taskid)
+        except:
+            try:
+                courseid = self.bank_name
+                self.task_factory.get_task_descriptor_content(courseid, taskid)
+            except:
+                courseid = tmp
         request = web.input()
         if request.get("action") == "download" and request.get('path') is not None:
             return self.action_download(courseid, taskid, request.get('path'))
@@ -58,8 +67,8 @@ class CourseTaskFiles(INGIniousAdminPage):
             except:
                 courseid = tmp
         request = web.input(testcase_input={}, testcase_output={}, testcase_feedback={})
-        if request.get("action") == "upload" and request.get('testcase_name') is not None and request.get('testcase_input') is not None and request.get('testcase_output') is not None:
-            return self.action_upload_testcase(courseid, taskid, request.get('testcase_name'), request.get('testcase_input'), request.get('testcase_output'), request.get('testcase_feedback', {}))
+        if request.get("action") == "upload" and request.get('testcase_desc') is not None and request.get('testcase_input') is not None and request.get('testcase_output') is not None:
+            return self.action_upload_testcase(courseid, taskid, request.get('testcase_desc'), request.get('testcase_input'), request.get('testcase_output'), request.get('testcase_feedback', {}))
         elif request.get("action") == "edit_save" and request.get('path') is not None and request.get('content') is not None:
             return self.action_edit_save(courseid, taskid, request.get('path'), request.get('content'))
         else:
@@ -67,18 +76,23 @@ class CourseTaskFiles(INGIniousAdminPage):
 
     def show_tab_file(self, courseid, taskid, error=None):
         """ Return the file tab """
+
+        file_list = OrderedDict([(x, open(self.verify_path(courseid, taskid, x + ".desc"), 'r').read()) for x in
+                                 self.convert_to_set(
+                                     self.get_task_filelist(self.task_factory, courseid, taskid))])
+
         return self.template_helper.get_renderer(False).course_admin.edit_tabs.files(
-            self.course_factory.get_course(courseid), taskid, self.convert_to_set(self.get_task_filelist(self.task_factory, courseid, taskid)), error)
+            self.course_factory.get_course(courseid), taskid, file_list, error)
 
     @classmethod
     def convert_to_set(self, filelist):
         res = set()
         for file in filelist:
             if not file[1]:
-                if not file[2].endswith(".pdf"):
+                if not (file[2].endswith(".pdf") or file[2]=="run"):
                     res.add(file[2].split(".")[0])
 
-        return res
+        return sorted(res)
 
     @classmethod
     def get_task_filelist(cls, task_factory, courseid, taskid):
@@ -178,8 +192,7 @@ class CourseTaskFiles(INGIniousAdminPage):
 
         wanted_path = self.verify_path(courseid, taskid, path, True)
         if wanted_path is None:
-            courseid = self.bank_name
-            wanted_path = self.verify_path(courseid, taskid, path, True)
+            return "Invalid new path"
         curpath = self.task_factory.get_directory_path(courseid, taskid)
         rel_path = os.path.relpath(wanted_path, curpath)
 
@@ -191,10 +204,11 @@ class CourseTaskFiles(INGIniousAdminPage):
                 return i + " is not a directory!"
 
         try:
-            to_write = "" if isinstance(fileobj, str) else fileobj.file.read()
+            to_write = fileobj.encode('utf-8') if isinstance(fileobj, str) else fileobj.file.read()
             open(wanted_path, "wb").write(to_write)
             return ""
-        except:
+        except Exception as e:
+            # web.debug(e)
             return "An error occurred while writing the file"
 
     def action_create(self, courseid, taskid, path):
@@ -305,23 +319,31 @@ class CourseTaskFiles(INGIniousAdminPage):
             web.header('Content-Disposition', 'attachment; filename="dir.tgz"', unique=True)
             return tmpfile
 
-    def action_upload_testcase(self, courseid, taskid, testcase_name, input, output, feedback):
+    def action_upload_testcase(self, courseid, taskid, testcase_desc, input, output, feedback):
+
+        filenames = CourseTaskFiles.convert_to_set(CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid))
+        maxi = 0
+        for file in filenames:
+            maxi = max(maxi, int(file.split("_")[1]))
+        testcase_name = "testcase_" + str(maxi + 1)
         in_upload = self.action_upload(courseid, taskid, testcase_name + ".in", input)
         out_upload = self.action_upload(courseid, taskid, testcase_name + ".out", output)
         fb_upload = self.action_upload(courseid, taskid, testcase_name + ".fb", feedback)
+        desc_upload = self.action_upload(courseid, taskid, testcase_name + ".desc", testcase_desc)
 
-        if in_upload == "" and out_upload == "" and fb_upload == "":
+        if in_upload == "" and out_upload == "" and fb_upload == "" and desc_upload == "":
             return self.show_tab_file(courseid, taskid)
         else:
-            return self.show_tab_file(courseid, taskid, in_upload if in_upload != "" else out_upload if out_upload != "" else fb_upload if fb_upload != "" else "Internal error")
+            return self.show_tab_file(courseid, taskid, in_upload if in_upload != "" else out_upload if out_upload != "" else fb_upload if fb_upload != "" else desc_upload if desc_upload != "" else "Internal error")
 
     def action_testcase_delete(self, courseid, taskid, path):
         """ Delete a testcase """
         in_upload = self.action_delete(courseid, taskid, path + ".in")
         out_upload = self.action_delete(courseid, taskid, path + ".out")
         fb_upload = self.action_delete(courseid, taskid, path + ".fb")
+        desc_upload = self.action_delete(courseid, taskid, path + ".desc")
 
         if in_upload == "" and out_upload == "" and fb_upload == "":
             return self.show_tab_file(courseid, taskid)
         else:
-            return self.show_tab_file(courseid, taskid, in_upload if in_upload != "" else out_upload if out_upload != "" else fb_upload if fb_upload != "" else "Internal error")
+            return self.show_tab_file(courseid, taskid, in_upload if in_upload != "" else out_upload if out_upload != "" else fb_upload if fb_upload != "" else desc_upload if desc_upload != "" else "Internal error")

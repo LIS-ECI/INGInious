@@ -64,6 +64,10 @@ class CourseEditTask(INGIniousAdminPage):
                     if i in problem_copy:
                         del problem_copy[i]
                 problem["custom"] = inginious.common.custom_yaml.dump(problem_copy)
+        task_list = OrderedDict([(x, open(self.verify_path(courseid, taskid, x + ".desc"), 'r').read()) for x in
+                        CourseTaskFiles.convert_to_set(
+                                CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid))])
+        # web.debug(task_list)
 
         return self.template_helper.get_renderer().course_admin.task_edit(
             course,
@@ -78,7 +82,7 @@ class CourseEditTask(INGIniousAdminPage):
             current_filetype,
             available_filetypes,
             AccessibleTime,
-            CourseTaskFiles.convert_to_set(CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid)))
+            task_list)
 
     @classmethod
     def contains_is_html(cls, data):
@@ -221,19 +225,20 @@ class CourseEditTask(INGIniousAdminPage):
                 return i + " is not a directory!"
 
         try:
-            to_write = fileobj.file.read()
-
-            open(wanted_path, "w+b").write(to_write)
-            web.debug("Golasdf")
+            to_write = fileobj.read()
+            mode = "w+b" if path != "run" else "w+"
+            f = open(wanted_path, mode)
+            # web.debug(wanted_path)
+            f.write(to_write)
+            f.close()
             return ""
         except Exception as e:
-            web.debug(e)
             return "An error occurred while writing the file"
 
     def POST_AUTH(self, courseid, taskid):  # pylint: disable=arguments-differ
         """ Edit a task """
         if not id_checker(taskid) or not id_checker(courseid):
-            raise Exception("Invalid course/task id")
+            raise Exception("Invalid course/problem id")
 
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
         data = web.input(problem_file={}, task_file={})
@@ -261,11 +266,9 @@ class CourseEditTask(INGIniousAdminPage):
                 task_zip = None
             del data["task_file"]
 
-
             try:
                 problem_file = data.get('problem_file')
             except Exception as e:
-                web.debug(e)
                 problem_file = None
             del data["problem_file"]
 
@@ -286,11 +289,23 @@ class CourseEditTask(INGIniousAdminPage):
             # Order the problems (this line also deletes @order from the result)
             data["problems"] = OrderedDict([(key, self.parse_problem(val)) for key, val in problems.items()])
             data["limits"] = limits
+            data["limits"]["time"]=30
             if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
                 del data["limits"]["hard_time"]
 
 
-            self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf", problem_file)
+
+            if problem_file is not None:
+                self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf",
+                                  problem_file.file if not isinstance(problem_file, str) else problem_file)
+
+            # web.debug(self.run_file)
+            if self.run_file is not None:
+                with open(self.run_file) as f:
+                    # web.debug("F",f)
+                    self.upload_pfile(courseid, taskid, "run", f)
+                wanted_path = self.verify_path(courseid, taskid, "run", True)
+                os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
 
             #Difficulty
             try:
@@ -358,6 +373,8 @@ class CourseEditTask(INGIniousAdminPage):
             # Network grading
             data["network_grading"] = "network_grading" in data
             data["code_analysis"] = "code_analysis" in data
+            if data["code_analysis"] and self.run_file is not None:
+                os.system("sed -i -e 's/#STATIC//g' " + wanted_path)
         except Exception as message:
             return json.dumps({"status": "error", "message": "Your browser returned an invalid form ({})".format(str(message))})
 

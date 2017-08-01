@@ -334,9 +334,9 @@ function studio_submit()
     });
 
     if(error)
-        studio_display_task_submit_message("Some error(s) occurred when saving the task: <ul>" + error + "</ul>", "danger", true);
+        studio_display_task_submit_message("Some error(s) occurred when saving the problem: <ul>" + error + "</ul>", "danger", true);
     else
-        studio_display_task_submit_message("Task saved.", "success", true);
+        studio_display_task_submit_message("Problem saved.", "success", true);
 
     $('.task_edit_submit_button').attr('disabled', false);
     studio_submitting = false;
@@ -700,4 +700,34 @@ function studio_task_file_delete(path)
     if(!confirm("Are you sure you want to delete this?") || !studio_task_file_delete_tab(path))
         return;
     studio_update_file_tabs({"action": "delete", "path": path});
+}
+
+function studio_import_users(){
+    var error = "";
+    $('#import_form').ajaxSubmit({
+        dataType: 'json',
+        beforeSend: function()
+                    {
+                        $('#alert_content').text('Loading...');
+                        $('#alert_import').css('display','block');
+                    },
+        success:    function (data) {
+                        if ("status" in data && data["status"] == "ok"){
+                            error += "Success! Refreshing...";
+                            location.reload(true);
+                        }else if ("message" in data){
+
+                            var obj = JSON.parse(data["message"]);
+                            error += "Error: The file has the following errors: ";
+                            jQuery.each(obj, function(i, val) {
+                                error += "<li>User " + i + ": " + val + "</li>";
+                            });
+
+                        }else
+                            error += "<li>An internal error occurred</li>";
+
+                        $('#alert_content').html(error);
+                    },
+        url:        "/import"
+    });
 }

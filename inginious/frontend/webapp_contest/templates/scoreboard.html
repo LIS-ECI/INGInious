@@ -66,8 +66,8 @@ $if start <= start.now():
 	<table class="contest_scoreboard">
 	    <tr>
 	        <th class="contest_rank">Rank</th>
-	        <th class="contest_contestant">Contestant</th>
-            <th class="contest_contestant">Real name</th>
+	        <th class="contest_contestant">Identifier</th>
+            <th class="contest_contestant">Name</th>
 	        <th colspan="2" class="contest_score_header">Score</th>
 	        $for taskid in tasks:
 	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>

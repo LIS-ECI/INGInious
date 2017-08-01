@@ -155,6 +155,10 @@ function studio_get_template_for_contest_problem(problem)
 function studio_create_new_contest_problem()
 {
     var new_problem_id = $('#problem_id').val();
+    if(new_problem_id==""){
+        alert("Select a problem first");
+        return;
+    }
     if($(studio_get_contest_problem(new_problem_id)).length != 0)
     {
         alert('This problem id is already used.');
@@ -233,4 +237,18 @@ function studio_contest_problem_delete(pid)
         codeEditors.splice(editor_idx, 1);
     });
     well.detach();
+}
+
+/**
+ * Preview a problem
+ *
+ */
+
+function studio_preview_problem(course){
+    var problem_id = $('#problem_id').val();
+    if(problem_id==""){
+        alert("Select a problem first");
+        return false;
+    }
+    window.open(window.location.href + "../../../../../course/"+course+"/"+problem_id+"/"+problem_id+".pdf",'_blank');
 }

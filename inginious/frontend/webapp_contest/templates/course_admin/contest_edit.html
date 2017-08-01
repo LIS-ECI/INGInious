@@ -1,4 +1,4 @@
-$def with (course, data, errors, saved, AccessibleTime, problems, problemdump)
+$def with (course, data, errors, saved, AccessibleTime, problems, problemdump, bank_name)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -52,7 +52,7 @@ $elif saved:
             </div>
 
             <div role="tabpanel" class="tab-pane" id="tab_container">
-                $:include.course_admin.contest_tabs.problems(course, data, problems)
+                $:include.course_admin.contest_tabs.problems(course, data, problems, bank_name)
             </div>
 
         </div>

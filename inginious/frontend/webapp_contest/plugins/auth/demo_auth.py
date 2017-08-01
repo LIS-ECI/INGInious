@@ -44,10 +44,12 @@ class DemoAuthMethod(AuthMethod):
             {username: None} else
         """
         retval = {username: None for username in usernames}
+        find_data = False
         for username in retval:
             if username in self._users:
+                find_data = True
                 retval[username] = (username, "{}@inginious.org".format(username))
-        return retval
+        return retval if find_data else None
 
 
 def init(plugin_manager, _, _2, conf):

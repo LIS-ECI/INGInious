@@ -1,4 +1,4 @@
-$def with (course, data, problems)
+$def with (course, data, problems, bank_name)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -10,14 +10,17 @@ $#
 
 <div class="row" id="new_subproblem">
     <div class="form-group col-sm-12">
-        <label for="problem_id" class="col-sm-3 control-label">Select a problem from the list</label>
+        <label for="problem_id" class="col-sm-2 control-label">Select a problem from the list</label>
         <div class="col-sm-6">
             <select class="form-control" id="problem_id" placeholder="Select a problem...">
                 $for problem in problems:
                     <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
             </select>
         </div>
-        <div class="col-sm-3">
+        <div class="col-sm-2">
+            <button type="button" target="_blank" class="btn btn-info btn-block" onclick="studio_preview_problem('${bank_name}');">Preview</button>
+        </div>
+        <div class="col-sm-2">
             <button type="button" class="btn btn-primary btn-block" onclick="studio_create_new_contest_problem();">Add</button>
         </div>
     </div>

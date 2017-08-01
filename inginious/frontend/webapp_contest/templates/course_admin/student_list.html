@@ -46,6 +46,25 @@ $var Navbar: $:NavbarF()
                         </div>
                     </form>
                 </div>
+
+            $if user_manager.has_admin_rights_on_course(course):
+                <hr>
+                <div class="alert alert-warning alert-dismissable" id="alert_import" role="alert" style="display:none;">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                    <div id="alert_content">
+                    </div>
+                </div>
+                <h3>Import students</h3>
+                <p>The file must be a valid CSV <b>with the following header line</b>: email,realname,password,username (where username is the student code)</p>
+                <div class="row">
+                    <form class=form-horizontal" method="post" id="import_form" action="/import" >
+                        <div class="form-group">
+                            <input type="hidden" name="course" id="course" value="${course.get_id()}"/>
+                            <div class="col-sm-9"><input type="file" class="form-control" name="users_file" placeholder="Student username"/></div>
+                            <div class="col-sm-3"><a name="import" class="btn btn-warning btn-block" onclick="studio_import_users();"><i class="fa fa-plus fa-lg"></i> Import students</a></div>
+                        </div>
+                    </form>
+                </div>
         </div>
         <div role="tabpanel" class="tab-pane" id="tab_staff">
             $:include.course_admin.student_list_table(course,user_data[0:len(course.get_staff())], True)

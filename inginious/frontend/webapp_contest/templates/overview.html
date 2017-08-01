@@ -58,8 +58,8 @@ $if start <= start.now():
 	<table class="contest_scoreboard">
 	    <tr>
 	        <th class="contest_rank">Rank</th>
-	        <th class="contest_contestant">Contestant</th>
-            <th class="contest_contestant">Real name</th>
+	        <th class="contest_contestant">Identifier</th>
+            <th class="contest_contestant">Name</th>
 	        <th colspan="2" class="contest_score_header">Score</th>
 	        $for taskid in tasks:
 	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>
@@ -82,6 +82,44 @@ $if start <= start.now():
 	                    <td class="contest_task contest_na">0</td>
 	        </tr>
 	</table>
+	<h3>Submit a problem</h3>
+    <div id="task_alert"></div>
+    <div class="well">
+        <div class="row">
+            <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
+                <input type="hidden" name="@action" value="submit"/>
+                <div class="col-sm-3">
+                    <label class="btn btn-primary btn-block" for="1">
+                        <input id="1" name="1" data-allowed-exts='[".py"]' type="file" style="display:none;">
+                        Select file
+                    </label>
+                </div>
+                <div class="col-sm-3">
+                    <select class="form-control" id="problem_id" placeholder="Select a problem...">
+                            $for taskid in tasks:
+                                <option value="$taskid">$taskid</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <select class="form-control" id="language" placeholder="Language">
+                            <option value="py3">Python 3</option>
+                    </select>
+                </div>
+                <div class="col-sm-2">
+                    <button type="submit" class="btn btn-success btn-block" onclick="" name="submit" id="submit">
+                        Submit
+                    </button>
+                </div>
+                <div class="col-sm-2">
+                    <button type="reset" class="btn btn-warning btn-block" name="reset" id="reset">
+                        Reset
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
 	<h3>Activity</h3>
 	<table class="table table-centered table-condensed table-bordered">
 	    <tr><th>Time</th><th>Contestant</th><th>Problem</th><th>Result</th></tr>
@@ -98,5 +136,16 @@ $if start <= start.now():
 	            </td>
 	        </tr>
 	</table>
+
+    <script type="text/javascript">
+    $$(document).ready(function() {
+        init_task_page("best");
+        $$("#submit").on("click", function(){
+            probid = $$('#problem_id').val();
+            $$('#task').attr('action', '$get_homepath()/course/$course.get_id()/'+probid);
+        });
+    });
+    </script>
+
 $else:
     <div class="alert alert-warning">Contest has not started yet.</div>

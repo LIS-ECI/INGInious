@@ -76,6 +76,11 @@ class INGIniousPage(object):
         return self.app.bank_name
 
     @property
+    def run_file(self):
+        """ Returns the run file path """
+        return self.app.run_file
+
+    @property
     def gridfs(self) -> GridFS:
         """ Returns the GridFS singleton """
         return self.app.gridfs
