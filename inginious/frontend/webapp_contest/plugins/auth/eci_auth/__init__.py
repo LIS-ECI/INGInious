@@ -208,7 +208,7 @@ class AdminRegisterPage(INGIniousAdminPage):
         try:
             users_file = data.get("users_file").file
         except:
-            return json.dumps({"status": "error", "message": "Invalid file!"})
+            return json.dumps({"status": "error", "message": json.dumps({"File": "Invalid file!"})})
 
         users_data = users_file.read()
         users_file.close()
