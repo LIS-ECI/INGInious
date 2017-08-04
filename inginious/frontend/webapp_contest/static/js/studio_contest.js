@@ -247,7 +247,6 @@ function studio_contest_problem_delete(pid)
 
 function studio_preview_problem(course){
     var url = [location.protocol, '//', location.host].join('');
-    alert(url);
     var problem_id = $('#problem_id').val();
     if(problem_id==""){
         alert("Select a problem first");
