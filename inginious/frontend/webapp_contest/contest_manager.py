@@ -58,12 +58,20 @@ class ContestManager():
         # tasks.append(course.get_task(t))
         # tasks = list(course.get_tasks().keys())
         tasks = contest_data["content"]
-        db_results = self.database.submissions.find({
+
+        db_results = self.database.submissions.find(
+            {'$or': [{
             "username": {"$in": users},
             "courseid": courseid,
             "submitted_on": {"$gte": start, "$lt": blackout},
-            "status": "done"},
-            {"username": True, "_id": False, "taskid": True, "result": True, "submitted_on": True}).sort(
+            "status": "error",
+            "result": "timeout"},
+            {
+            "username": {"$in": users},
+            "courseid": courseid,
+            "submitted_on": {"$gte": start, "$lt": blackout},
+            "status": "done"}]},
+            {"username": True, "_id": False, "taskid": True, "result": True, "submitted_on": True, "text": True}).sort(
             [("submitted_on", pymongo.ASCENDING)])
 
         task_status = {taskid: {"status": "NA", "tries": 0} for taskid in tasks}
@@ -72,9 +80,12 @@ class ContestManager():
         username in users}
         activity = []
         contest_name = contest_data["name"]
+        conversor = {'AC': 'Accepted', 'ACF': 'Accepted', 'WA': 'Wrong Answer', 'TLE': 'Time Limit Exceed', 'RE': 'Runtime Error'};
+
         # Compute stats for each submission
         task_succeeded = {taskid: False for taskid in tasks}
         for submission in db_results:
+            web.debug(submission)
             for username in submission["username"]:
                 if submission['taskid'] not in tasks:
                     continue
@@ -96,7 +107,10 @@ class ContestManager():
                                            + timedelta(minutes=contest_data["penalty"] * (status["tries"] - 1))
                                            - start).total_seconds() / 60
                     elif submission['result'] == "failed" or submission['result'] == "killed":
-                        status["status"] = "WA"
+                        if submission['text'].startswith('Runtime Error'):
+                            status["status"] = "RE"
+                        else:
+                            status["status"] = "WA"
                         status["tries"] += 1
                     elif submission['result'] == "timeout":
                         status["status"] = "TLE"
@@ -107,12 +121,12 @@ class ContestManager():
                         if results[username]["name"] in allowed_users:
                             activity.append({"user": results[username]["name"],
                                          "when": submission['submitted_on'],
-                                         "result": (status["status"] == 'AC' or status["status"] == 'ACF'),
+                                         "result": conversor.get(status["status"], 'Failed'),
                                          "taskid": submission['taskid']})
                     else:
                         activity.append({"user": results[username]["name"],
                                          "when": submission['submitted_on'],
-                                         "result": (status["status"] == 'AC' or status["status"] == 'ACF'),
+                                         "result": conversor.get(status["status"], 'Failed'),
                                          "taskid": submission['taskid']})
         activity.reverse()
         # Compute current score

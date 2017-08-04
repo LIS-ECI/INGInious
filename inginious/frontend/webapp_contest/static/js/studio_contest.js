@@ -11,7 +11,8 @@
 function studio_create_new_contest()
 {
     var contest_id = $('#new_contest_id');
-    window.location.href = window.location.href + "/../" + contest_id.val() + "/contest"
+    var url = [location.protocol, '//', location.host, location.pathname].join('');
+    window.location.href = url + "/../" + contest_id.val() + "/contest"
 }
 
 /**
@@ -245,10 +246,12 @@ function studio_contest_problem_delete(pid)
  */
 
 function studio_preview_problem(course){
+    var url = [location.protocol, '//', location.host].join('');
+    alert(url);
     var problem_id = $('#problem_id').val();
     if(problem_id==""){
         alert("Select a problem first");
         return false;
     }
-    window.open(window.location.href + "../../../../../course/"+course+"/"+problem_id+"/"+problem_id+".pdf",'_blank');
+    window.open(url+"/course/"+course+"/"+problem_id+"/"+problem_id+".pdf",'_blank');
 }

@@ -129,10 +129,7 @@ $if start <= start.now():
 	            <td>$a['user']</td>
 	            <td>$a['taskid']</td>
 	            <td>
-	                $if a['result']:
-	                    Succeeded
-	                $else:
-	                    Failed
+	                $a['result']
 	            </td>
 	        </tr>
 	</table>
