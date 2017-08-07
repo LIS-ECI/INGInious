@@ -234,7 +234,7 @@ class UserManager(AbstractUserManager):
                         if val is not None:
                             retval[user] = val
                             self._database.user_info_cache.update_one({"_id": user}, {"$set": {"realname": val[0], "email": val[1]}}, upsert=True)
-        web.debug(retval)
+
         return retval
 
     def get_user_info(self, username):

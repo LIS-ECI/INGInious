@@ -88,13 +88,10 @@ $if start <= start.now():
         <div class="row">
             <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
                 <input type="hidden" name="@action" value="submit"/>
-                <div class="col-sm-3">
-                    <label class="btn btn-primary btn-block" for="1">
-                        <input id="1" name="1" data-allowed-exts='[".py"]' type="file" style="display:none;">
-                        Select file
-                    </label>
+                <div class="col-sm-4">
+                    <input id="1" name="1" data-allowed-exts='[".py"]' type="file" class="filestyle" data-buttonName="btn-primary"/>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-2">
                     <select class="form-control" id="problem_id" placeholder="Select a problem...">
                             $for taskid in tasks:
                                 <option value="$taskid">$taskid</option>

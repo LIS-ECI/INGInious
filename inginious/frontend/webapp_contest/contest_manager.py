@@ -85,7 +85,6 @@ class ContestManager():
         # Compute stats for each submission
         task_succeeded = {taskid: False for taskid in tasks}
         for submission in db_results:
-            web.debug(submission)
             for username in submission["username"]:
                 if submission['taskid'] not in tasks:
                     continue

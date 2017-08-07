@@ -11,6 +11,7 @@ import re
 from collections import OrderedDict
 import csv
 import json
+import time
 
 import web
 
@@ -216,22 +217,26 @@ class AdminRegisterPage(INGIniousAdminPage):
         list = [[y for y in list[x].split(",")] for x in range(1,len(list))]
         not_imported = dict()
         real_data = []
-        for row in list:
-            user_data = dict()
-            user_data["email"] = row[0]
-            user_data["realname"] = row[1]
-            user_data["passwd"] = row[2]
-            user_data["passwd2"] = row[2]
-            user_data["username"] = row[3]
-            msg, error = self.register_user(user_data, False)
-            if error:
-                if msg == "existing_user":
-                    user_data["existing"]=True
-                    real_data.append(user_data)
+        send_email = "email" in data
+        try:
+            for row in list:
+                user_data = dict()
+                user_data["email"] = row[0]
+                user_data["realname"] = row[1]
+                user_data["passwd"] = row[2]
+                user_data["passwd2"] = row[2]
+                user_data["username"] = row[3]
+                msg, error = self.register_user(user_data, False)
+                if error:
+                    if msg == "existing_user":
+                        user_data["existing"]=True
+                        real_data.append(user_data)
+                    else:
+                        not_imported[row[1]]=msg
                 else:
-                    not_imported[row[1]]=msg
-            else:
-                real_data.append(user_data)
+                    real_data.append(user_data)
+        except:
+            return json.dumps({"status": "error", "message": json.dumps({"File": "Invalid file!"})})
         for user_data in real_data:
             username_duplicated = len([x for x in real_data if x["username"] == user_data["username"]]) != 1
             if username_duplicated:
@@ -240,17 +245,22 @@ class AdminRegisterPage(INGIniousAdminPage):
             if email_duplicated:
                 return json.dumps({"status": "error", "message": json.dumps({user_data["username"]: "Duplicated email in file!"})})
         if len(not_imported) == 0:
+            message = {}
             for user_data in real_data:
                 if not user_data.get("existing",False):
-                    self.register_user(user_data, True)
+                    msg, error = self.register_user(user_data, True, send_email)
+                    if error:
+                        message+="\nUser "+user_data["username"]+": Mail not sent."
                 course = self.course_factory.get_course(courseid)
-                self.user_manager.course_register_user(course, user_data["username"].strip(), '', True)
-            return json.dumps({"status": "ok", "message": "Success!"})
+                reg = self.user_manager.course_register_user(course, user_data["username"].strip(), '', True)
+                if not reg:
+                    message[user_data["username"]] = "Error while registering the user to the course. (maybe this user is already registered to the course)."
+            return json.dumps({"status": "ok", "message": json.dumps(message)})
         else:
             return json.dumps({"status": "error", "message": json.dumps(not_imported)})
 
 
-    def register_user(self, data, register):
+    def register_user(self, data, register, send_email=False):
         """ Parses input and register user """
         error = False
         msg = ""
@@ -286,6 +296,17 @@ class AdminRegisterPage(INGIniousAdminPage):
                                                 "realname": data["realname"],
                                                 "email": data["email"],
                                                 "password": passwd_hash})
+                    if send_email:
+                        web.sendmail(web.config.smtp_sendername, data["email"], "Welcome on INGInious",
+                                 """Welcome on INGInious !
+
+Following you have the URL and your credentials to access the platform:
+
+Username: """ + data["username"] + """
+
+Password: """ + data["passwd"] + """
+
+Platform URL: """ + web.ctx.home + "/")
                     try:
                         msg = "You are succesfully registered. An email has been sent to you for activation."
                     except:

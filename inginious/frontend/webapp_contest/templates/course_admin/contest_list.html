@@ -33,7 +33,9 @@ $var Navbar: $:NavbarF()
         </tr>
     </thead>
     <tbody>
+    $ i = 0
     $for contestid, data in contests_data.items():
+
     	<tr>
     		<td>$data["name"]</td>
     		<td>$AccessibleTime(data.get('start',True)).get_std_start_date()</td>
@@ -44,9 +46,12 @@ $var Navbar: $:NavbarF()
                     $if is_admin:
                         <a href="$get_homepath()/admin/${course.get_id()}/$contestid/contest" class="btn btn-primary btn-xs" title="Edit task" data-toggle="tooltip"
                            data-placement="bottom"><i class="fa fa-edit"></i></a>
+                    <a href="$get_homepath()/contest/${course.get_id()}/$i/scoreboard" class="btn btn-default btn-xs" title="View contest" data-toggle="tooltip"
+                       data-placement="bottom"><i class="fa fa-users"></i></a>
                 </div>
     		</td>
     	</tr>
+        $ i = i + 1
     </tbody>
 </table>
 </form>

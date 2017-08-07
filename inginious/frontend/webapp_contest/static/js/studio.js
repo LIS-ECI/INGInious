@@ -713,8 +713,12 @@ function studio_import_users(){
                     },
         success:    function (data) {
                         if ("status" in data && data["status"] == "ok"){
-                            error += "Success! Refreshing...";
-                            location.reload(true);
+
+                            var obj = JSON.parse(data["message"]);
+                            error += "Success! Refresh this page to see the results.";
+                            jQuery.each(obj, function(i, val) {
+                                error += "<li>User " + i + ": " + val + "</li>";
+                            });
                         }else if ("message" in data){
 
                             var obj = JSON.parse(data["message"]);

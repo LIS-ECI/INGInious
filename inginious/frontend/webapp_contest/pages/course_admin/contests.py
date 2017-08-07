@@ -20,7 +20,7 @@ class ContestsPageAdmin(INGIniousAdminPage):
 
     def GET_AUTH(self, courseid):  # pylint: disable=arguments-differ
         """ GET request: simply display the form """
-        course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
+        course, _ = self.get_course_and_check_rights(courseid)
         contests_data = self.contest_manager.get_all_contest_data(course)
         #return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, None, False)
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/studio_contest.js', 'header')

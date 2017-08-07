@@ -204,11 +204,11 @@ class CourseTaskFiles(INGIniousAdminPage):
                 return i + " is not a directory!"
 
         try:
-            to_write = fileobj.encode('utf-8') if isinstance(fileobj, str) else fileobj.file.read()
+            to_write = fileobj.encode('utf-8', 'replace').decode('ISO-8859-1').encode('utf-8') if isinstance(fileobj, str) else fileobj.file.read()
             open(wanted_path, "wb").write(to_write)
             return ""
         except Exception as e:
-            # web.debug(e)
+            web.debug(e)
             return "An error occurred while writing the file"
 
     def action_create(self, courseid, taskid, path):
