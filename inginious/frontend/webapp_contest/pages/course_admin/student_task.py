@@ -10,7 +10,7 @@ from inginious.frontend.webapp_contest.pages.course_admin.utils import make_csv,
 
 
 class CourseStudentTaskPage(INGIniousAdminPage):
-    """ List information about a task done by a student """
+    """ List information about a problem done by a student """
 
     def GET_AUTH(self, courseid, username, taskid):  # pylint: disable=arguments-differ
         """ GET request """

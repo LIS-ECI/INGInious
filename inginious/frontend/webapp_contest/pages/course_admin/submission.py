@@ -13,7 +13,7 @@ from inginious.frontend.webapp_contest.pages.course_admin.utils import INGInious
 
 
 class CourseStudentTaskSubmission(INGIniousAdminPage):
-    """ List information about a task done by a student """
+    """ List information about a problem done by a student """
 
     def GET_AUTH(self, courseid, username, taskid, submissionid):  # pylint: disable=arguments-differ
         """ GET request """

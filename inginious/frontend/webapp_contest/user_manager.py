@@ -204,27 +204,28 @@ class UserManager(AbstractUserManager):
         for method in self._auth_methods:
             if method.should_cache() is False:
                 infos = method.get_users_info(remaining_users)
-                # web.debug("infos",infos)
+                web.debug("infos",infos)
                 if infos is not None:
-                    # web.debug("Entró")
+                    web.debug("Entró")
                     for user, val in infos.items():
                         if retval[user]==None:
                             retval[user] = val
 
         remaining_users = [username for username, val in retval.items() if val is None]
-        # web.debug("remaining_users", remaining_users)
+        web.debug("remaining_users", remaining_users)
+        web.debug(retval)
         if len(remaining_users) == 0:
             return retval
 
         # If this is not the case, look in the cache
         infos = self._database.user_info_cache.find({"_id": {"$in": remaining_users}})
         for info in infos:
-            retval[info["_id"]] = (info["realname"], info["email"])
-        # web.debug(retval)
+            retval[info["_id"]] = (info["realname"], info["email"], info["flag"])
+        web.debug(retval)
         remaining_users = [username for username, val in retval.items() if val is None]
         if len(remaining_users) == 0:
             return retval
-        # web.debug(retval)
+        web.debug(retval)
         # If it's still not the case, ask the other auth methods
         for method in self._auth_methods:
             if method.should_cache() is True:
@@ -253,6 +254,16 @@ class UserManager(AbstractUserManager):
         info = self.get_user_info(username)
         if info is not None:
             return info[0]
+        return None
+
+    def get_user_flag(self, username):
+        """
+        :param username:
+        :return: the real name of the user if it can be found, None else
+        """
+        info = self.get_user_info(username)
+        if info is not None:
+            return info[2]
         return None
 
     def get_user_email(self, username):
@@ -518,7 +529,7 @@ class UserManager(AbstractUserManager):
         if username is None:
             username = self.session_username()
 
-        realname, email = self.get_user_info(username)
+        realname, email, flag = self.get_user_info(username)
 
         if not force:
             if not course.is_registration_possible(username, realname, email):

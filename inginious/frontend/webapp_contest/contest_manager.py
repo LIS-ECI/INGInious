@@ -76,7 +76,7 @@ class ContestManager():
 
         task_status = {taskid: {"status": "NA", "tries": 0} for taskid in tasks}
         results = {
-        username: {"realname": self.user_manager.get_user_realname(username), "name": username, "tasks": copy.deepcopy(task_status)} for
+        username: {"flag": self.user_manager.get_user_flag(username), "realname": self.user_manager.get_user_realname(username), "name": username, "tasks": copy.deepcopy(task_status)} for
         username in users}
         activity = []
         contest_name = contest_data["name"]

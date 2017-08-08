@@ -735,3 +735,31 @@ function studio_import_users(){
         url:        "/import"
     });
 }
+
+var countries = {};
+
+function load_countries(){
+    console.log(Object.keys(countries).length);
+    return $.getJSON( "/static/webapp/json/names.json", function( data ) {
+        $.each( data, function( key, val ) {
+            key = String(key);
+            countries[key] = val;
+        });
+    }).then(function(){
+        console.log(countries);
+    });
+
+}
+
+function get_country_name(name, id){
+    if(Object.keys(countries).length==0){
+        load_countries().then(function(){
+            $("#"+id).prop("title",countries[name]);
+        });
+    }else{
+        $("#"+id).prop("title",countries[name]);
+    }
+
+
+
+}

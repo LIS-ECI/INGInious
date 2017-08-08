@@ -11,7 +11,7 @@ import re
 from collections import OrderedDict
 import csv
 import json
-import time
+import urllib.request
 
 import web
 
@@ -70,7 +70,7 @@ class EciDatabaseAuthMethod(AuthMethod):
 
         find_data = False
         for user in data:
-            retval[user["username"]] = (user["realname"], user["email"])
+            retval[user["username"]] = (user["realname"], user["email"], user["flag"])
             find_data = True
         # web.debug(find_data)
         return retval if find_data else None
@@ -235,6 +235,7 @@ class AdminRegisterPage(INGIniousAdminPage):
                         not_imported[row[1]]=msg
                 else:
                     real_data.append(user_data)
+            web.debug(real_data)
         except:
             return json.dumps({"status": "error", "message": json.dumps({"File": "Invalid file!"})})
         for user_data in real_data:
@@ -250,7 +251,9 @@ class AdminRegisterPage(INGIniousAdminPage):
                 if not user_data.get("existing",False):
                     msg, error = self.register_user(user_data, True, send_email)
                     if error:
-                        message+="\nUser "+user_data["username"]+": Mail not sent."
+                        message[user_data["username"]] = "Mail not sent."
+                elif send_email:
+                    message[user_data["username"]] = "Mail not sent (reason: user already exists)"
                 course = self.course_factory.get_course(courseid)
                 reg = self.user_manager.course_register_user(course, user_data["username"].strip(), '', True)
                 if not reg:
@@ -291,11 +294,24 @@ class AdminRegisterPage(INGIniousAdminPage):
                 msg = "existing_user"
             else:
                 if register:
+                    flags = []
+                    with urllib.request.urlopen(
+                                    web.ctx.homedomain + '/static/webapp/json/countries.json') as url:
+                        flags_data = json.loads(url.read().decode())
+                        for d in flags_data:
+                            flags.append(d["Code"])
+                    flag = random.choice(flags)
+                    existing_flag = self.database.users.find_one({"flag": flag})
+                    while existing_flag is not None:
+                        flag = random.choice(flags)
+                        existing_flag = self.database.users.find_one({"flag": flag})
+
                     passwd_hash = hashlib.sha512(data["passwd"].encode("utf-8")).hexdigest()
                     self.database.users.insert({"username": data["username"],
                                                 "realname": data["realname"],
                                                 "email": data["email"],
-                                                "password": passwd_hash})
+                                                "password": passwd_hash,
+                                                "flag": flag})
                     if send_email:
                         web.sendmail(web.config.smtp_sendername, data["email"], "Welcome on INGInious",
                                  """Welcome on INGInious !

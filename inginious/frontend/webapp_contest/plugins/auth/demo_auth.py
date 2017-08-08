@@ -48,7 +48,7 @@ class DemoAuthMethod(AuthMethod):
         for username in retval:
             if username in self._users:
                 find_data = True
-                retval[username] = (username, "{}@inginious.org".format(username))
+                retval[username] = (username, "{}@inginious.org".format(username), 'CO')
         return retval if find_data else None
 
 
