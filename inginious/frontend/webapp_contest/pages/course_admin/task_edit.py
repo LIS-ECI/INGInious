@@ -191,7 +191,7 @@ class CourseEditTask(INGIniousAdminPage):
 
         task_dir_path = self.task_factory.get_directory_path(courseid, taskid)
         # verify that the dir exists
-        if not os.path.exists(task_dir_path):
+        if new_path == False and not os.path.exists(task_dir_path):
             return None
         wanted_path = os.path.normpath(os.path.join(task_dir_path, path))
         rel_wanted_path = os.path.relpath(wanted_path, task_dir_path)  # normalized
@@ -215,6 +215,8 @@ class CourseEditTask(INGIniousAdminPage):
         if wanted_path is None:
             return "Invalid new path"
         curpath = self.task_factory.get_directory_path(courseid, taskid)
+        if not os.path.exists(curpath):
+            os.mkdir(curpath)
         rel_path = os.path.relpath(wanted_path, curpath)
 
         for i in rel_path.split(os.path.sep)[:-1]:
@@ -260,124 +262,120 @@ class CourseEditTask(INGIniousAdminPage):
 
         # Else, parse content
         try:
+            task_zip = data.get("task_file").file
+        except:
+            task_zip = None
+        del data["task_file"]
+
+        try:
+            problem_file = data.get('problem_file')
+        except Exception as e:
+            problem_file = None
+        del data["problem_file"]
+
+        problems = self.dict_from_prefix("problem", data)
+        limits = self.dict_from_prefix("limits", data)
+
+        data = {key: val for key, val in data.items() if not key.startswith("problem") and not key.startswith("limits")}
+        del data["@action"]
+
+        if data["@filetype"] not in self.task_factory.get_available_task_file_extensions():
+            return json.dumps({"status": "error", "message": "Invalid file type: {}".format(str(data["@filetype"]))})
+        file_ext = data["@filetype"]
+        del data["@filetype"]
+        if problems is None:
+            problems = {'1': {"type": "code-file", "header": "", "allowed_exts": ".py"}}
+            #return json.dumps({"status": "error", "message": "You cannot create a task without subproblems"})
+
+        # Order the problems (this line also deletes @order from the result)
+        data["problems"] = OrderedDict([(key, self.parse_problem(val)) for key, val in problems.items()])
+        data["limits"] = limits
+        data["limits"]["time"]=30
+        if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
+            del data["limits"]["hard_time"]
+
+
+
+        if problem_file is not None:
+            self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf",
+                              problem_file.file if not isinstance(problem_file, str) else problem_file)
+
+        # web.debug(self.run_file)
+        if self.run_file is not None:
+            with open(self.run_file) as f:
+                # web.debug("F",f)
+                self.upload_pfile(courseid, taskid, "run", f)
+            wanted_path = self.verify_path(courseid, taskid, "run", True)
+            os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
+
+        #Difficulty
+        try:
+            data["difficulty"] = int(data["difficulty"])
+            if not (data["difficulty"]>0 and data["difficulty"]<=10):
+                return json.dumps({"status": "error", "message": "Difficulty level must be between 1 and 10"})
+        except:
+            return json.dumps({"status": "error", "message": "Difficulty level must be an integer number"})
+
+        # Weight
+        try:
+            data["weight"] = 1.0
+        except:
+            return json.dumps({"status": "error", "message": "Grade weight must be a floating-point number"})
+
+        try:
+            data["authenticity_percentage"] = float(data["authenticity_percentage"])
+        except:
+            return json.dumps({"status": "error", "message": "Authenticity percentage must be a floating-point number"})
+
+        # Groups
+        if "groups" in data:
+            data["groups"] = True if data["groups"] == "true" else False
+
+        # Submision storage
+        if "store_all" in data:
             try:
-                task_zip = data.get("task_file").file
+                stored_submissions = data["stored_submissions"]
+                data["stored_submissions"] = 0 if data["store_all"] == "true" else int(stored_submissions)
             except:
-                task_zip = None
-            del data["task_file"]
+                return json.dumps(
+                    {"status": "error", "message": "The number of stored submission must be positive!"})
 
-            try:
-                problem_file = data.get('problem_file')
-            except Exception as e:
-                problem_file = None
-            del data["problem_file"]
+            if data["store_all"] == "false" and data["stored_submissions"] <= 0:
+                return json.dumps({"status": "error", "message": "The number of stored submission must be positive!"})
+            del data['store_all']
 
-            problems = self.dict_from_prefix("problem", data)
-            limits = self.dict_from_prefix("limits", data)
-
-            data = {key: val for key, val in data.items() if not key.startswith("problem") and not key.startswith("limits")}
-            del data["@action"]
-
-            if data["@filetype"] not in self.task_factory.get_available_task_file_extensions():
-                return json.dumps({"status": "error", "message": "Invalid file type: {}".format(str(data["@filetype"]))})
-            file_ext = data["@filetype"]
-            del data["@filetype"]
-            if problems is None:
-                problems = {'1': {"type": "code-file", "header": "", "allowed_exts": ".py"}}
-                #return json.dumps({"status": "error", "message": "You cannot create a task without subproblems"})
-
-            # Order the problems (this line also deletes @order from the result)
-            data["problems"] = OrderedDict([(key, self.parse_problem(val)) for key, val in problems.items()])
-            data["limits"] = limits
-            data["limits"]["time"]=30
-            if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
-                del data["limits"]["hard_time"]
-
-
-
-            if problem_file is not None:
-                self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf",
-                                  problem_file.file if not isinstance(problem_file, str) else problem_file)
-
-            # web.debug(self.run_file)
-            if self.run_file is not None:
-                with open(self.run_file) as f:
-                    # web.debug("F",f)
-                    self.upload_pfile(courseid, taskid, "run", f)
-                wanted_path = self.verify_path(courseid, taskid, "run", True)
-                os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
-
-            #Difficulty
-            try:
-                data["difficulty"] = int(data["difficulty"])
-                if not (data["difficulty"]>0 and data["difficulty"]<=10):
-                    return json.dumps({"status": "error", "message": "Difficulty level must be between 1 and 10"})
-            except:
-                return json.dumps({"status": "error", "message": "Difficulty level must be an integer number"})
-
-            # Weight
-            try:
-                data["weight"] = 1.0
-            except:
-                return json.dumps({"status": "error", "message": "Grade weight must be a floating-point number"})
-
-            try:
-                data["authenticity_percentage"] = float(data["authenticity_percentage"])
-            except:
-                return json.dumps({"status": "error", "message": "Authenticity percentage must be a floating-point number"})
-
-            # Groups
-            if "groups" in data:
-                data["groups"] = True if data["groups"] == "true" else False
-
-            # Submision storage
-            if "store_all" in data:
+        # Submission limits
+        if "submission_limit" in data:
+            if data["submission_limit"] == "none":
+                result = {"amount": -1, "period": -1}
+            elif data["submission_limit"] == "hard":
                 try:
-                    stored_submissions = data["stored_submissions"]
-                    data["stored_submissions"] = 0 if data["store_all"] == "true" else int(stored_submissions)
+                    result = {"amount": int(data["submission_limit_hard"]), "period": -1}
                 except:
-                    return json.dumps(
-                        {"status": "error", "message": "The number of stored submission must be positive!"})
+                    return json.dumps({"status": "error", "message": "Invalid submission limit!"})
 
-                if data["store_all"] == "false" and data["stored_submissions"] <= 0:
-                    return json.dumps({"status": "error", "message": "The number of stored submission must be positive!"})
-                del data['store_all']
+            else:
+                try:
+                    result = {"amount": int(data["submission_limit_soft_0"]), "period": int(data["submission_limit_soft_1"])}
+                except:
+                    return json.dumps({"status": "error", "message": "Invalid submission limit!"})
 
-            # Submission limits
-            if "submission_limit" in data:
-                if data["submission_limit"] == "none":
-                    result = {"amount": -1, "period": -1}
-                elif data["submission_limit"] == "hard":
-                    try:
-                        result = {"amount": int(data["submission_limit_hard"]), "period": -1}
-                    except:
-                        return json.dumps({"status": "error", "message": "Invalid submission limit!"})
+            del data["submission_limit_hard"]
+            del data["submission_limit_soft_0"]
+            del data["submission_limit_soft_1"]
+            data["submission_limit"] = result
 
-                else:
-                    try:
-                        result = {"amount": int(data["submission_limit_soft_0"]), "period": int(data["submission_limit_soft_1"])}
-                    except:
-                        return json.dumps({"status": "error", "message": "Invalid submission limit!"})
+        data["accessible"] = True
 
-                del data["submission_limit_hard"]
-                del data["submission_limit_soft_0"]
-                del data["submission_limit_soft_1"]
-                data["submission_limit"] = result
+        # Checkboxes
+        if data.get("responseIsHTML"):
+            data["responseIsHTML"] = True
 
-            data["accessible"] = True
-
-            # Checkboxes
-            if data.get("responseIsHTML"):
-                data["responseIsHTML"] = True
-
-            # Network grading
-            data["network_grading"] = "network_grading" in data
-            data["code_analysis"] = "code_analysis" in data
-            if data["code_analysis"] and self.run_file is not None:
-                os.system("sed -i -e 's/#STATIC//g' " + wanted_path)
-        except Exception as message:
-            return json.dumps({"status": "error", "message": "Your browser returned an invalid form ({})".format(str(message))})
-
+        # Network grading
+        data["network_grading"] = "network_grading" in data
+        data["code_analysis"] = "code_analysis" in data
+        if data["code_analysis"] and self.run_file is not None:
+            os.system("sed -i -e 's/#STATIC//g' " + wanted_path)
         # Get the course
         try:
             course = self.course_factory.get_course(courseid)

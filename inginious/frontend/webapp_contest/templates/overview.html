@@ -94,40 +94,42 @@ $if start <= start.now():
             $ i = i + 1
         });
     </script>
-	<h3>Submit a problem</h3>
-    <div id="task_alert"></div>
-    <div class="well">
-        <div class="row">
-            <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
-                <input type="hidden" name="@action" value="submit"/>
-                <div class="col-sm-4">
-                    <input id="1" name="1" data-allowed-exts='[".py"]' type="file" class="filestyle" data-buttonName="btn-primary"/>
-                </div>
-                <div class="col-sm-2">
-                    <select class="form-control" id="problem_id" placeholder="Select a problem...">
-                            $for taskid in tasks:
-                                <option value="$taskid">$taskid</option>
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <select class="form-control" id="language" placeholder="Language">
-                            <option value="py3">Python 3</option>
-                    </select>
-                </div>
-                <div class="col-sm-2">
-                    <button type="submit" class="btn btn-success btn-block" onclick="" name="submit" id="submit">
-                        Submit
-                    </button>
-                </div>
-                <div class="col-sm-2">
-                    <button type="reset" class="btn btn-warning btn-block" name="reset" id="reset">
-                        Reset
-                    </button>
-                </div>
-            </form>
+    $if end > end.now():
+        <h3>Submit a problem</h3>
+        <div id="task_alert"></div>
+        <div class="well">
+            <div class="row">
+                <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
+                    <input type="hidden" name="@action" value="submit"/>
+                    <div class="col-sm-4">
+                        <input id="1" name="1" data-allowed-exts='[".py"]' type="file" class="filestyle" data-buttonName="btn-primary"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="problem_id" placeholder="Select a problem...">
+                                $for taskid in tasks:
+                                    <option value="$taskid">$taskid</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <select class="form-control" id="language" placeholder="Language">
+                                <option value="py3">Python 3</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="submit" class="btn btn-success btn-block" onclick="" name="submit" id="submit">
+                            Submit
+                        </button>
+                    </div>
+                    <div class="col-sm-2">
+                        <button type="reset" class="btn btn-warning btn-block" name="reset" id="reset">
+                            Reset
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
-
+    $else:
+        <div></div>
 
 	<h3>Activity</h3>
 	<table class="table table-centered table-condensed table-bordered">
