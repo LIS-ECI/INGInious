@@ -28,6 +28,7 @@ urls = (
     r'/index', 'inginious.frontend.webapp_contest.pages.index.IndexPage',
     r'/contest/([^/]+)/([^/]+)/overview', 'inginious.frontend.webapp_contest.pages.overview.OverviewPage',
     r'/contest/([^/]+)/([^/]+)/scoreboard', 'inginious.frontend.webapp_contest.pages.scoreboard.ContestScoreboard',
+    r'/contest/([^/]+)/([^/]+)/scoreboard/public', 'inginious.frontend.webapp_contest.pages.scoreboard.PublicContestScoreboard',
     r'/course/([^/]+)', 'inginious.frontend.webapp_contest.pages.course.CoursePage',
     r'/course/([^/]+)/([^/]+)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPage',
     r'/course/([^/]+)/([^/]+)/(.*)', 'inginious.frontend.webapp_contest.pages.tasks.TaskPageStaticDownload',

@@ -1,0 +1,44 @@
+$def with (course, tasks, results)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+    <table class="contest_scoreboard">
+	    <tr>
+	        <th class="contest_rank">Rank</th>
+            <th class="contest_country">Country</th>
+            <th class="contest_contestant">Name</th>
+	        <th colspan="2" class="contest_score_header">Score</th>
+	        $for taskid in tasks:
+	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>
+	    </tr>
+        $ i = -1
+	    $for username, data in results.items():
+            $ i+=1
+	        <tr>
+	            <td class="contest_rank">$data['displayed_rank']</td>
+                <td class="contest_country"><img src="/static/webapp/images/flags/${data['flag'].lower()}.svg" style="width: 40px;" id="img_${i}"></td>
+                <td class="contest_contestant">$data['realname']</td>
+	            <td class="contest_score_task">$data['score'][0]</td>
+	            <td class="contest_score_time">$int(data['score'][1])</td>
+	            $for taskid in tasks:
+	                $if data['tasks'][taskid]['status'] == 'ACF':
+	                    <td class="contest_task contest_ac_first">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
+	                $elif data['tasks'][taskid]['status'] == 'AC':
+	                    <td class="contest_task contest_ac">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
+	                $elif data['tasks'][taskid]['status'] != 'NA':
+	                    <td class="contest_task contest_wa_tle">$data['tasks'][taskid]['tries']</td>
+	                $else:
+	                    <td class="contest_task contest_na">0</td>
+	        </tr>
+	</table>
+    <script>
+        load_countries().then(function(){
+            $ i = 0
+            $for username, data in results.items():
+                get_country_name('${data['flag']}', 'img_${i}');
+                $ i = i + 1
+        });
+    </script>

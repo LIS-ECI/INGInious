@@ -65,7 +65,7 @@ class ContestManager():
             "courseid": courseid,
             "submitted_on": {"$gte": start, "$lt": blackout},
             "status": "error",
-            "result": "timeout"},
+            "result": {'$in': ["timeout", "overflow"]}},
             {
             "username": {"$in": users},
             "courseid": courseid,
@@ -80,7 +80,7 @@ class ContestManager():
         username in users}
         activity = []
         contest_name = contest_data["name"]
-        conversor = {'AC': 'Accepted', 'ACF': 'Accepted', 'WA': 'Wrong Answer', 'TLE': 'Time Limit Exceed', 'RE': 'Runtime Error'};
+        conversor = {'AC': 'Accepted', 'ACF': 'Accepted', 'WA': 'Wrong Answer', 'TLE': 'Time Limit Exceed', 'RE': 'Runtime Error', 'OL': 'Output Limit'};
 
         # Compute stats for each submission
         task_succeeded = {taskid: False for taskid in tasks}
@@ -113,6 +113,9 @@ class ContestManager():
                         status["tries"] += 1
                     elif submission['result'] == "timeout":
                         status["status"] = "TLE"
+                        status["tries"] += 1
+                    elif submission['result'] == "overflow":
+                        status["status"] = "OL"
                         status["tries"] += 1
                     else:  # other internal error
                         continue

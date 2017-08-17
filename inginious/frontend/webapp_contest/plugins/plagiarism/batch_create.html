@@ -1,0 +1,65 @@
+$def with (course, container_name, container_title, container_description, container_args, problems, errors)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $:course.get_name() - Start a new plagiarism check
+
+$var Column: $:template_helper.call('course_admin_menu',course=course,current='plagiarism')
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name()</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" title="Administration" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-user-secret"></i></a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()/plagiarism" title="plagiarism operations" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-rocket"></i></a></li>
+        <li class="active"><a href="#">$container_title <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+<h2>Start a new plagiarism check</h2>
+
+$if errors is not None:
+    $for e in errors:
+        <div class="alert alert-danger" role="alert">$e</div>
+
+<form method="post" enctype="multipart/form-data">
+    <table class="table table-bordered">
+        $for key, val in container_args.items():
+            <tr>
+                $if val.get("description") is not None:
+                    <th rowspan="2"><label for="args-$key">$val.get("name",key)</label></th>
+                $else:
+                    <th><label for="args-$key">$val.get("name",key)</label></th>
+                <td>
+                    $if val["type"] == "text":
+                        $if val["name"]=="Problem to check":
+                            <select class="form-control" id="args-$key" name="$key" placeholder="Select a problem...">
+                                $for problem in problems:
+                                    <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
+                            </select>
+                        $else:
+                            <input class="form-control" type="text" id="args-$key" name="$key"/>
+                    $else:
+                        <input class="form-control" type="file" id="args-$key" name="$key"/>
+                </td>
+            </tr>
+            $if val.get("description") is not None:
+                <tr>
+                    <td>$:val["description"]</td>
+                </tr>
+        <tr>
+            <td colspan="2">
+                <button type="submit" class="btn btn-primary btn-block"><i class="fa fa-rocket"></i> Launch!</button>
+            </td>
+        </tr>
+    </table>
+</form>
+
+<!-- Init the javascript for the problem select option -->
+<script type="text/javascript">
+    $$('#args-task').selectize();
+</script>

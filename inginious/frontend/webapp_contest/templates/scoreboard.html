@@ -1,4 +1,4 @@
-$def with (course, start, end, blackout, tasks, results, activity, cid, cname)
+$def with (course, start, end, blackout, tasks, results, activity, cid, cname, is_public)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -8,99 +8,64 @@ $#
 $var title: $cname - Scoreboard
 
 $def NavbarF():
-    <ol class="nav navbar-nav nav-breadcrumb">
-        <li><a href="$get_homepath()/contest/$course.get_id()/$cid/overview">$cname</a></li>
-        <li class="active"><a href="#"><i class="fa fa-trophy"></i> Scoreboard <span class="sr-only">(current)</span></a></li>
-    </ol>
+    $if is_public == False:
+        <ol class="nav navbar-nav nav-breadcrumb">
+            <li><a href="$get_homepath()/contest/$course.get_id()/$cid/overview">$cname</a></li>
+            <li class="active"><a href="#"><i class="fa fa-trophy"></i> Scoreboard <span class="sr-only">(current)</span></a></li>
+        </ol>
 $var Navbar: $:NavbarF()
 
 
 $# Left column content
 $def ColumnF():
-    <h3>Contest options</h3>
+    $if is_public == False:
+        <h3>Contest options</h3>
 
-    <div class="list-group">
-
-    <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item active">
-        <i class="fa fa-list-alt fa-fw"></i>&nbsp; Scoreboard</a>
-    <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item">
-        <i class="fa fa-cog fa-fw"></i>&nbsp; Overview</a>
-    </div>
-
-    $if user_manager.has_staff_rights_on_course(course):
-		<h3>Contest management</h3>
         <div class="list-group">
-            <a class="list-group-item list-group-item-info" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
-                <i class="fa fa-user-secret fa-fw"></i>&nbsp; Edit contest
-            </a>
+
+        <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item active">
+            <i class="fa fa-list-alt fa-fw"></i>&nbsp; Scoreboard</a>
+        <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item">
+            <i class="fa fa-cog fa-fw"></i>&nbsp; Overview</a>
         </div>
 
-    $:template_helper.call('main_menu', template_helper=template_helper)
+        $if user_manager.has_staff_rights_on_course(course):
+            <h3>Contest management</h3>
+            <div class="list-group">
+                <a class="list-group-item list-group-item-info" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
+                    <i class="fa fa-user-secret fa-fw"></i>&nbsp; Edit contest
+                </a>
+            </div>
+
+        $:template_helper.call('main_menu', template_helper=template_helper)
 $var Column: $:ColumnF()
 
 $if end > end.now():
     <meta http-equiv="refresh" content="30" />
 
 <h2>$cname - Scoreboard</h2>
-<div class="well">
-    <div class="row">
-        <div class="col-md-4" style="margin-top:2px;">
-            Contest starts: $start.strftime('%d/%m/%Y %H:%M:%S')<br/>
-            Contest ends: $end.strftime('%d/%m/%Y %H:%M:%S')<br/>
-        </div>
-        <div class="col-md-4" style="margin-top:2px;">
-            $if start > start.now():
-                <span class="contest_starting_time" starts-at="$start.strftime('%Y-%m-%d %H:%M:%S')"></span>
-            $else:
-                <span class="contest_remaining_time" ends-at="$end.strftime('%Y-%m-%d %H:%M:%S')"></span>
-                $if blackout != end:
-                    <br/><span class="contest_blackout_time" blackout-at="$blackout.strftime('%Y-%m-%d %H:%M:%S')"></span>
-        </div>
-        <div class="col-md-4" style="margin-top:2px;">
-            $if end > end.now():
-                The scoreboard will refresh every 30 seconds.
+$if is_public == False:
+    <div class="well">
+        <div class="row">
+            <div class="col-md-4" style="margin-top:2px;">
+                Contest starts: $start.strftime('%d/%m/%Y %H:%M:%S')<br/>
+                Contest ends: $end.strftime('%d/%m/%Y %H:%M:%S')<br/>
+            </div>
+            <div class="col-md-4" style="margin-top:2px;">
+                $if start > start.now():
+                    <span class="contest_starting_time" starts-at="$start.strftime('%Y-%m-%d %H:%M:%S')"></span>
+                $else:
+                    <span class="contest_remaining_time" ends-at="$end.strftime('%Y-%m-%d %H:%M:%S')"></span>
+                    $if blackout != end:
+                        <br/><span class="contest_blackout_time" blackout-at="$blackout.strftime('%Y-%m-%d %H:%M:%S')"></span>
+            </div>
+            <div class="col-md-4" style="margin-top:2px;">
+                $if end > end.now():
+                    The scoreboard will refresh every 30 seconds.
+            </div>
         </div>
     </div>
-</div>
 $if start <= start.now():
-	<table class="contest_scoreboard">
-	    <tr>
-	        <th class="contest_rank">Rank</th>
-            <th class="contest_country">Country</th>
-	        <th class="contest_identifier">Identifier</th>
-            <th class="contest_contestant">Name</th>
-	        <th colspan="2" class="contest_score_header">Score</th>
-	        $for taskid in tasks:
-	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>
-	    </tr>
-        $ i = -1
-	    $for username, data in results.items():
-            $ i+=1
-	        <tr>
-	            <td class="contest_rank">$data['displayed_rank']</td>
-                <td class="contest_country"><img src="/static/webapp/images/flags/${data['flag'].lower()}.svg" style="width: 40px;" id="img_${i}"></td>
-	            <td class="contest_identifier">$data['name']</td>
-                <td class="contest_contestant">$data['realname']</td>
-	            <td class="contest_score_task">$data['score'][0]</td>
-	            <td class="contest_score_time">$int(data['score'][1])</td>
-	            $for taskid in tasks:
-	                $if data['tasks'][taskid]['status'] == 'ACF':
-	                    <td class="contest_task contest_ac_first">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
-	                $elif data['tasks'][taskid]['status'] == 'AC':
-	                    <td class="contest_task contest_ac">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
-	                $elif data['tasks'][taskid]['status'] != 'NA':
-	                    <td class="contest_task contest_wa_tle">$data['tasks'][taskid]['tries']</td>
-	                $else:
-	                    <td class="contest_task contest_na">0</td>
-	        </tr>
-	</table>
-    <script>
-        load_countries().then(function(){
-        $ i = 0
-        $for username, data in results.items():
-            get_country_name('${data['flag']}', 'img_${i}');
-            $ i = i + 1
-        });
-    </script>
+	$:include.score(course, tasks, results)
 $else:
     <div class="alert alert-warning">Contest has not started yet.</div>

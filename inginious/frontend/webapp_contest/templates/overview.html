@@ -55,81 +55,41 @@ $var Column: $:ColumnF()
     </div>
 </div>
 $if start <= start.now():
-	<table class="contest_scoreboard">
-	    <tr>
-	        <th class="contest_rank">Rank</th>
-            <th class="contest_country">Country</th>
-	        <th class="contest_identifier">Identifier</th>
-            <th class="contest_contestant">Name</th>
-	        <th colspan="2" class="contest_score_header">Score</th>
-	        $for taskid in tasks:
-	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>
-	    </tr>
-        $ i = -1
-	    $for username, data in results.items():
-            $ i+=1
-	        <tr>
-	            <td class="contest_rank">$data['displayed_rank']</td>
-                <td class="contest_country"><img src="/static/webapp/images/flags/${data['flag'].lower()}.svg" style="width: 40px;" id="img_${i}"></td>
-	            <td class="contest_identifier">$data['name']</td>
-                <td class="contest_contestant">$data['realname']</td>
-	            <td class="contest_score_task">$data['score'][0]</td>
-	            <td class="contest_score_time">$int(data['score'][1])</td>
-	            $for taskid in tasks:
-	                $if data['tasks'][taskid]['status'] == 'ACF':
-	                    <td class="contest_task contest_ac_first">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
-	                $elif data['tasks'][taskid]['status'] == 'AC':
-	                    <td class="contest_task contest_ac">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
-	                $elif data['tasks'][taskid]['status'] != 'NA':
-	                    <td class="contest_task contest_wa_tle">$data['tasks'][taskid]['tries']</td>
-	                $else:
-	                    <td class="contest_task contest_na">0</td>
-	        </tr>
-	</table>
-    <script>
-        load_countries().then(function(){
-        $ i = 0
-        $for username, data in results.items():
-            get_country_name('${data['flag']}', 'img_${i}');
-            $ i = i + 1
-        });
-    </script>
-    $if end > end.now():
-        <h3>Submit a problem</h3>
-        <div id="task_alert"></div>
-        <div class="well">
-            <div class="row">
-                <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
-                    <input type="hidden" name="@action" value="submit"/>
-                    <div class="col-sm-4">
-                        <input id="1" name="1" data-allowed-exts='[".py"]' type="file" class="filestyle" data-buttonName="btn-primary"/>
-                    </div>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="problem_id" placeholder="Select a problem...">
-                                $for taskid in tasks:
-                                    <option value="$taskid">$taskid</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <select class="form-control" id="language" placeholder="Language">
-                                <option value="py3">Python 3</option>
-                        </select>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-success btn-block" onclick="" name="submit" id="submit">
-                            Submit
-                        </button>
-                    </div>
-                    <div class="col-sm-2">
-                        <button type="reset" class="btn btn-warning btn-block" name="reset" id="reset">
-                            Reset
-                        </button>
-                    </div>
-                </form>
+	$:include.score(course, tasks, results)
+        $if end > end.now():
+            <h3>Submit a problem</h3>
+            <div id="task_alert"></div>
+            <div class="well">
+                <div class="row">
+                    <form id="task" method="post" action="$get_homepath()/course/" enctype="multipart/form-data">
+                        <input type="hidden" name="@action" value="submit"/>
+                        <div class="col-sm-4">
+                            <input id="1" name="1" data-allowed-exts='[".py"]' type="file" class="filestyle" data-buttonName="btn-primary"/>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control" id="problem_id" placeholder="Select a problem...">
+                                    $for taskid in tasks:
+                                        <option value="$taskid">$taskid</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <select class="form-control" id="language" placeholder="Language">
+                                    <option value="py3">Python 3</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="submit" class="btn btn-success btn-block" onclick="" name="submit" id="submit">
+                                Submit
+                            </button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="reset" class="btn btn-warning btn-block" name="reset" id="reset">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-    $else:
-        <div></div>
 
 	<h3>Activity</h3>
 	<table class="table table-centered table-condensed table-bordered">

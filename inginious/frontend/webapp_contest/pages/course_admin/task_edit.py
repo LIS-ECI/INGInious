@@ -245,13 +245,6 @@ class CourseEditTask(INGIniousAdminPage):
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
         data = web.input(problem_file={}, task_file={})
 
-        # Delete task ?
-        if "delete" in data:
-            self.task_factory.delete_task(courseid, taskid)
-            if data.get("wipe", False):
-                self.wipe_task(courseid, taskid)
-            raise web.seeother("/admin/"+courseid+"/tasks")
-
         # Task exists?
         try:
             self.task_factory.get_task(course, taskid)
@@ -259,6 +252,15 @@ class CourseEditTask(INGIniousAdminPage):
             # If doesn't, use bank instead
             courseid = self.bank_name
             course = self.course_factory.get_course(courseid)
+
+        # Delete task ?
+        if "delete" in data:
+            self.task_factory.delete_task(courseid, taskid)
+            if data.get("wipe", False):
+                self.wipe_task(courseid, taskid)
+            raise web.seeother("/admin/"+courseid+"/tasks")
+
+
 
         # Else, parse content
         try:

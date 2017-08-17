@@ -519,3 +519,8 @@ def update_pending_jobs(database):
     database.submissions.update({'status': 'waiting'},
                                 {"$unset": {'jobid': ""},
                                  "$set": {'status': 'error', 'grade': 0.0, 'text': 'Internal error. Server restarted'}}, multi=True)
+
+    database.batch_jobs.update({'result': {'$exists': False}},
+                                                            {
+                                   "$set": {"result": {"retval": -1, "stderr": "Internal error. Server restarted"}}},
+                               multi=True)
