@@ -262,7 +262,7 @@ class CourseEditTask(INGIniousAdminPage):
                 raise web.seeother("/admin/" + previous_courseid + "/tasks")
             if data.get("wipe", False):
                 self.wipe_task(courseid, taskid)
-            raise web.seeother("/admin/"+previous_courseid+"/tasks")
+            raise web.seeother("/admin/" + previous_courseid + "/tasks")
 
         # Else, parse content
         try:
@@ -302,10 +302,10 @@ class CourseEditTask(INGIniousAdminPage):
             self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf",
                               problem_file.file if not isinstance(problem_file, str) else problem_file)
 
-        # web.debug(self.run_file)
-        if self.run_file is not None:
-            with open(self.run_file) as f:
-                # web.debug("F",f)
+        run = os.path.join(self.task_factory._tasks_directory, "run", "run")
+        if os.path.exists(run):
+            with open(run) as f:
+                web.debug("F",f)
                 self.upload_pfile(courseid, taskid, "run", f)
             wanted_path = self.verify_path(courseid, taskid, "run", True)
             os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
