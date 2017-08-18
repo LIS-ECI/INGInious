@@ -25,7 +25,7 @@ class IndexPage(INGIniousAuthPage):
 
     def GET_AUTH(self):  # pylint: disable=arguments-differ
         """ Display main course list page """
-        is_staff = self.is_staff()
+        is_staff = self.user_manager.user_is_superadmin(self.user_manager.session_username()) or self.is_staff()
 
         if not is_staff:
             return self.show_contests(None)
