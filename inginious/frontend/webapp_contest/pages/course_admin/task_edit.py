@@ -244,6 +244,7 @@ class CourseEditTask(INGIniousAdminPage):
 
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
         data = web.input(problem_file={}, task_file={})
+        previous_courseid = courseid
 
         # Task exists?
         try:
@@ -255,12 +256,13 @@ class CourseEditTask(INGIniousAdminPage):
 
         # Delete task ?
         if "delete" in data:
-            self.task_factory.delete_task(courseid, taskid)
+            try:
+                self.task_factory.delete_task(courseid, taskid)
+            except:
+                raise web.seeother("/admin/" + previous_courseid + "/tasks")
             if data.get("wipe", False):
                 self.wipe_task(courseid, taskid)
-            raise web.seeother("/admin/"+courseid+"/tasks")
-
-
+            raise web.seeother("/admin/"+previous_courseid+"/tasks")
 
         # Else, parse content
         try:
@@ -296,8 +298,6 @@ class CourseEditTask(INGIniousAdminPage):
         if "hard_time" in data["limits"] and data["limits"]["hard_time"] == "":
             del data["limits"]["hard_time"]
 
-
-
         if problem_file is not None:
             self.upload_pfile(courseid, taskid, "public/"+taskid+".pdf",
                               problem_file.file if not isinstance(problem_file, str) else problem_file)
@@ -310,13 +310,17 @@ class CourseEditTask(INGIniousAdminPage):
             wanted_path = self.verify_path(courseid, taskid, "run", True)
             os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
 
-        #Difficulty
+        # Difficulty
         try:
             data["difficulty"] = int(data["difficulty"])
-            if not (data["difficulty"]>0 and data["difficulty"]<=10):
+            if not (data["difficulty"] > 0 and data["difficulty"] <= 10):
                 return json.dumps({"status": "error", "message": "Difficulty level must be between 1 and 10"})
         except:
             return json.dumps({"status": "error", "message": "Difficulty level must be an integer number"})
+
+        # Name
+        if len(data["name"])==0:
+            return json.dumps({"status": "error", "message": "Field 'name' must have non-empty."})
 
         # Weight
         try:
@@ -333,7 +337,7 @@ class CourseEditTask(INGIniousAdminPage):
         if "groups" in data:
             data["groups"] = True if data["groups"] == "true" else False
 
-        # Submision storage
+        # Submission storage
         if "store_all" in data:
             try:
                 stored_submissions = data["stored_submissions"]

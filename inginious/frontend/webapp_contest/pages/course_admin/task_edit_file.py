@@ -192,7 +192,7 @@ class CourseTaskFiles(INGIniousAdminPage):
 
         wanted_path = self.verify_path(courseid, taskid, path, True)
         if wanted_path is None:
-            return "Invalid new path"
+            return "Invalid new path. Please click on the 'Save changes' button first and try again."
         curpath = self.task_factory.get_directory_path(courseid, taskid)
         rel_path = os.path.relpath(wanted_path, curpath)
 

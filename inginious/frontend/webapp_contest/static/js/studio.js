@@ -7,7 +7,7 @@
 /**
  * Redirect to the studio to create a new task
  */
-function studio_create_new_task()
+function studio_create_new_task(course)
 {
     var task_id = $('#new_task_id');
     if(!task_id.val().match(/^[a-zA-Z0-9_\-]+$/))
@@ -15,7 +15,8 @@ function studio_create_new_task()
         alert('Task id should only contain alphanumeric characters (in addition to "_" and "-").');
         return;
     }
-    window.location.href = window.location.href + "/../edit/task/" + task_id.val()
+    var url = [location.protocol, '//', location.host].join('');
+    window.location.href = url + "/admin/"+course+"/edit/task/" + task_id.val()
 }
 
 
@@ -704,14 +705,17 @@ function studio_task_file_delete(path)
 
 function studio_import_users(){
     var error = "";
+
     $('#import_form').ajaxSubmit({
         dataType: 'json',
         beforeSend: function()
                     {
+                        $("#import").attr('disabled','disabled');
                         $('#alert_content').text('Loading...');
                         $('#alert_import').css('display','block');
                     },
         success:    function (data) {
+                        $("#import").removeAttr('disabled');
                         if ("status" in data && data["status"] == "ok"){
 
                             var obj = JSON.parse(data["message"]);
