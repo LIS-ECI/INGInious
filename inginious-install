@@ -10,6 +10,7 @@
 import argparse
 import inginious.frontend.lti.installer
 import inginious.frontend.webapp.installer
+import inginious.frontend.webapp_contest.installer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Creates a configuration file for the specified frontend.')
