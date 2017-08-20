@@ -69,6 +69,7 @@ setup(
         'inginious-backend',
         'inginious-lti',
         'inginious-webapp',
+        'inginious-webapp-contest',
         'inginious-install',
         'utils/check_task_description/inginious-check-task',
         'utils/sync/inginious-synchronize',

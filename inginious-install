@@ -21,3 +21,5 @@ if __name__ == "__main__":
         inginious.frontend.lti.installer.Installer(args.file).run()
     elif args.frontend == "webapp":
         inginious.frontend.webapp.installer.Installer(args.file).run()
+    elif args.frontend == "webapp-contest":
+        inginious.frontend.webapp_contest.installer.Installer(args.file).run()

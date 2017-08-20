@@ -10,7 +10,7 @@ import inginious.frontend.common.installer
 
 
 class Installer(inginious.frontend.common.installer.Installer):
-    """ Custom installer for the WebApp frontend """
+    """ Custom installer for the Contest WebApp frontend """
 
     def configure_backup_directory(self):
         """ Configure backup directory """
@@ -25,6 +25,13 @@ class Installer(inginious.frontend.common.installer.Installer):
                     backup_directory = None
 
         return {"backup_directory": backup_directory}
+
+    def configure_bank_name(self):
+        """ Configure bank name """
+        self._display_question("Please choose the name of the course where you will storage the problems (bank of problems). By default, the name is 'bank'")
+        bank_name = self._ask_with_default("Bank name", "bank")
+
+        return {"bank": bank_name}
 
     def ldap_plugin(self):
         """ Configures the LDAP plugin """
@@ -122,6 +129,10 @@ class Installer(inginious.frontend.common.installer.Installer):
         self._display_header("BACKUP DIRECTORY")
         backup_directory_opt = self.configure_backup_directory()
         options.update(backup_directory_opt)
+
+        self._display_header("BANK NAME")
+        bank_name = self.configure_bank_name()
+        options.update(bank_name)
 
         self._display_header("AUTHENTIFICATION")
         auth_opts = self.configure_authentication()

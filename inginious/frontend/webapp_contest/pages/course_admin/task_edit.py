@@ -380,7 +380,7 @@ class CourseEditTask(INGIniousAdminPage):
         # Network grading
         data["network_grading"] = "network_grading" in data
         data["code_analysis"] = "code_analysis" in data
-        if data["code_analysis"] and self.run_file is not None:
+        if data["code_analysis"] and os.path.exists(run):
             os.system("sed -i -e 's/#STATIC//g' " + wanted_path)
         # Get the course
         try:
