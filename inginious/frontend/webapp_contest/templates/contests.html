@@ -7,6 +7,11 @@ $#
 
 $var title: My contests
 
+$# Left column content
+$def ColumnF():
+    $:template_helper.call('main_menu', template_helper=template_helper)
+$var Column: $:ColumnF()
+
 $# Start content
 <h2>My contests</h2>
 <div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">

@@ -30,6 +30,9 @@ class CourseSettings(INGIniousAdminPage):
             if course_content['name'] == "":
                 errors.append('Invalid name')
             course_content['admins'] = list(map(str.strip, data['admins'].split(',')))
+            bank_course = self.course_factory.get_course(self.bank_name)
+            for admin in course_content['admins']:
+                self.user_manager.course_register_user(bank_course, admin, force=True)
             if not self.user_manager.user_is_superadmin() and self.user_manager.session_username() not in course_content['admins']:
                 errors.append('You cannot remove yourself from the administrators of this course')
             course_content['tutors'] = list(map(str.strip, data['tutors'].split(',')))

@@ -15,7 +15,7 @@ $def ColumnF():
 
     $if user_manager.has_staff_rights_on_course(course):
         <div class="list-group">
-            <a class="list-group-item list-group-item-info" href="$get_homepath()/admin/$course.get_id()">
+            <a class="list-group-item" href="$get_homepath()/admin/$course.get_id()">
                 <i class="fa fa-user-secret fa-fw"></i>&nbsp; Course administration
             </a>
         </div>

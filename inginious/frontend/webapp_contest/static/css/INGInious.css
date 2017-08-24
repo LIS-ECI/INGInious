@@ -361,7 +361,7 @@ ul.checked-list-box .state-icon {
 }
 ul.checked-list-box .list-group-item-primary {
   color: #ffffff;
-  background-color: #428bca;
+  background-color: #7b7b7b;
 }
 .dragging {
   cursor: move !important;

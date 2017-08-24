@@ -87,7 +87,7 @@ class Installer(inginious.frontend.common.installer.Installer):
         name = self._ask_with_default("Authentication method name (will be displayed on the login page)", "WebApp")
 
         return {
-            "plugin_module": "inginious.frontend.webapp_contest.plugins.auth.db_auth",
+            "plugin_module": "inginious.frontend.webapp_contest.plugins.auth.eci_auth",
             "name": name
         }
 

@@ -32,7 +32,7 @@ $def ColumnF():
         $if user_manager.has_staff_rights_on_course(course):
             <h3>Contest management</h3>
             <div class="list-group">
-                <a class="list-group-item list-group-item-info" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
+                <a class="list-group-item" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
                     <i class="fa fa-user-secret fa-fw"></i>&nbsp; Edit contest
                 </a>
             </div>

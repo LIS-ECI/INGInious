@@ -1,4 +1,4 @@
-$def with (open_courses,registrable_courses,submissions,success)
+$def with (open_courses,registrable_courses,submissions,bank_name,success)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -18,6 +18,8 @@ $# Start content
 	$if len(open_courses) != 0:
         $ username = user_manager.session_username()
         $for courseid, course in open_courses.items():
+            $if courseid == bank_name and user_manager.user_is_superadmin()==False:
+                pass
             <a href="$get_homepath()/course/$courseid" class="list-group-item row $('list-group-item-warning' if not course.is_open_to_non_staff() else '')">
                 <div class="col-xs-12 col-md-8">
                     $course.get_name()

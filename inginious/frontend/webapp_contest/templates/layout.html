@@ -16,7 +16,7 @@ $#
 <link rel="icon" href="$get_homepath()/static/common/icons/favicon.ico">
 <link rel="mask-icon" href="$get_homepath()/static/common/icons/wb.svg" color="#5E932E">
 
-<title>INGInious - $content.title</title>
+<title>ECINGInious - $content.title</title>
 
 <!-- Bootstrap -->
 <link href="$get_homepath()/static/common/css/bootstrap.min.css" rel="stylesheet">
@@ -91,7 +91,7 @@ $:template_helper.call('header_hook')
                             class="icon-bar"></span> <span class="icon-bar"></span> <span
                             class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="$get_homepath()/index"><img src="$get_homepath()/static/common/images/header.png" alt="logo"/> INGInious</a>
+                    <a class="navbar-brand" href="$get_homepath()/index"><img src="$get_homepath()/static/common/images/header.jpg" class="logo img-responsive" alt="logo"/> ECINGInious</a>
                 </div>
                 <div class="collapse navbar-collapse">
                     $if "Navbar" in content:
@@ -131,16 +131,14 @@ $:template_helper.call('header_hook')
             <div class="container-fluid">
                 <div class="navbar-header" style="width: 100%">
                     <p class="navbar-text">
-                        &copy; 2014-2017 Universit&eacute; catholique de Louvain -
+                        &copy; 2017 Escuela Colombiana de Ingeniería Julio Garavito - ECINGInious
+                    </p>
+                    <p class="navbar-text">
+                        Based on INGInious.
                         <a target="_blank" href="http://www.inginious.org" class="navbar-link">
                             INGInious is distributed under AGPL license
                         </a>
                     </p>
-                    <div class="navbar-right">
-                        <p class="navbar-text">
-                            <a href="$get_homepath()/queue" class="navbar-link">Status</a>
-                        </p>
-                    </div>
                 </div>
             </div>
         </div>

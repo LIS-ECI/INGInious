@@ -113,4 +113,4 @@ class IndexPage(INGIniousAuthPage):
 
         registerable_courses = OrderedDict(sorted(iter(registerable_courses.items()), key=lambda x: x[1].get_name()))
 
-        return self.template_helper.get_renderer().main(open_courses, registerable_courses, except_free_last_submissions, success)
+        return self.template_helper.get_renderer().main(open_courses, registerable_courses, except_free_last_submissions, self.bank_name, success)
