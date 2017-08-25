@@ -6,11 +6,9 @@ from inginious.frontend.webapp_contest.tests.SeleniumTest import SeleniumTest
 
 class TestLogin(SeleniumTest):
     def test_login(self):
-        print("A")
         driver = self.driver
-        print("A")
         driver.get(self.base_url + "/index?logoff")
-        print("A")
+
         self.assertEqual("Hello! Welcome on the INGInious platform.", driver.find_element_by_css_selector("h2").text)
 
         driver.find_element_by_name("login").clear()
