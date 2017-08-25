@@ -110,7 +110,7 @@ class Installer(inginious.frontend.common.installer.Installer):
             elif plugin == '2':
                 already_in = False
                 for p in options["plugins"]:
-                    if p["plugin_module"] == "inginious.frontend.webapp_contest.plugins.auth.db_auth":
+                    if p["plugin_module"] == "inginious.frontend.webapp_contest.plugins.auth.eci_auth":
                         already_in = True
 
                 if not already_in:
