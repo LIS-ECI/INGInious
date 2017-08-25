@@ -102,6 +102,14 @@ class SeleniumTest(unittest.TestCase):
             self.frontend_host = "127.0.0.1"
             self.frontend_port = 8081
             self.frontend_ssh_port = 8082
+        elif TEST_ENV == "circleci":
+            self.display = None
+            self.driver = webdriver.Firefox()
+            self.base_url = CUSTOM_SELENIUM_BASE_URL or "http://localhost:8090"
+            self.frontend_host = "localhost"
+            self.frontend_port = 8090
+            self.frontend_ssh_port = 8082
+            self.frontend_config["backend"] = "local"
         elif False and TEST_ENV == "jenkins":
             self.display = Display(visible=0, size=(1920, 1080))
             self.display.start()

@@ -1,0 +1,341 @@
+1503694143809	geckodriver	INFO	Listening on 127.0.0.1:40577
+1503694144966	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694149538	Marionette	INFO	Enabled via --marionette
+1503694153747	Marionette	INFO	Listening on port 42789
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694153795	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503694153837	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:15338): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503694237629	geckodriver	INFO	Listening on 127.0.0.1:53209
+1503694238756	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694239403	Marionette	INFO	Enabled via --marionette
+1503694241072	Marionette	INFO	Listening on port 44165
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694241174	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503694241211	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:15707): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503694551231	geckodriver	INFO	Listening on 127.0.0.1:58875
+1503694552382	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694553014	Marionette	INFO	Enabled via --marionette
+1503694554631	Marionette	INFO	Listening on port 45177
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694554704	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503694554744	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:16387): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503694761630	geckodriver	INFO	Listening on 127.0.0.1:44335
+1503694762764	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694763438	Marionette	INFO	Enabled via --marionette
+1503694765016	Marionette	INFO	Listening on port 41055
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694765129	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503694765200	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:16891): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503694911404	geckodriver	INFO	Listening on 127.0.0.1:50837
+1503694912530	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694913206	Marionette	INFO	Enabled via --marionette
+1503694914828	Marionette	INFO	Listening on port 45543
+1503694914863	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694914909	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:17495): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503694955192	geckodriver	INFO	Listening on 127.0.0.1:48557
+1503694956329	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503694956951	Marionette	INFO	Enabled via --marionette
+1503694958577	Marionette	INFO	Listening on port 39905
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503694958646	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503694958695	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:17843): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695017949	geckodriver	INFO	Listening on 127.0.0.1:43359
+1503695019072	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695019728	Marionette	INFO	Enabled via --marionette
+
+(/usr/lib/firefox/firefox:18239): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695070363	geckodriver	INFO	Listening on 127.0.0.1:47667
+1503695071553	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695072407	Marionette	INFO	Enabled via --marionette
+1503695074321	Marionette	INFO	Listening on port 44563
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695074390	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503695074442	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:18586): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695087982	geckodriver	INFO	Listening on 127.0.0.1:51057
+1503695089090	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695089698	Marionette	INFO	Enabled via --marionette
+1503695091168	Marionette	INFO	Listening on port 41071
+1503695091279	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695091321	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:18917): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695097731	geckodriver	INFO	Listening on 127.0.0.1:59799
+1503695098847	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695099445	Marionette	INFO	Enabled via --marionette
+1503695101207	Marionette	INFO	Listening on port 36635
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695101347	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503695101384	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:19245): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695365299	geckodriver	INFO	Listening on 127.0.0.1:54009
+1503695366442	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695367219	Marionette	INFO	Enabled via --marionette
+1503695369037	Marionette	INFO	Listening on port 38301
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695369070	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503695369128	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:20872): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1029.
+
+1503695527758	geckodriver	INFO	Listening on 127.0.0.1:60683
+1503695528916	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695537275	geckodriver	INFO	Listening on 127.0.0.1:58265
+1503695538420	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695539151	Marionette	INFO	Enabled via --marionette
+1503695541026	Marionette	INFO	Listening on port 46467
+1503695541041	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695541096	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:22204): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1057.
+
+1503695566787	geckodriver	INFO	Listening on 127.0.0.1:47393
+1503695567934	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695568728	Marionette	INFO	Enabled via --marionette
+1503695570967	Marionette	INFO	Listening on port 38745
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503695571066	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503695571129	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:22709): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1057.
+
+1503695583794	geckodriver	INFO	Listening on 127.0.0.1:49215
+1503695584985	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503695585777	Marionette	INFO	Enabled via --marionette
+
+(/usr/lib/firefox/firefox:23218): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1057.
+
+1503696023447	geckodriver	INFO	Listening on 127.0.0.1:34755
+1503696024630	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503696025565	Marionette	INFO	Enabled via --marionette
+1503696042086	geckodriver	INFO	Listening on 127.0.0.1:58293
+1503696043280	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503696044211	Marionette	INFO	Enabled via --marionette
+1503696046619	Marionette	INFO	Listening on port 34177
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503696046721	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503696046810	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:25152): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1057.
+
+1503696120618	geckodriver	INFO	Listening on 127.0.0.1:54705
+1503696121818	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503696123524	Marionette	INFO	Enabled via --marionette
+1503696129954	geckodriver	INFO	Listening on 127.0.0.1:41927
+1503696131137	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503696132144	Marionette	INFO	Enabled via --marionette
+1503696132978	Marionette	INFO	Listening on port 45941
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503696133096	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503696133166	Marionette	DEBUG	loaded listener.js
+1503696134166	Marionette	INFO	Listening on port 38157
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503696134337	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503696134401	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:25749): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1057.
+
+1503696194138	geckodriver	INFO	Listening on 127.0.0.1:34731
+1503696195300	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503696196089	Marionette	INFO	Enabled via --marionette
+1503696197856	Marionette	INFO	Listening on port 38561
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503696198025	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503696198078	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:26786): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1093.
+
+
+(/usr/lib/firefox/firefox:25956): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1061.
+
+1503697320402	geckodriver	INFO	Listening on 127.0.0.1:60273
+1503697321555	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697322261	Marionette	INFO	Enabled via --marionette
+1503697323881	Marionette	INFO	Listening on port 33891
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697324006	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697324057	Marionette	DEBUG	loaded listener.js
+
+(/usr/lib/firefox/firefox:28131): Gdk-WARNING **: /usr/lib/firefox/firefox: Fatal IO error 11 (Resource temporarily unavailable) on X server :1093.
+
+1503697348190	geckodriver	INFO	Listening on 127.0.0.1:49961
+1503697349340	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697350093	Marionette	INFO	Enabled via --marionette
+1503697351816	Marionette	INFO	Listening on port 34667
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697351951	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697352013	Marionette	DEBUG	loaded listener.js
+1503697375817	Marionette	DEBUG	Received DOM event "beforeunload" for "about:blank"
+1503697381591	Marionette	DEBUG	Received DOM event "pagehide" for "about:blank"
+1503697381591	Marionette	DEBUG	Received DOM event "unload" for "about:blank"
+1503697381772	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.google.com.co/?gfe_rd=cr&ei=4ZmgWa6eIvLP8Aegz5G4BQ&gws_rd=ssl"
+1503697382435	Marionette	DEBUG	Received observer notification "outer-window-destroyed" for "2147483653"
+1503697382437	Marionette	DEBUG	Received DOM event "DOMContentLoaded" for "https://www.google.com.co/?gfe_rd=cr&ei=4ZmgWa6eIvLP8Aegz5G4BQ&gws_rd=ssl"
+1503697382440	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.google.com.co/?gfe_rd=cr&ei=4ZmgWa6eIvLP8Aegz5G4BQ&gws_rd=ssl"
+1503697384805	Marionette	DEBUG	Received DOM event "pageshow" for "https://www.google.com.co/?gfe_rd=cr&ei=4ZmgWa6eIvLP8Aegz5G4BQ&gws_rd=ssl"
+1503697407868	geckodriver	INFO	Listening on 127.0.0.1:53461
+1503697409100	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697409840	Marionette	INFO	Enabled via --marionette
+1503697411577	Marionette	INFO	Listening on port 46775
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697411717	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697411772	Marionette	DEBUG	loaded listener.js
+1503697416920	addons.productaddons	WARN	Failed downloading via XHR, status: 0, reason: error
+JavaScript error: resource://shield-recipe-client/lib/RecipeRunner.jsm, line 219: TypeError: log is undefined
+1503697498946	geckodriver	INFO	Listening on 127.0.0.1:53843
+1503697500097	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697500793	Marionette	INFO	Enabled via --marionette
+1503697502496	Marionette	INFO	Listening on port 39529
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697502517	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697502569	Marionette	DEBUG	loaded listener.js
+1503697649034	geckodriver	INFO	Listening on 127.0.0.1:50569
+1503697650194	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697650913	Marionette	INFO	Enabled via --marionette
+1503697652613	Marionette	INFO	Listening on port 44797
+1503697652744	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697652797	Marionette	DEBUG	loaded listener.js
+1503697741956	geckodriver	INFO	Listening on 127.0.0.1:37215
+1503697743101	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697743824	Marionette	INFO	Enabled via --marionette
+1503697745566	Marionette	INFO	Listening on port 36923
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697745621	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697745665	Marionette	DEBUG	loaded listener.js
+1503697819739	geckodriver	INFO	Listening on 127.0.0.1:46667
+1503697820873	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697821563	Marionette	INFO	Enabled via --marionette
+1503697823247	Marionette	INFO	Listening on port 35659
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697823380	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697823438	Marionette	DEBUG	loaded listener.js
+[Parent 30061] WARNING: pipe error (67): Connection reset by peer: file /build/firefox-S0wyi8/firefox-55.0.2+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1503697954480	geckodriver	INFO	Listening on 127.0.0.1:53743
+1503697955637	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503697956338	Marionette	INFO	Enabled via --marionette
+1503697958127	Marionette	INFO	Listening on port 36767
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503697958160	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503697958216	Marionette	DEBUG	loaded listener.js
+1503698058063	geckodriver	INFO	Listening on 127.0.0.1:56675
+1503698059203	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698059962	Marionette	INFO	Enabled via --marionette
+1503698061737	Marionette	INFO	Listening on port 39015
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698061871	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698061938	Marionette	DEBUG	loaded listener.js
+1503698115096	geckodriver	INFO	Listening on 127.0.0.1:52153
+1503698116228	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698116911	Marionette	INFO	Enabled via --marionette
+1503698118606	Marionette	INFO	Listening on port 34845
+1503698118744	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698118807	Marionette	DEBUG	loaded listener.js
+[GFX1-]: Receive IPC close with reason=AbnormalShutdown
+[Child 31372] WARNING: pipe error (3): Connection reset by peer: file /build/firefox-S0wyi8/firefox-55.0.2+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 353
+1503698321333	geckodriver	INFO	Listening on 127.0.0.1:40985
+1503698322469	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698323207	Marionette	INFO	Enabled via --marionette
+1503698324917	Marionette	INFO	Listening on port 40571
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698325058	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698325122	Marionette	DEBUG	loaded listener.js
+1503698347122	geckodriver	INFO	Listening on 127.0.0.1:34233
+1503698348283	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698349029	Marionette	INFO	Enabled via --marionette
+1503698350790	Marionette	INFO	Listening on port 43965
+1503698350802	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698350860	Marionette	DEBUG	loaded listener.js
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698423027	geckodriver	INFO	Listening on 127.0.0.1:59505
+1503698424178	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698424928	Marionette	INFO	Enabled via --marionette
+1503698426838	Marionette	INFO	Listening on port 34043
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698426899	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698426951	Marionette	DEBUG	loaded listener.js
+1503698494095	geckodriver	INFO	Listening on 127.0.0.1:42665
+1503698495241	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698496051	Marionette	INFO	Enabled via --marionette
+1503698497977	Marionette	INFO	Listening on port 38761
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698498065	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698498110	Marionette	DEBUG	loaded listener.js
+1503698498619	geckodriver	INFO	Listening on 127.0.0.1:42675
+1503698499846	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698500673	Marionette	INFO	Enabled via --marionette
+1503698502507	Marionette	INFO	Listening on port 36855
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698502640	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698502710	Marionette	DEBUG	loaded listener.js
+1503698503242	geckodriver	INFO	Listening on 127.0.0.1:53755
+1503698504415	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698505214	Marionette	INFO	Enabled via --marionette
+1503698507020	Marionette	INFO	Listening on port 45469
+1503698507044	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698507107	Marionette	DEBUG	loaded listener.js
+1503698507758	geckodriver	INFO	Listening on 127.0.0.1:39845
+1503698508929	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698509986	Marionette	INFO	Enabled via --marionette
+1503698512126	Marionette	INFO	Listening on port 41023
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698512147	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698512204	Marionette	DEBUG	loaded listener.js
+1503698512742	geckodriver	INFO	Listening on 127.0.0.1:36205
+1503698514046	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698514894	Marionette	INFO	Enabled via --marionette
+1503698517546	Marionette	INFO	Listening on port 39017
+1503698517572	Marionette	WARN	TLS certificate errors will be ignored for this session
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698517618	Marionette	DEBUG	loaded listener.js
+1503698518177	geckodriver	INFO	Listening on 127.0.0.1:35611
+1503698519393	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698520375	Marionette	INFO	Enabled via --marionette
+1503698522647	Marionette	INFO	Listening on port 41631
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698522822	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698522888	Marionette	DEBUG	loaded listener.js
+1503698523461	geckodriver	INFO	Listening on 127.0.0.1:38595
+1503698524643	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698525567	Marionette	INFO	Enabled via --marionette
+1503698527444	Marionette	INFO	Listening on port 36951
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698527501	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698527566	Marionette	DEBUG	loaded listener.js
+[Parent 32663] WARNING: pipe error: Broken pipe: file /build/firefox-S0wyi8/firefox-55.0.2+build1/ipc/chromium/src/chrome/common/ipc_channel_posix.cc, line 709
+1503698708447	geckodriver	INFO	Listening on 127.0.0.1:42411
+1503698709587	geckodriver::marionette	INFO	Starting browser /usr/bin/firefox with args ["-marionette"]
+1503698710282	Marionette	INFO	Enabled via --marionette
+1503698711909	Marionette	INFO	Listening on port 36765
+JavaScript error: chrome://marionette/content/server.js, line 337: NS_ERROR_SOCKET_ADDRESS_IN_USE: Component returned failure code: 0x804b0036 (NS_ERROR_SOCKET_ADDRESS_IN_USE) [nsIServerSocket.initSpecialConnection]
+1503698712036	Marionette	WARN	TLS certificate errors will be ignored for this session
+1503698712090	Marionette	DEBUG	loaded listener.js
