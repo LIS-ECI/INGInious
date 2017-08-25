@@ -1,0 +1,24 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/ECINGInious
+    docker:
+      - image: circleci/python:3.5
+    steps:
+      - checkout
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip3.5 install --upgrade pip
+      - run:
+          command: |
+            . venv/bin/activate
+            pip3.5 install --upgrade --no-cache-dir '.[test]'
+      - run:
+          command: |
+            . venv/bin/activate
+            python inginious/setup.py test
+      - store_artifacts:
+          path: test-reports/
+          destination: tr1
