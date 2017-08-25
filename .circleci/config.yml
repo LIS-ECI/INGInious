@@ -18,7 +18,7 @@ jobs:
       - run:
           command: |
             . venv/bin/activate
-            python inginious/setup.py test
+            python3 setup.py test
       - store_artifacts:
           path: test-reports/
           destination: tr1
