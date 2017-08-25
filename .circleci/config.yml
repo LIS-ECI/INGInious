@@ -16,6 +16,9 @@ jobs:
            PATH=/home/circleci/ECINGInious/venv/bin:/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
       - run:
           command: |
+           sudo apt-get install python-tidylib
+      - run:
+          command: |
             . venv/bin/activate
             pip3.5 install --upgrade --no-cache-dir '.[test]'
       - run:
