@@ -31,4 +31,4 @@ jobs:
           destination: tr1
       - deploy:
           command: |
-            ssh root@190.24.150.99 'sh restartTestEnvironment.sh > /dev/null 2>&1 &'            
+            ssh -o StrictHostKeyChecking=no root@190.24.150.99 'sh restartTestEnvironment.sh > /dev/null 2>&1 &'            
