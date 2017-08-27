@@ -305,7 +305,6 @@ class CourseEditTask(INGIniousAdminPage):
         run = os.path.join(self.task_factory._tasks_directory, "run", "run")
         if os.path.exists(run):
             with open(run) as f:
-                web.debug("F",f)
                 self.upload_pfile(courseid, taskid, "run", f)
             wanted_path = self.verify_path(courseid, taskid, "run", True)
             os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)

@@ -204,16 +204,12 @@ class UserManager(AbstractUserManager):
         for method in self._auth_methods:
             if method.should_cache() is False:
                 infos = method.get_users_info(remaining_users)
-                web.debug("infos",infos)
                 if infos is not None:
-                    web.debug("Entró")
                     for user, val in infos.items():
                         if retval[user]==None:
                             retval[user] = val
 
         remaining_users = [username for username, val in retval.items() if val is None]
-        web.debug("remaining_users", remaining_users)
-        web.debug(retval)
         if len(remaining_users) == 0:
             return retval
 
@@ -221,11 +217,9 @@ class UserManager(AbstractUserManager):
         infos = self._database.user_info_cache.find({"_id": {"$in": remaining_users}})
         for info in infos:
             retval[info["_id"]] = (info["realname"], info["email"], info["flag"])
-        web.debug(retval)
         remaining_users = [username for username, val in retval.items() if val is None]
         if len(remaining_users) == 0:
             return retval
-        web.debug(retval)
         # If it's still not the case, ask the other auth methods
         for method in self._auth_methods:
             if method.should_cache() is True:

@@ -235,7 +235,6 @@ class AdminRegisterPage(INGIniousAdminPage):
                         not_imported[row[1]]=msg
                 else:
                     real_data.append(user_data)
-            web.debug(real_data)
         except:
             return json.dumps({"status": "error", "message": json.dumps({"File": "Invalid file!"})})
         for user_data in real_data:

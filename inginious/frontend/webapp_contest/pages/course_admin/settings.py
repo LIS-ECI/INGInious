@@ -94,4 +94,7 @@ class CourseSettings(INGIniousAdminPage):
 
     def page(self, course, errors=None, saved=False):
         """ Get all data and display the page """
-        return self.template_helper.get_renderer().course_admin.settings(course, errors, saved)
+        if self.user_manager.user_is_superadmin():
+            return self.template_helper.get_renderer().course_admin.settings(course, errors, saved)
+        else:
+            raise web.seeother('/admin/{}/students'.format(course.get_id()))

@@ -78,6 +78,8 @@ class CourseAggregationListPage(INGIniousAdminPage):
 
     def page(self, course, msg="", error=False):
         """ Get all data and display the page """
+        if not self.user_manager.user_is_superadmin():
+            raise web.seeother('/admin/{}/students'.format(course.get_id()))
         aggregations = OrderedDict()
         taskids = list(course.get_tasks().keys())
 
