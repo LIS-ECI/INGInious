@@ -1,11 +1,15 @@
 ### INGInious - IEAPIS fork. Innovación Educativa con Arenas de Programación para Ingeniería de Sistemas
-=========
-![http://jenkins2.info.ucl.ac.be/job/INGInious/](http://jenkins2.info.ucl.ac.be/job/INGInious/badge/icon)
-![https://landscape.io/github/UCL-INGI/INGInious/master](https://landscape.io/github/UCL-INGI/INGInious/master/landscape.svg?style=flat)
-![https://landscape.io/github/UCL-INGI/INGInious/master](https://landscape.io/github/UCL-INGI/INGInious/master/landscape.svg?style=flat)
-![https://gitter.im/UCL-INGI/INGInious?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge](https://badges.gitter.im/Join%20Chat.svg)
-![https://readthedocs.org/projects/inginious/?badge=latest](https://readthedocs.org/projects/inginious/badge/?version=latest)
 
+<!--
+TODO: update badges
+![http://jenkins2.info.ucl.ac.be/job/INGInious/](http://jenkins2.info.ucl.ac.be/job/INGInious/badge/icon)
+//![https://landscape.io/github/UCL-INGI/INGInious/master](https://landscape.io/github/UCL-INGI/INGInious/master/landscape.svg?style=flat)
+#![https://landscape.io/github/UCL-INGI/INGInious/master](https://landscape.io/github/UCL-INGI/INGInious/master/landscape.svg?style=flat)
+#![https://gitter.im/UCL-INGI/INGInious?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge](https://badges.gitter.im/Join%20Chat.svg)
+#![https://readthedocs.org/projects/inginious/?badge=latest](https://readthedocs.org/projects/inginious/badge/?version=latest)
+-->
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7d783c7603454d45b5a9b267591c0a3e)](https://www.codacy.com/app/hcadavid/INGInious?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LIS-ECI/INGInious&amp;utm_campaign=Badge_Grade)
 
 INGInious is an intelligent grader that allows secured and automated testing of code made by students.
 
