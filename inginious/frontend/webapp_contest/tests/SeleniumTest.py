@@ -67,17 +67,8 @@ class SeleniumTest(unittest.TestCase):
     def setUp(self):
         self.frontend_config = {
             "backend": "remote",
-            "docker_daemons": [{
-                "remote_host": "192.168.59.103",
-                "remote_docker_port": 2375,
-                "remote_agent_port": 63456
-            }],
             "mongo_opt": {"host": "localhost", "database": "INGIniousFrontendTest"},
             "tasks_directory": "./inginious/tasks",
-            "containers": {
-                "default": "ingi/inginious-c-default",
-                "sekexe": "ingi/inginious-c-sekexe",
-            },
             "superadmins": ["test"],
             "plugins": [
                 {

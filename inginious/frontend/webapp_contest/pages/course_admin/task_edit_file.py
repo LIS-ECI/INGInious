@@ -12,6 +12,7 @@ import os.path
 import shutil
 import tarfile
 import tempfile
+import copy
 
 import web
 
@@ -208,7 +209,6 @@ class CourseTaskFiles(INGIniousAdminPage):
             open(wanted_path, "wb").write(to_write)
             return ""
         except Exception as e:
-            web.debug(e)
             return "An error occurred while writing the file"
 
     def action_create(self, courseid, taskid, path):
@@ -319,13 +319,39 @@ class CourseTaskFiles(INGIniousAdminPage):
             web.header('Content-Disposition', 'attachment; filename="dir.tgz"', unique=True)
             return tmpfile
 
+    def verify_file(self, fileobj):
+        isValid = True
+        try:
+            if not isinstance(fileobj, str):
+                if isinstance(fileobj.value, bytes):
+                    fileobj.value.decode()
+                else:
+                    fileobj.value
+        except Exception as e:
+            isValid = False
+        return isValid
+
     def action_upload_testcase(self, courseid, taskid, testcase_desc, input, output, feedback):
+
+        in_verify = self.verify_file(input)
+        if not in_verify:
+            return self.show_tab_file(courseid, taskid,
+                                      "Error writing the input file. Are you sure that the input file is encoded with UTF-8?")
+        out_verify = self.verify_file(output)
+        if not out_verify:
+            return self.show_tab_file(courseid, taskid,
+                                      "Error writing the output file. Are you sure that the output file is encoded with UTF-8?")
+        fb_verify = self.verify_file(feedback)
+        if not fb_verify:
+            return self.show_tab_file(courseid, taskid,
+                                      "Error writing the feedback file. Are you sure that the feedback file is encoded with UTF-8?")
 
         filenames = CourseTaskFiles.convert_to_set(CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid))
         maxi = 0
         for file in filenames:
             maxi = max(maxi, int(file.split("_")[1]))
         testcase_name = "testcase_" + str(maxi + 1)
+
         in_upload = self.action_upload(courseid, taskid, testcase_name + ".in", input)
         out_upload = self.action_upload(courseid, taskid, testcase_name + ".out", output)
         fb_upload = self.action_upload(courseid, taskid, testcase_name + ".fb", feedback)
