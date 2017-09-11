@@ -1,4 +1,4 @@
-$def with (course, data, errors, saved, AccessibleTime, problems, problemdump, bank_name)
+$def with (course, data, errors, saved, AccessibleTime, problems, problemdump, bank_name, techniques, structures)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -52,7 +52,7 @@ $elif saved:
             </div>
 
             <div role="tabpanel" class="tab-pane" id="tab_container">
-                $:include.course_admin.contest_tabs.problems(course, data, problems, bank_name)
+                $:include.course_admin.contest_tabs.problems(course, data, problems, bank_name, techniques, structures)
             </div>
 
         </div>
@@ -99,6 +99,59 @@ $elif saved:
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal_file_upload" tabindex="-1" role="dialog" aria-labelledby="modal_file_upload_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal_file_upload_label">Add a new type of problem</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="action" value="upload"/>
+                    <div class="form-group">
+                        <label for="add-quantity" class="control-label"># of problems to be added:</label>
+                        <input type="number" class="form-control" id="add-quantity" name="add-quantity" min="1" placeholder="1"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-technique" class="control-label">Technique:</label>
+                        <select id="add-technique" class="form-control" name="add-technique">
+                            $for category in techniques:
+                                <option value="$category">$category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-structure" class="control-label">Structure:</label>
+                        <select id="add-structure" class="form-control" name="add-structure">
+                            $for structure in structures:
+                                <option value="$structure">$structure</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-difficulty" class="control-label">Difficulty (1-10):</label>
+                        <input type="number" class="form-control" id="add-difficulty" name="add-difficulty" value="" min="1" max="10" placeholder="1"/>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="studio_add_type_problem();event.preventDefault();">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div style="display: none;">
+    <form id="generate_contest_form" method="post" enctype="multipart/form-data" class="form-horizontal">>
+        <input type="hidden" name="generate" value="1"/>
+        <table id="cloned_info">
+
+        </table>
+    </form>
+</div>
+
+
 
 <!-- Init the javascript for the subproblem tab -->
 <script type="text/javascript">

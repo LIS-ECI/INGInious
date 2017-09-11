@@ -116,6 +116,30 @@ function registerCodeEditor(textarea, lang, lines)
     return editor;
 }
 
+//Register and init a code editor (ace)
+function registerDiffEditor(div_id, orig1, orig2)
+{
+    var target = document.getElementById(div_id);
+    orig1 = document.getElementById(orig1).value;
+    orig2 = document.getElementById(orig2).value;
+    console.log(orig2);
+    console.log(orig1);
+  dv = CodeMirror.MergeView(target, {
+    value: orig1 ,
+    origLeft: null,
+    orig: orig2,
+    lineNumbers: true,
+    mode: "text/plain",
+    highlightDifferences: true,
+    connect: "align",
+    collapseIdentical: false,
+    readOnly: true
+  });
+
+  editor = dv.editor();
+    return editor;
+}
+
 // Verify if the size of each code editor is sufficient
 function onEditorViewportChange(min_editor_height, cm)
 {

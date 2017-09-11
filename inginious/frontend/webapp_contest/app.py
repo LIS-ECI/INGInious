@@ -37,6 +37,7 @@ urls = (
     r'/admin/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.utils.CourseRedirect',
     r'/admin/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contests.ContestsPageAdmin',
     r'/admin/([^/]+)/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestAdmin',
+    r'/admin/([^/]+)/([^/]+)/contest/generate', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestGenerator',
     r'/admin/([^/]+)/settings', 'inginious.frontend.webapp_contest.pages.course_admin.settings.CourseSettings',
     r'/admin/([^/]+)/students', 'inginious.frontend.webapp_contest.pages.course_admin.student_list.CourseStudentListPage',
     r'/admin/([^/]+)/student/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.student_info.CourseStudentInfoPage',
@@ -133,7 +134,7 @@ def get_app(config):
     template_helper = TemplateHelper(plugin_manager, 'frontend/webapp_contest/templates', 'frontend/webapp_contest/templates/layout',
                                      config.get('use_minified_js', True))
 
-    contest_manager = ContestManager(user_manager, database, course_factory, template_helper)
+    contest_manager = ContestManager(user_manager, database, course_factory, template_helper, task_factory, config.get("bank", "bank"))
 
     # Init web mail
     smtp_conf = config.get('smtp', None)

@@ -1,4 +1,4 @@
-$def with (course, data, problems, bank_name)
+$def with (course, data, problems, bank_name, techniques, structures)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -7,6 +7,33 @@ $#
 
 <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 </div>
+
+<h3>Generate contest</h3>
+
+    <table class="table table-bordered table-condensed" id="generate_contest">
+        <tr>
+            <th># problems</th>
+            <th>Technique</th>
+            <th>Structure</th>
+            <th>Difficulty</th>
+            <th>Actions</th>
+        </tr>
+    </table>
+
+
+    <table class="table table-bordered table-condensed">
+
+        <tr>
+            <th colspan="9" style="text-align:right">
+                <a href="#" onclick="$$('#modal_file_upload').modal('show'); return false;" class="btn btn-sm btn-primary">Add a new type</a>
+                <a onclick="studio_generate_new_contest();" class="btn btn-sm btn-primary contest_generate_submit_button">Generate!</a>
+            </th>
+        </tr>
+    </table>
+
+<hr>
+
+<h3>Add problems manually</h3>
 
 <div class="row" id="new_subproblem">
     <div class="form-group col-sm-12">

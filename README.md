@@ -11,6 +11,8 @@ TODO: update badges
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7d783c7603454d45b5a9b267591c0a3e)](https://www.codacy.com/app/hcadavid/INGInious?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=LIS-ECI/INGInious&amp;utm_campaign=Badge_Grade)
 
+[![CircleCI](https://circleci.com/gh/LIS-ECI/INGInious.svg?style=shield)](https://circleci.com/gh/LIS-ECI/INGInious)
+
 INGInious is an intelligent grader that allows secured and automated testing of code made by students.
 
 It is written in Python and uses Docker_ to run student's code inside a secured environment.

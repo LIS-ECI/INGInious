@@ -69,6 +69,13 @@ class CourseEditTask(INGIniousAdminPage):
                                 CourseTaskFiles.get_task_filelist(self.task_factory, courseid, taskid))])
         # web.debug(task_list)
 
+        techniques = self.contest_manager.get_all_techniques(self.bank_name)
+        structures = self.contest_manager.get_all_structures(self.bank_name)
+
+        self.template_helper.add_javascript("//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.js", "header")
+        self.template_helper.add_css("//rawgithub.com/indrimuska/jquery-editable-select/master/dist/jquery-editable-select.min.css")
+
+
         return self.template_helper.get_renderer().course_admin.task_edit(
             course,
             taskid,
@@ -82,7 +89,9 @@ class CourseEditTask(INGIniousAdminPage):
             current_filetype,
             available_filetypes,
             AccessibleTime,
-            task_list)
+            task_list,
+            techniques,
+            structures)
 
     @classmethod
     def contains_is_html(cls, data):
@@ -414,6 +423,7 @@ class CourseEditTask(INGIniousAdminPage):
             except Exception as message:
                 return json.dumps(
                     {"status": "error", "message": "There was a problem while extracting the zip archive. Some files may have been modified"})
+
 
         self.task_factory.delete_all_possible_task_files(courseid, taskid)
         self.task_factory.update_task_descriptor_content(courseid, taskid, data, force_extension=file_ext)

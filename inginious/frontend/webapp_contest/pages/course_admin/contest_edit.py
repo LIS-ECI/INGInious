@@ -67,8 +67,11 @@ class ContestAdmin(INGIniousAdminPage):
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/selectize.min.js', "header")
         self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
 
+
+        techniques = self.contest_manager.get_all_techniques(self.bank_name)
+        structures = self.contest_manager.get_all_structures(self.bank_name)
         return self.template_helper.get_renderer().course_admin.contest_edit(course, contest_data, None, False,
-                                                                             AccessibleTime, problems, problemdump, self.bank_name)
+                                                                             AccessibleTime, problems, problemdump, self.bank_name, techniques, structures)
 
     def migrate_data(self, course, dest_course, dest_tasks):
         """ migrate tasks """
@@ -92,6 +95,18 @@ class ContestAdmin(INGIniousAdminPage):
         if "delete" in new_data:
             self.contest_manager.delete_contest(courseid, contestid)
             raise web.seeother("/admin/" + courseid + "/contest")
+
+        web.debug(new_data)
+
+        if "generate" in new_data:
+            data = [value for key, value in self.dict_from_prefix("type", new_data).items()]
+            web.debug(data)
+            try:
+                new_problems = self.contest_manager.get_random_contest(data)
+                web.debug(new_problems)
+                return json.dumps({"status": "ok", "message": new_problems})
+            except Exception as e:
+                return json.dumps({"status": "error", "message": str(e)})
         try:
             contest_data['enabled'] = new_data.get('enabled', '0') == '1'
             contest_data['start'] = new_data["start"]

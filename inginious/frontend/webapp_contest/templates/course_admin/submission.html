@@ -8,6 +8,7 @@ $#
 $ user_realname= user_manager.get_user_realname(username)
 $var title: $:task.get_name() - $:user_realname - $:course.get_name()
 $ is_admin = user_manager.has_admin_rights_on_course(course)
+$ r = "<br />"
 $var Column: $:template_helper.call('course_admin_menu',course=course,current='students')
 
 $def NavbarF():
@@ -94,47 +95,29 @@ $else:
             <br/>
             $:submission["text"]
 </div>
-$for key, problem in enumerate(to_display):
+
+$if color == "danger":
+    <div style="display:none;">
+        <textarea id="orig1">$submission["custom"].get("diff1","")</textarea>
+        <textarea id="orig2">$submission["custom"].get("diff2","")</textarea>
+    </div>
+
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">
-                $if not problem["defined"]:
-                    <span class="text-warning">This problem id is not defined in the task.</span>
-                $if not problem["present"]:
-                    <span class="text-warning">This problem is not present in the submission.</span>
-                Question ${key+1}: $problem["name"]
-                $if problem['base64'] is not None:
-                    <a href="data:$problem['mime'];base64,$problem['base64']" class="btn btn-default btn-xs" title="Download as file"
-                       data-toggle="tooltip" data-placement="bottom">
-                        <i class="fa fa-download"></i>
-                    </a>
+                Result: User output vs Problem output
             </h3>
         </div>
+
+
+
         <div class="panel-body">
-            $if problem["feedback"] is not None:
-                $if problem["feedback"][0] == "success":
-                    $ color="success"
-                $elif problem["feedback"][0] in ["timeout", "overflow"]:
-                    $ color="warning"
-                $else:
-                    $ color="danger"
-                <div class="alert alert-$color">
-                    $:problem["feedback"][1]
-                </div>
-            <div class="student_view">
-                $:problem["context"]
-            </div>
-            $if problem["content"] is not None:
-                <textarea class="code-editor form-control"
-                          data-x-language="$problem['language']"
-                          data-x-lines="1">$problem["content"]</textarea>
-            $elif not problem["present"]:
-                <span class="text-warning">This problem was not answered in this submission.</span>
-            $elif problem["mime"] == "application/pdf":
-                <object data="data:$problem['mime'];base64,$problem['base64']" type="application/pdf" style="width: 100%; min-height: 800px;">
-                    <embed src="data:$problem['mime'];base64,$problem['base64']" type="application/pdf"/>
-                </object>
-            $else:
-                <span class="text-warning">There is input, but it can't be read as an UTF-8 file.</span>
+
+            <div id="diff"></div>
         </div>
     </div>
+
+    <script>
+        registerDiffEditor('diff', "orig1", "orig2");
+    </script>

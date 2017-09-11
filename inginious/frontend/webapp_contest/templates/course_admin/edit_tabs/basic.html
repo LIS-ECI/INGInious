@@ -1,4 +1,4 @@
-$def with (course,task_data,available_filetypes,AccessibleTime,current_filetype,contains_is_html,environments)
+$def with (course,task_data,available_filetypes,AccessibleTime,current_filetype,contains_is_html,environments, techniques, structures)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -44,9 +44,28 @@ $else:
 </div>
 
 <div class="form-group">
-    <label for="category" class="col-sm-3 control-label">Category</label>
+    <label for="category" class="col-sm-3 control-label">Technique</label>
     <div class="col-sm-9">
-        <input type="text" class="form-control" id="category" name="category" placeholder="" value="${task_data.get('category','')}"/>
+        <select id="category" class="form-control" name="category">
+            $for category in techniques:
+                <option value="$category"
+                    $if category == task_data.get('category',''):
+                        selected="selected"
+                >$category</option>
+        </select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label for="structure" class="col-sm-3 control-label">Structure</label>
+    <div class="col-sm-9">
+        <select id="structure" class="form-control" name="structure">
+            $for structure in structures:
+                <option value="$structure"
+                    $if structure == task_data.get('structure',''):
+                        selected="selected"
+                >$structure</option>
+        </select>
     </div>
 </div>
 

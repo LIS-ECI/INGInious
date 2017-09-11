@@ -153,9 +153,14 @@ function studio_get_template_for_contest_problem(problem)
 /**
  * Create new subproblem from the data in the form
  */
-function studio_create_new_contest_problem()
+function studio_create_new_contest_problem(problem="-1")
 {
-    var new_problem_id = $('#problem_id').val();
+    if(problem!=-1){
+        var new_problem_id = problem;
+    }else{
+        var new_problem_id = $('#problem_id').val();
+    }
+
     if(new_problem_id==""){
         alert("Select a problem first");
         return;
@@ -253,4 +258,159 @@ function studio_preview_problem(course){
         return false;
     }
     window.open(url+"/course/"+course+"/"+problem_id+"/"+problem_id+".pdf",'_blank');
+}
+
+/**
+ * Add a new type of problem from the data in the form
+ */
+function studio_add_type_problem()
+{
+    var quantity = $('#add-quantity').val();
+    if(quantity==""){
+        quantity = 1;
+    }
+    if(quantity<0){
+        alert("Quantity must be a positive number");
+        return;
+    }
+    var technique = $('#add-technique').val();
+    if(technique==""){
+        alert("Technique must be non-empty");
+        return;
+    }
+    var structure = $('#add-structure').val();
+    if(structure==""){
+        alert("Structure must be non-empty");
+        return;
+    }
+    var difficulty = $('#add-difficulty').val();
+    if(difficulty==""){
+        difficulty = 1;
+    }
+
+    if(difficulty<=0 || difficulty>10){
+        alert("Difficulty must be between 1 and 10");
+        return;
+    }
+
+    var isValid = true;
+    var cont = 0;
+
+    $("tr.type").each(function(i, tr) {
+      cont++;
+      var item_quantity = $("td.quantity", tr).html();
+      var item_technique = $("td.technique", tr).html();
+      var item_structure = $("td.structure", tr).html();
+      var item_difficulty = $("td.difficulty", tr).html();
+
+      if(isValid && difficulty==item_difficulty && (technique == item_technique)){
+        alert("Already exists a type of problem with the same difficulty and the same technique.");
+        isValid = false;
+      }
+    });
+
+    if(!isValid){
+        return;
+    }
+
+    $("#generate_contest").find('tbody')
+        .append($('<tr class="type">')
+            .append($('<td class="quantity">')
+                    .text(quantity)
+            ).append($('<td class="technique">')
+                    .text(technique)
+            ).append($('<td class="structure">')
+                    .text(structure)
+            ).append($('<td class="difficulty">')
+                    .text(difficulty)
+            ).append($('<td class="actions">')
+                    .append($('<a>')
+                        .attr('onclick', '$(this).parent().parent().remove(); $("#cloned_info").find("tr[id=info-'+cont+']").remove();')
+                        .text('Remove')
+                    )
+            )
+        );
+    $("#cloned_info").append($('<tr id="info-'+cont+'">').append($('<input>')
+                .attr('type', 'hidden')
+                .attr('id', 'quantity-'+cont)
+                .attr('name', 'type['+cont+'][quantity]')
+                .attr('value', quantity)
+            ).append($('<input>')
+                .attr('type', 'hidden')
+                .attr('id', 'technique-'+cont)
+                .attr('name', 'type['+cont+'][technique]')
+                .attr('value', technique)
+            ).append($('<input>')
+                .attr('type', 'hidden')
+                .attr('id', 'structure-'+cont)
+                .attr('name', 'type['+cont+'][structure]')
+                .attr('value', structure)
+            ).append($('<input>')
+                .attr('type', 'hidden')
+                .attr('id', 'difficulty-'+cont)
+                .attr('name', 'type['+cont+'][difficulty]')
+                .attr('value', difficulty)
+            )
+    );
+    $('#modal_file_upload').modal('hide');
+}
+
+function studio_generate_new_contest(){
+    var count = document.getElementById("generate_contest").getElementsByTagName("tr").length;
+    if(count==1){
+        alert("You must have at least one type of problem.");
+        return false;
+    }
+
+    studio_display_contest_submit_message("Saving...", "info", false);
+
+    var error = "";
+    $('.contest_generate_submit_button').attr('disabled', true);
+
+    var error = "";
+    $('form#generate_contest_form').ajaxSubmit({
+        dataType: 'json',
+        success: function (data) {
+            if ("status" in data && data["status"] == "ok"){
+                error += "";
+                var problems = data["message"];
+                console.log(problems);
+
+                $.each(problems, function( index, value ) {
+                  studio_create_new_contest_problem(value);
+                });
+
+            }else if ("message" in data)
+                error += "<li>" + data["message"] + "</li>";
+            else
+                error += "<li>An internal error occurred</li>";
+        },
+        error: function (result) {
+            error += "<li>An internal error occurred</li>";
+        },
+        async: false
+    });
+
+    if(error)
+        studio_display_contest_submit_message("Some error(s) occurred when generating the problems: <ul>" + error + "</ul>", "danger", true);
+    else
+        studio_display_contest_submit_message("Problems generated.", "success", true);
+
+    $('.contest_generate_submit_button').attr('disabled', false);
+    /*
+
+    var types = []
+
+    $("tr.type").each(function(i, tr) {
+        var item_quantity = $("td.quantity", tr).html();
+        var item_technique = $("td.technique", tr).html();
+        var item_structure = $("td.structure", tr).html();
+        var item_difficulty = $("td.difficulty", tr).html();
+        var array = {"quantity": item_quantity, "technique": item_technique, "structure": item_structure, "difficulty": item_structure};
+        types.push(array);
+    });
+    console.log(types);
+
+    */
+
 }

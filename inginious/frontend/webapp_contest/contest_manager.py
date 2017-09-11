@@ -4,19 +4,61 @@ from datetime import datetime, timedelta
 
 import pymongo
 import web
+import random
 
 class ContestManager():
 
-    def __init__(self, user_manager, database, course_factory, template_helper):
+    def __init__(self, user_manager, database, course_factory, template_helper, task_factory, bank_name):
         self.user_manager = user_manager
         self.database = database
         self.course_factory = course_factory
         self.template_helper = template_helper
+        self.task_factory = task_factory
+        self.bank_name = bank_name
+
+    def get_all_techniques(self, courseid):
+        problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("category","") for x in
+                    self.course_factory.get_course(courseid).get_tasks()]
+        retval = set([x for x in problems if len(x)>0])
+        return retval
+
+    def get_all_structures(self, courseid):
+        problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("structure","") for x in
+                    self.course_factory.get_course(courseid).get_tasks()]
+        retval = set([x for x in problems if len(x) > 0])
+        return retval
 
     def contest_is_enabled(self, courseid, contestid):
         course = self.course_factory.get_course(courseid)
         data = self.get_contest_data(course, contestid)
         return data["enabled"]==True
+
+    def get_random_problems(self, quantity, technique, structure, difficulty):
+        problems = [(self.task_factory.get_task(self.course_factory.get_course(self.bank_name), x),
+                     self.task_factory.get_task_descriptor_content(self.bank_name, x)) for x in
+                    self.course_factory.get_course(self.bank_name).get_tasks()]
+        problems = [x for x in problems if x[1].get("difficulty") == difficulty]
+        problems = [x for x in problems if x[1].get("structure") == structure]
+        problems = [x for x in problems if x[1].get("category") == technique]
+        problems = [x[0].get_id() for x in problems]
+        if len(problems) < quantity:
+            raise Exception("Inconsistent information: There are not enough problems for this type: "
+                            "Technique:"+technique+
+                            " Difficulty:"+str(difficulty))
+        retval = random.sample(problems, quantity)
+        return retval
+
+    def get_random_contest(self, random_types):
+        problems = []
+        for random_type in random_types:
+            quantity = int(random_type["quantity"])
+            technique = random_type["technique"]
+            structure = random_type["structure"]
+            difficulty = int(random_type["difficulty"])
+            retval = self.get_random_problems(quantity, technique, structure, difficulty)
+            problems.extend(retval)
+        return problems
+
 
     def get_all_contest_data(self, course):
         contests = course.get_descriptor().get('contest', {})
