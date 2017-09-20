@@ -96,7 +96,7 @@ $else:
             $:submission["text"]
 </div>
 
-$if color == "danger":
+$if submission["custom"].get("diff2",-1)!=-1:
     <div style="display:none;">
         <textarea id="orig1">$submission["custom"].get("diff1","")</textarea>
         <textarea id="orig2">$submission["custom"].get("diff2","")</textarea>
@@ -121,3 +121,18 @@ $if color == "danger":
     <script>
         registerDiffEditor('diff', "orig1", "orig2");
     </script>
+$elif submission["custom"].get("diff1",-1)!=-1:
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">
+                Result: Runtime error
+            </h3>
+        </div>
+
+
+
+        <div class="panel-body">
+
+            <textarea  class="form-control" readonly rows="10" id="diff">$submission["custom"].get("diff1","")</textarea>
+        </div>
+    </div>

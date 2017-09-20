@@ -321,7 +321,7 @@ class CourseEditTask(INGIniousAdminPage):
         # Difficulty
         try:
             data["difficulty"] = int(data["difficulty"])
-            if not (data["difficulty"] > 0 and data["difficulty"] <= 10):
+            if not (data["difficulty"] > 0 and data["difficulty"] <= 5):
                 return json.dumps({"status": "error", "message": "Difficulty level must be between 1 and 10"})
         except:
             return json.dumps({"status": "error", "message": "Difficulty level must be an integer number"})

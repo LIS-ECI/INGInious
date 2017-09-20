@@ -11,8 +11,8 @@ $#
             <th class="contest_country">Country</th>
             <th class="contest_contestant">Name</th>
 	        <th colspan="2" class="contest_score_header">Score</th>
-	        $for taskid in tasks:
-	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank">$taskid</a></th>
+	        $for taskid,value in tasks.items():
+	            <th class="contest_task"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank" title="$value['name']">$taskid</a></th>
 	    </tr>
         $ i = -1
 	    $for username, data in results.items():

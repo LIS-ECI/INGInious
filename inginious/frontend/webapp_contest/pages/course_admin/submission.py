@@ -138,5 +138,24 @@ class CourseStudentTaskSubmission(INGIniousAdminPage):
                     data["content"] = submission["input"][pid]
                     data["base64"] = base64.b64encode(str(submission["input"][pid]).encode('utf-8')).decode('utf-8')
                 to_display.append(data)
+        lines = []
+        submi = submission["custom"].get("diff1", -1)
+        if submi!=-1:
+            for line in str(submission["custom"].get("diff1", "")).split('\n'):
+                line = list(line)
+                if line[-1]=='$':
+                    line[-1] = '\n'
+                lines.append(''.join(line))
+            submission["custom"]["diff1"] = ''.join(lines)
+
+        lines = []
+        submi = submission["custom"].get("diff2", -1)
+        if submi!=-1:
+            for line in str(submission["custom"].get("diff2", "")).split('\n'):
+                line = list(line)
+                if line[-1]=='$':
+                    line[-1] = '\n'
+                lines.append(''.join(line))
+            submission["custom"]["diff2"] = ''.join(lines)
 
         return self.template_helper.get_renderer().course_admin.submission(course, username, task, submissionid, submission, to_display)

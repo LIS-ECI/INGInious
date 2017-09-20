@@ -204,5 +204,6 @@ class ContestManager():
 
         if allowed_users!=[]:
             results = {x: results[x] for x in results.keys() if x in allowed_users}
-
+        tasks = {x:self.task_factory.get_task_descriptor_content(courseid, x) for x in tasks}
+        tasks = OrderedDict(sorted(tasks.items(), key=lambda t: t[0]))
         return course, start, end, blackout, tasks, results, activity, contestid, contest_name
