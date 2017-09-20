@@ -139,8 +139,8 @@ class CourseStudentTaskSubmission(INGIniousAdminPage):
                     data["base64"] = base64.b64encode(str(submission["input"][pid]).encode('utf-8')).decode('utf-8')
                 to_display.append(data)
         lines = []
-        submi = submission["custom"].get("diff1", -1)
-        if submi!=-1:
+        submi = submission["custom"].get("diff1", "")
+        if submi!="":
             for line in str(submission["custom"].get("diff1", "")).split('\n'):
                 line = list(line)
                 if line[-1]=='$':
@@ -149,8 +149,8 @@ class CourseStudentTaskSubmission(INGIniousAdminPage):
             submission["custom"]["diff1"] = ''.join(lines)
 
         lines = []
-        submi = submission["custom"].get("diff2", -1)
-        if submi!=-1:
+        submi = submission["custom"].get("diff2", "")
+        if submi!="":
             for line in str(submission["custom"].get("diff2", "")).split('\n'):
                 line = list(line)
                 if line[-1]=='$':
