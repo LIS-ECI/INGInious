@@ -16,6 +16,15 @@ class ContestManager():
         self.task_factory = task_factory
         self.bank_name = bank_name
 
+    def exists_contest(self, courseid, contestid):
+        ret = False
+        try:
+            self.contest_is_enabled(courseid, contestid)
+            ret = True
+        except:
+            pass
+        return ret
+
     def get_all_techniques(self, courseid):
         problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("category","") for x in
                     self.course_factory.get_course(courseid).get_tasks()]
@@ -33,10 +42,11 @@ class ContestManager():
         data = self.get_contest_data(course, contestid)
         return data["enabled"]==True
 
-    def get_random_problems(self, quantity, technique, structure, difficulty):
+    def get_random_problems(self, quantity, technique, structure, difficulty, other_problems):
         problems = [(self.task_factory.get_task(self.course_factory.get_course(self.bank_name), x),
                      self.task_factory.get_task_descriptor_content(self.bank_name, x)) for x in
                     self.course_factory.get_course(self.bank_name).get_tasks()]
+        problems = [x for x in problems if x[0].get_id() not in other_problems]
         problems = [x for x in problems if x[1].get("difficulty") == difficulty]
         problems = [x for x in problems if x[1].get("structure") == structure]
         problems = [x for x in problems if x[1].get("category") == technique]
@@ -48,14 +58,15 @@ class ContestManager():
         retval = random.sample(problems, quantity)
         return retval
 
-    def get_random_contest(self, random_types):
+    def get_random_contest(self, random_types, other_problems):
         problems = []
+        other_problems = [x["name"] for x in other_problems]
         for random_type in random_types:
             quantity = int(random_type["quantity"])
             technique = random_type["technique"]
             structure = random_type["structure"]
             difficulty = int(random_type["difficulty"])
-            retval = self.get_random_problems(quantity, technique, structure, difficulty)
+            retval = self.get_random_problems(quantity, technique, structure, difficulty, other_problems)
             problems.extend(retval)
         return problems
 
@@ -86,6 +97,12 @@ class ContestManager():
         if specific_contest is None:
             specific_contest = {}
         return specific_contest
+
+    def get_last_contest_id(self, courseid):
+        course = self.course_factory.get_course(courseid)
+        contests = course.get_descriptor().get('contest', {})
+        contestid = max([i for i, val in enumerate(contests)], default=0)
+        return contestid
 
     def get_data(self, courseid, contestid, all_ranks=False, allowed_users = []):
         course = self.course_factory.get_course(courseid)

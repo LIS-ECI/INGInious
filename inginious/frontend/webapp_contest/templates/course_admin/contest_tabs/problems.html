@@ -5,50 +5,20 @@ $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 $# more information about the licensing of this file.
 $#
 
-<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-</div>
+<h4>
+    Add problems:
 
-<!--h3>Generate contest</h3>
-
-    <table class="table table-bordered table-condensed" id="generate_contest">
-        <tr>
-            <th># problems</th>
-            <th>Technique</th>
-            <th>Structure</th>
-            <th>Difficulty</th>
-            <th>Actions</th>
-        </tr>
-    </table>
-
-
-    <table class="table table-bordered table-condensed">
-
-        <tr>
-            <th colspan="9" style="text-align:right">
-                <a href="#" onclick="$$('#modal_file_upload').modal('show'); return false;" class="btn btn-sm btn-primary">Add a new type</a>
-                <a onclick="studio_generate_new_contest();" class="btn btn-sm btn-primary contest_generate_submit_button">Generate!</a>
-            </th>
-        </tr>
-    </table>
-
-<hr-->
-
-<h3>Add problems manually</h3>
-
-<div class="row" id="new_subproblem">
-    <div class="form-group col-sm-12">
-        <label for="problem_id" class="col-sm-2 control-label">Select a problem from the list</label>
-        <div class="col-sm-6">
-            <select class="form-control" id="problem_id" placeholder="Select a problem...">
-                $for problem in problems:
-                    <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
-            </select>
-        </div>
-        <div class="col-sm-2">
-            <button type="button" target="_blank" class="btn btn-primary btn-block" onclick="studio_preview_problem('${bank_name}');">Preview</button>
-        </div>
-        <div class="col-sm-2">
-            <button type="button" class="btn btn-primary btn-block" onclick="studio_create_new_contest_problem();">Add</button>
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-sm btn-primary" onclick="$$('#modal_add_problems_manually').modal('show'); return false;" type="button"><i class="fa fa-save"></i> Manually</button>
+            <button class="btn btn-sm btn-primary" onclick="$$('#modal_generate_contest').modal('show'); return false;" type="button"><i class="fa fa-save"></i> Automatically</button>
         </div>
     </div>
+</h4>
+
+<hr>
+
+<h4>Added problems:</h4>
+
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
 </div>

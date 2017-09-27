@@ -100,7 +100,7 @@ $elif saved:
     </div>
 </div>
 
-<div class="modal fade" id="modal_file_upload" tabindex="-1" role="dialog" aria-labelledby="modal_file_upload_label" aria-hidden="true">
+<div class="modal fade" id="modal_file_upload" style="z-index: 9999;" tabindex="-1" role="dialog" aria-labelledby="modal_file_upload_label" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form>
@@ -142,10 +142,84 @@ $elif saved:
     </div>
 </div>
 
+<div class="modal fade" id="modal_add_problems_manually" tabindex="-1" role="dialog" aria-labelledby="modal_add_problems_manually_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal_add_problems_manually_label">Add problems manually</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label for="problem_id" class="col-sm-2 control-label">Select a problem from the list</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="problem_id" placeholder="Select a problem...">
+                                $for problem in problems:
+                                    <option value="${problem.get_id()}">${problem.get_id()} - ${problem.get_name()}</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" target="_blank" class="btn btn-primary btn-large" onclick="studio_preview_problem('${bank_name}');">Preview</button>
+                        </div>
+                        <div class="col-sm-2">
+                            <button type="button" class="btn btn-primary btn-large" onclick="studio_create_new_contest_problem();">Add</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_generate_contest" tabindex="-1" role="dialog" aria-labelledby="modal_generate_contest_label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="modal_generate_contest_label">Add problems manually</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-bordered table-condensed" id="generate_contest">
+                        <tr>
+                            <th># problems</th>
+                            <th>Technique</th>
+                            <th>Structure</th>
+                            <th>Difficulty</th>
+                            <th>Actions</th>
+                        </tr>
+                    </table>
+
+
+                    <table class="table table-bordered table-condensed">
+
+                        <tr>
+                            <th colspan="9" style="text-align:right">
+                                <a href="#" onclick="$$('#modal_file_upload').modal('show'); return false;" class="btn btn-sm btn-primary">Add a new type</a>
+                                <a onclick="studio_generate_new_contest();" class="btn btn-sm btn-primary contest_generate_submit_button" data-dismiss="modal">Generate!</a>
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <div style="display: none;">
     <form id="generate_contest_form" method="post" enctype="multipart/form-data" class="form-horizontal">>
         <input type="hidden" name="generate" value="1"/>
         <table id="cloned_info">
+
+        </table>
+        <table id="problems_cloned">
 
         </table>
     </form>

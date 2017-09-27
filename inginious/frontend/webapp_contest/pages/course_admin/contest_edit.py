@@ -100,9 +100,10 @@ class ContestAdmin(INGIniousAdminPage):
 
         if "generate" in new_data:
             data = [value for key, value in self.dict_from_prefix("type", new_data).items()]
+            other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
             web.debug(data)
             try:
-                new_problems = self.contest_manager.get_random_contest(data)
+                new_problems = self.contest_manager.get_random_contest(data, other_problems)
                 web.debug(new_problems)
                 return json.dumps({"status": "ok", "message": new_problems})
             except Exception as e:

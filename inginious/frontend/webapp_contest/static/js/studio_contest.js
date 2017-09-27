@@ -367,6 +367,8 @@ function studio_generate_new_contest(){
     var error = "";
     $('.contest_generate_submit_button').attr('disabled', true);
 
+    $("#problems_cloned").html($("#accordion").html());
+
     var error = "";
     $('form#generate_contest_form').ajaxSubmit({
         dataType: 'json',
