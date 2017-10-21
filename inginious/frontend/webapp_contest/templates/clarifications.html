@@ -1,0 +1,101 @@
+$def with (course,clarifications_data,errors,AccessibleTime,contestid,cname)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $cname - Clarifications
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/contest/$course.get_id()/$contestid/overview">$cname</a></li>
+        <li class="active"><a href="#"><i class="fa fa-cog"></i> Overview <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+
+$# Left column content
+$def ColumnF():
+    $:include.contest_menu(course, contestid, "clarification_list", False)
+    $:template_helper.call('main_menu', template_helper=template_helper)
+$var Column: $:ColumnF()
+
+<form method="post">
+<h2>Clarifications</h2>
+
+<table class="table sorted_table">
+    <thead>
+        <tr>
+            <th>Time</th>
+            <th>From</th>
+            <th>Subject</th>
+            <th>Text</th>
+            <th>Answered by</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    $ i = 0
+    $for data in clarifications_data:
+
+    	<tr>
+    		<td>$data["time"].strftime("%d/%m/%Y %H:%M:%S")</td>
+    		<td>$data["from"]</td>
+            <td>$data["subject"]</td>
+    		<td>$data["text"]</td>
+                $if data["answered_by"]==-1:
+                    <td>None</td>
+                $else:
+                    <td>$data["answered_by"]</td>
+    		<td style="min-width:120px">
+                <a href="$get_homepath()/contest/$course.get_id()/$contestid/$data['_id']/clarification" class="btn btn-primary btn-xs" title="View clarification" data-toggle="tooltip"
+                   data-placement="bottom"><i class="fa fa-eye"></i></a>
+    		</td>
+    	</tr>
+        $ i = i + 1
+    </tbody>
+</table>
+</form>
+
+<!--div class="row">
+    <div class="form-group">
+        <input type="hidden" class="form-control" id="new_contest_id" value="${len(clarifications_data)}"/>
+        <div class="col-sm-12"><a href="javascript:studio_create_new_contest();" class="btn btn-primary btn-large btn-block">Create new contest</a></div>
+    </div>
+</div-->
+$if errors != None:
+    <h3>Errors while loading contest</h3>
+    <table class="table">
+        <tr>
+            <th>contest name</th>
+            <th>error</th>
+        </tr>
+        $for task in errors:
+            <tr>
+                <td>$task['taskid']</td>
+                <td><pre>$task['error']</pre></td>
+            </tr>
+    </table>
+
+<script type="text/javascript">
+$$('.sorted_table').sortable({
+    containerSelector: 'table',
+    itemPath: '> tbody',
+    itemSelector: 'tr',
+    placeholder: '<tr class="placeholder"/>'
+});
+
+$$('.sorted_table').sortable("disable");
+
+$$("#switch").click(function  (e) {
+    if($$(this).hasClass("active")) {
+        $$(this).removeClass("active");
+        $$(".sorted_table tr").removeAttr("style");
+    } else {
+        $$(this).addClass("active");
+        $$(".sorted_table tr").attr("style", "cursor: pointer;");
+    }
+    $$('.sorted_table').sortable($$(this).hasClass("active") ? "enable" : "disable");
+});
+</script>

@@ -26,25 +26,23 @@ $var Navbar: $:NavbarF()
 <table class="table sorted_table">
     <thead>
         <tr>
+            <th>Problem ID</th>
             <th>Problem name</th>
             <th>Time limit</th>
-            <th>Memory limit</th>
             <th>Output limit</th>
-            <th># test cases</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     $for taskid in data:
     	<tr>
+            <td>$taskid</td>
     		<td>
     			<a href="$get_homepath()/admin/${course.get_id()}/task/$taskid">$data[taskid].get_name()</a>
                 <input type="hidden" name="task" value="$taskid">
     		</td>
-    		<td>$data[taskid].get_limits()["time"]</td>
-    		<td>$data[taskid].get_limits()["memory"]</td>
+    		<td>$data[taskid].get_limits()["real_time"]</td>
             <td>$data[taskid].get_limits()["output"]</td>
-            <td>$data[taskid].get_limits()["time"]</td>
     		<td style="min-width:120px">
                 <div class="btn-group" role="group">
                     $if is_admin:

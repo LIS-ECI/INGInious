@@ -1,4 +1,4 @@
-$def with (course,contests_data,errors,AccessibleTime)
+$def with (course,clarifications_data,errors,AccessibleTime,contestid)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -20,36 +20,37 @@ $def NavbarF():
 $var Navbar: $:NavbarF()
 
 <form method="post">
-<h2>Contests</h2>
+<h2>Clarifications</h2>
 
 <table class="table sorted_table">
     <thead>
         <tr>
-            <th>Contest name</th>
-            <th>Start</th>
-            <th>End</th>
-            <th>Enabled</th>
+            <th>Time</th>
+            <th>From</th>
+            <th>Subject</th>
+            <th>Text</th>
+            <th>Answered by</th>
             <th>Actions</th>
         </tr>
     </thead>
     <tbody>
     $ i = 0
-    $for contestid, data in contests_data.items():
+    $for data in clarifications_data:
 
     	<tr>
-    		<td>$data["name"]</td>
-    		<td>$AccessibleTime(data.get('start',True)).get_std_start_date()</td>
-            <td>$AccessibleTime(data.get('end',True)).get_std_start_date()</td>
-            <td>$data["enabled"]</td>
+    		<td>$data["time"].strftime("%d/%m/%Y %H:%M:%S")</td>
+    		<td>$data["from"]</td>
+            <td>$data["subject"]</td>
+    		<td>$data["text"]</td>
+                $if data["answered_by"]==-1:
+                    <td>None</td>
+                $else:
+                    <td>$data["answered_by"]</td>
     		<td style="min-width:120px">
                 <div class="btn-group" role="group">
                     $if is_admin:
-                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/contest" class="btn btn-primary btn-xs" title="Edit contest" data-toggle="tooltip"
+                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/clarifications/$data['_id']" class="btn btn-primary btn-xs" title="View clarification and reply" data-toggle="tooltip"
                            data-placement="bottom"><i class="fa fa-edit"></i></a>
-                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/clarifications" class="btn btn-default btn-xs" title="View clarifications" data-toggle="tooltip"
-                           data-placement="bottom"><i class="fa fa-eye"></i></a>
-                    <a href="$get_homepath()/contest/${course.get_id()}/$i/scoreboard" class="btn btn-default btn-xs" title="View contest" data-toggle="tooltip"
-                       data-placement="bottom"><i class="fa fa-users"></i></a>
                 </div>
     		</td>
     	</tr>
@@ -58,12 +59,12 @@ $var Navbar: $:NavbarF()
 </table>
 </form>
 
-<div class="row">
+<!--div class="row">
     <div class="form-group">
-        <input type="hidden" class="form-control" id="new_contest_id" value="${len(contests_data)}"/>
+        <input type="hidden" class="form-control" id="new_contest_id" value="${len(clarifications_data)}"/>
         <div class="col-sm-12"><a href="javascript:studio_create_new_contest();" class="btn btn-primary btn-large btn-block">Create new contest</a></div>
     </div>
-</div>
+</div-->
 $if errors != None:
     <h3>Errors while loading contest</h3>
     <table class="table">

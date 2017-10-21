@@ -27,6 +27,8 @@ class PublicContestScoreboard(INGIniousPage):
         contestid = self.contest_manager.get_last_contest_id(courseid)
         if not self.contest_manager.exists_contest(courseid, contestid):
             ret = self.template_helper.get_renderer().contest_unavailable()
+        elif not self.contest_manager.exists_contest(courseid, contestid):
+            ret = self.template_helper.get_renderer().contest_unavailable()
         elif not self.contest_manager.contest_is_enabled(courseid, contestid):
             ret = self.template_helper.get_renderer().contest_unavailable()
         else:

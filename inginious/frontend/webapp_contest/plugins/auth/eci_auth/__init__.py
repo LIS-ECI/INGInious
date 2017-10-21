@@ -354,8 +354,7 @@ class ProfilePage(INGIniousAuthPage):
             result = self.database.users.find_one_and_update({"username": self.user_manager.session_username(),
                                                               "password": oldpasswd_hash},
                                                              {"$set": {
-                                                                 "password": passwd_hash,
-                                                                 "realname": data["realname"]}
+                                                                 "password": passwd_hash}
                                                              },
                                                              return_document=ReturnDocument.AFTER)
             if not result:
@@ -363,6 +362,7 @@ class ProfilePage(INGIniousAuthPage):
                 msg = "Incorrect old pasword."
             else:
                 msg = "Profile updated."
+        '''
         else:
             result = self.database.users.find_one_and_update({"username": self.user_manager.session_username()},
                                                              {"$set": {"realname": data["realname"]}},
@@ -373,6 +373,7 @@ class ProfilePage(INGIniousAuthPage):
             else:
                 self.user_manager.set_session_realname(data["realname"])
                 msg = "Profile updated."
+        '''
 
         return result, msg, error
 

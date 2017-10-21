@@ -126,6 +126,7 @@ function studio_task_file_upload()
         success:    function(data)
                     {
                         $("#tab_file_list").replaceWith(data);
+                        $('#task_upload_form')[0].reset();
                     },
         url:        location.pathname + "/files"
     });

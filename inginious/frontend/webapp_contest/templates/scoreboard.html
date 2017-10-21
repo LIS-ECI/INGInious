@@ -18,26 +18,8 @@ $var Navbar: $:NavbarF()
 
 $# Left column content
 $def ColumnF():
-    $if is_public == False:
-        <h3>Contest options</h3>
-
-        <div class="list-group">
-
-        <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item active">
-            <i class="fa fa-list-alt fa-fw"></i>&nbsp; Scoreboard</a>
-        <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item">
-            <i class="fa fa-cog fa-fw"></i>&nbsp; Overview</a>
-        </div>
-
-        $if user_manager.has_staff_rights_on_course(course):
-            <h3>Contest management</h3>
-            <div class="list-group">
-                <a class="list-group-item" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
-                    <i class="fa fa-user-secret fa-fw"></i>&nbsp; Edit contest
-                </a>
-            </div>
-
-        $:template_helper.call('main_menu', template_helper=template_helper)
+    $:include.contest_menu(course, cid, "scoreboard", is_public)
+    $:template_helper.call('main_menu', template_helper=template_helper)
 $var Column: $:ColumnF()
 
 $if end > end.now():

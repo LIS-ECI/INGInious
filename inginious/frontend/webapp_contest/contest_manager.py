@@ -88,6 +88,7 @@ class ContestManager():
         if len(course_content["contest"])>int(contestid):
             del course_content["contest"][int(contestid)]
             self.course_factory.update_course_descriptor_content(course, course_content)
+            self.database.clarifications.delete_many({"course": course, "contest": contestid})
 
     def get_contest_data(self, course, contestid):
         """ Returns the settings of the contest for this course """

@@ -1,0 +1,46 @@
+$def with (course,cid,current,is_public)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$if is_public == False:
+    <h3>Contest options</h3>
+    <div class="list-group">
+
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/scoreboard" class="list-group-item
+        $if current=='scoreboard':
+            active
+        ">
+        <i class="fa fa-list-alt fa-fw"></i>&nbsp; Scoreboard</a>
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/overview" class="list-group-item
+        $if current=='overview':
+            active
+        ">
+        <i class="fa fa-cog fa-fw"></i>&nbsp; Overview</a>
+    </div>
+
+    <h3>Clarification options</h3>
+    <div class="list-group">
+
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/clarifications" class="list-group-item
+        $if current=='clarification_list':
+            active
+        ">
+        <i class="fa fa-search fa-fw"></i>&nbsp; See clarifications</a>
+    <a href="$get_homepath()/contest/$course.get_id()/$cid/clarifications/request" class="list-group-item
+        $if current=='clarification_request':
+            active
+        ">
+        <i class="fa fa-check fa-fw"></i>&nbsp; Request a new clarification</a>
+    </div>
+
+
+    $if user_manager.has_staff_rights_on_course(course):
+		<h3>Contest management</h3>
+        <div class="list-group">
+            <a class="list-group-item" href="$get_homepath()/admin/$course.get_id()/$cid/contest">
+                <i class="fa fa-user-secret fa-fw"></i>&nbsp; Edit contest
+            </a>
+        </div>

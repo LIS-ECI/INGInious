@@ -20,7 +20,9 @@ class OverviewPage(INGIniousAuthPage):
     def GET_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
         username = self.user_manager.session_username()
         course = self.course_factory.get_course(courseid)
-        if not self.user_manager.course_is_open_to_user(course):
+        if not self.contest_manager.exists_contest(courseid, contestid):
+            return self.template_helper.get_renderer().contest_unavailable()
+        elif not self.user_manager.course_is_open_to_user(course):
             return self.template_helper.get_renderer().contest_unavailable()
         elif not self.contest_manager.contest_is_enabled(courseid, contestid):
             return self.template_helper.get_renderer().contest_unavailable()

@@ -86,13 +86,13 @@ $else:
 <div class="form-group">
     <label for="real_time" class="col-sm-3 control-label">Timeout limit (in seconds)</label>
     <div class="col-sm-9">
-        <input type="number" class="form-control" id="real_time" name="real_time" placeholder="5" value="${task_data.get('real_time',5)}"/>
+        <input type="number" class="form-control" id="real_time" name="limits[real_time]" placeholder="5" value="${task_data.get('limits',{}).get('real_time',5)}"/>
     </div>
 </div>
 <div class="form-group">
     <label for="limit-memory" class="col-sm-3 control-label">Memory limit (in megabytes)</label>
     <div class="col-sm-9">
-        <input type="number" class="form-control" id="limit-memory" name="limits[memory]" placeholder="30" value="${task_data.get('limits',{}).get('memory',100)}"/>
+        <input type="number" class="form-control" id="limit-memory" name="limits[memory]" placeholder="30" value="${task_data.get('limits',{}).get('memory',30)}"/>
     </div>
 </div>
 <div class="form-group">

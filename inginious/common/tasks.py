@@ -32,9 +32,10 @@ class Task(object):
         self._response_is_html = self._data.get("responseIsHTML", False)
 
         # Limits
-        self._limits = {"time": 20, "memory": 1024, "disk": 1024}
+        self._limits = {"real_time": 5, "time": 20, "memory": 1024, "disk": 1024}
         if "limits" in self._data:
             try:
+                self._limits['real_time'] = int(self._data["limits"].get("real_time", 5))
                 self._limits['time'] = int(self._data["limits"].get("time", 20))
                 self._limits['hard_time'] = int(self._data["limits"].get("hard_time", 3 * self._limits['time']))
                 self._limits['memory'] = int(self._data["limits"].get("memory", 1024))

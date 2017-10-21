@@ -316,7 +316,7 @@ class CourseEditTask(INGIniousAdminPage):
             with open(run) as f:
                 self.upload_pfile(courseid, taskid, "run", f)
             wanted_path = self.verify_path(courseid, taskid, "run", True)
-            os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["real_time"])+"/g' " + wanted_path)
+            os.system("sed -i -e 's/REPLACEWITHTIME/"+str(data["limits"]["real_time"])+"/g' " + wanted_path)
 
         # Difficulty
         try:
