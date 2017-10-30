@@ -69,7 +69,8 @@ class CourseTaskFiles(INGIniousAdminPage):
                 courseid = tmp
         request = web.input(testcase_input={}, testcase_output={}, testcase_feedback={})
         if request.get("action") == "upload" and request.get('testcase_desc') is not None and request.get('testcase_input') is not None and request.get('testcase_output') is not None:
-            return self.action_upload_testcase(courseid, taskid, request.get('testcase_desc'), request.get('testcase_input'), request.get('testcase_output'), request.get('testcase_feedback', {}))
+            output_value = request.get('testcase_output').value if not isinstance(request.get('testcase_output'), str) else 1
+            return self.action_upload_testcase(courseid, taskid, request.get('testcase_desc'), request.get('testcase_input'), request.get('testcase_output'), request.get('testcase_feedback', {}), output_value)
         elif request.get("action") == "edit_save" and request.get('path') is not None and request.get('content') is not None:
             return self.action_edit_save(courseid, taskid, request.get('path'), request.get('content'))
         else:
@@ -331,8 +332,8 @@ class CourseTaskFiles(INGIniousAdminPage):
             isValid = False
         return isValid
 
-    def action_upload_testcase(self, courseid, taskid, testcase_desc, input, output, feedback):
-
+    def action_upload_testcase(self, courseid, taskid, testcase_desc, input, output, feedback, output_value):
+        web.debug(output_value)
         in_verify = self.verify_file(input)
         if not in_verify:
             return self.show_tab_file(courseid, taskid,
@@ -341,6 +342,10 @@ class CourseTaskFiles(INGIniousAdminPage):
         if not out_verify:
             return self.show_tab_file(courseid, taskid,
                                       "Error writing the output file. Are you sure that the output file is encoded with UTF-8?")
+        elif (isinstance(output, str) and output=="") or (len(output_value)==0):
+            return self.show_tab_file(courseid, taskid,
+                                      "Error reading the output file. Are you sure that the output file is not empty?")
+
         fb_verify = self.verify_file(feedback)
         if not fb_verify:
             return self.show_tab_file(courseid, taskid,
