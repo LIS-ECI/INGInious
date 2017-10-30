@@ -10,7 +10,7 @@ $var title: $cname - Clarifications
 $def NavbarF():
     <ol class="nav navbar-nav nav-breadcrumb">
         <li><a href="$get_homepath()/contest/$course.get_id()/$contestid/overview">$cname</a></li>
-        <li class="active"><a href="#"><i class="fa fa-cog"></i> Overview <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="#"><i class="fa fa-cog"></i> Send clarification <span class="sr-only">(current)</span></a></li>
     </ol>
 $var Navbar: $:NavbarF()
 
@@ -23,6 +23,12 @@ $var Column: $:ColumnF()
 
 <form method="post">
 <h2>Clarifications</h2>
+
+    $if user_manager.has_staff_rights_on_course(course):
+        <div class="alert alert-warning">You are seeing this page as a contestant.
+            If you want to see this page as a staff click
+            <a href="$get_homepath()/admin/$course.get_id()/$contestid/clarifications">here</a>
+        </div>
 
 <table class="table sorted_table">
     <thead>
