@@ -333,7 +333,7 @@ class CourseTaskFiles(INGIniousAdminPage):
         return isValid
 
     def action_upload_testcase(self, courseid, taskid, testcase_desc, input, output, feedback, output_value):
-        web.debug(output_value)
+        #web.debug(output_value)
         in_verify = self.verify_file(input)
         if not in_verify:
             return self.show_tab_file(courseid, taskid,

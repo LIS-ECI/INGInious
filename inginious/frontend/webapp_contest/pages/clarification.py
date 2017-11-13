@@ -29,9 +29,12 @@ class ClarificationListPage(INGIniousAuthPage):
             return self.template_helper.get_renderer().contest_unavailable()
         else:
             data = list(self.database.clarifications.find({"$or":
-                                                        [{"contest": contestid, "course": courseid, "response": {"$ne" : ""}},
-                                                         {"from": username}]
-                                                    }).sort([("time", DESCENDING)]))
+                                                        [
+                                                            {"to": username},
+                                                            {"to":"*"},
+                                                            {"from": username}
+                                                        ],
+                                                           "contest": contestid, "course": courseid}).sort([("time", DESCENDING)]))
             for clarification in data:
                 if len(clarification["text"]) > 40:
                     clarification["text"] =clarification["text"][:min(40,len(clarification["text"]))]+"..."

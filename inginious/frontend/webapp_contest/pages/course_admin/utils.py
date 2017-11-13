@@ -244,7 +244,7 @@ def make_csv(data):
     return csv_string.read()
 
 
-def get_menu(course, current, renderer, plugin_manager, user_manager):
+def get_menu(course, current, renderer, plugin_manager, user_manager, contest_manager):
     """ Returns the HTML of the menu used in the administration. ```current``` is the current page of section """
     default_entries = []
     if user_manager.has_admin_rights_on_course(course):

@@ -1,0 +1,108 @@
+$def with (course,tasks,results,errors,AccessibleTime)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $:course.get_name()
+
+$var Column: $:template_helper.call('course_admin_menu',course=course,current='contest')
+$ is_admin = user_manager.has_admin_rights_on_course(course)
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/course/$course.get_id()">$course.get_name()</a></li>
+        <li><a href="$get_homepath()/admin/$course.get_id()" title="Administration" data-toggle="tooltip" data-placement="bottom">
+            <i class="fa fa-user-secret"></i></a></li>
+        <li class="active"><a href="#"><i class="fa fa-tasks"></i> Contests <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+<h2>
+    Contest report
+    <div class="pull-right">
+        <div class="btn-group">
+            <button class="btn btn-primary btn-success btn-sm" id="export_to_excel" type="button"><i class="fa fa-save"></i> Export to Excel</button>
+            <button class="btn btn-primary btn-sm" id="export_to_csv" type="button"><i class="fa fa-save"></i> Export to CSV</button>
+        </div>
+    </div>
+</h2>
+<br>
+<div class="table-responsive">
+    <table class="table table-bordered sorted_table" id="report_table">
+        <thead>
+            <tr>
+                <th></th>
+                $for taskid,value in tasks.items():
+                    <th class="text-center" id="task" colspan="3"><a href="$get_homepath()/course/${course.get_id()}/$taskid/${taskid+'.pdf'}" target="_blank" title="$value['name']">$taskid - $value['name']</a></th>
+            </tr>
+
+            <tr>
+                <th>Student</th>
+                $for taskid,value in tasks.items():
+                    <th>Result</th>
+                    <th># attempts</th>
+                    <th>Last submission date</th>
+            </tr>
+            $for username, data in results.items():
+                <tr>
+                    <td class="contest_rank">$data['realname']</td>
+                    $for taskid in tasks:
+                        $if data['tasks'][taskid]['status'] == 'ACF' or data['tasks'][taskid]['status'] == 'AC':
+                            <td class="result">Accepted</td>
+                        $elif data['tasks'][taskid]['status'] != 'NA':
+                            <td class="result">Not accepted</td>
+                        $else:
+                            <td class="result">Not attempted</td>
+                        <td class="attempts">${data['tasks'][taskid]['tries']}</td>
+                        <td class="last_submission_date">${data['tasks'][taskid]['time']}</td>
+                </tr>
+        </thead>
+    </table>
+</div>
+
+
+$if errors != None:
+    <h3>Errors while loading contest</h3>
+    <table class="table">
+        <tr>
+            <th>contest name</th>
+            <th>error</th>
+        </tr>
+        $for task in errors:
+            <tr>
+                <td>$task['taskid']</td>
+                <td><pre>$task['error']</pre></td>
+            </tr>
+    </table>
+<script type="text/javascript">
+
+    TableExport.prototype.bootstrap = ["btn", "btn-primary btn-success btn-sm", "btn-toolbar"];
+
+    var BootstrapTable = document.getElementById('report_table');
+    var instance = new TableExport(BootstrapTable, {
+        bootstrap: true,
+        formats: ['xlsx','csv'],
+        filename: 'Report',
+    });
+
+    var XLSbutton = document.getElementById('export_to_excel');
+
+    XLSbutton.addEventListener('click', function (e) {
+        $$(".xlsx").click();
+    });
+
+    $$(".xlsx").css("display","none");
+
+    var CSVbutton = document.getElementById('export_to_csv');
+
+    CSVbutton.addEventListener('click', function (e) {
+        $$(".csv").click();
+    });
+
+    $$(".csv").css("display","none");
+
+
+
+</script>

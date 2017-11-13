@@ -21,7 +21,7 @@ $def ColumnF():
     $:template_helper.call('main_menu', template_helper=template_helper)
 $var Column: $:ColumnF()
 
-<form method="post">
+<form method="post" class="form-horizontal">
 <h2>
     New clarification
     <div class="pull-right">
@@ -41,7 +41,6 @@ $var Column: $:ColumnF()
                 $for id,problem in problems.items():
                     <option value="${id}">${id} - ${problem['name']}</option>
             </select>
-            <br>
         </div>
     </div>
     <div class="form-group">
@@ -60,24 +59,3 @@ $var Column: $:ColumnF()
     </div>
 
 </form>
-<script type="text/javascript">
-$$('.sorted_table').sortable({
-    containerSelector: 'table',
-    itemPath: '> tbody',
-    itemSelector: 'tr',
-    placeholder: '<tr class="placeholder"/>'
-});
-
-$$('.sorted_table').sortable("disable");
-
-$$("#switch").click(function  (e) {
-    if($$(this).hasClass("active")) {
-        $$(this).removeClass("active");
-        $$(".sorted_table tr").removeAttr("style");
-    } else {
-        $$(this).addClass("active");
-        $$(".sorted_table tr").attr("style", "cursor: pointer;");
-    }
-    $$('.sorted_table').sortable($$(this).hasClass("active") ? "enable" : "disable");
-});
-</script>

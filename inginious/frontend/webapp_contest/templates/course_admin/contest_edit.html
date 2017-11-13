@@ -116,21 +116,26 @@ $elif saved:
                     </div>
                     <div class="form-group">
                         <label for="add-technique" class="control-label">Technique:</label>
-                        <select id="add-technique" class="form-control" name="add-technique">
+                        <select id="add-technique" class="form-control" name="add-technique" onclick="studio_get_len_problems()">
                             $for category in techniques:
                                 <option value="$category">$category</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="add-structure" class="control-label">Structure:</label>
-                        <select id="add-structure" class="form-control" name="add-structure">
+                        <select id="add-structure" class="form-control" name="add-structure" onclick="studio_get_len_problems()">
                             $for structure in structures:
                                 <option value="$structure">$structure</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label for="add-difficulty" class="control-label">Difficulty (1-5):</label>
-                        <input type="number" class="form-control" id="add-difficulty" name="add-difficulty" value="" min="1" max="5" placeholder="1"/>
+                        <input type="number" class="form-control" id="add-difficulty" name="add-difficulty" value="" min="1" max="5" placeholder="1" onchange="studio_get_len_problems()"/>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="add-get-problem" class="control-label">Maximum number of problems:</label>
+                        <p id="add-get-problem" name="add-get-problem"></p>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -215,7 +220,15 @@ $elif saved:
 
 <div style="display: none;">
     <form id="generate_contest_form" method="post" enctype="multipart/form-data" class="form-horizontal">>
-        <input type="hidden" name="generate" value="1"/>
+        <input type="hidden" id="generate" name="generate" value="1"/>
+        <input type="hidden" id="get_problems" name="get_problems" value="0"/>
+
+        <input type="hidden" id="add-technique_cloned" name="add-technique_cloned"/>
+
+        <input type="hidden" id="add-structure_cloned" name="add-structure_cloned"/>
+
+        <input type="hidden" id="add-difficulty_cloned" name="add-difficulty_cloned" value="1"/>
+
         <table id="cloned_info">
 
         </table>

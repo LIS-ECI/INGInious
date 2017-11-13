@@ -43,16 +43,28 @@ class AnswerClarificationPageAdmin(INGIniousAdminPage):
     def GET_AUTH(self, courseid, contestid, clarificationid):  # pylint: disable=arguments-differ
         """ GET request: simply display the form """
         course, _ = self.get_course_and_check_rights(courseid)
+
         try:
             data = self.database.clarifications.find_one(({"contest": contestid, "course": courseid, "_id" : ObjectId(clarificationid)}))
         except:
             raise web.notfound()
         if data is None:
             raise web.notfound()
-        web.debug(data, courseid, contestid, clarificationid)
+        #web.debug(data, courseid, contestid, clarificationid)
+
+        users = sorted(list(self.user_manager.get_users_info(self.user_manager.get_course_registered_users(course, False)).items()),
+                       key=lambda k: k[1][0] if k[1] is not None else "")
+
+        users = OrderedDict(sorted(list(self.user_manager.get_users_info(course.get_staff()).items()),
+                                   key=lambda k: k[1][0] if k[1] is not None else "") + users)
+
+        users = [x for x,y in users.items()]
+
+        #web.debug(users)
+
         #return self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/contests').admin(course, contest_data, None, False)
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/studio_contest.js', 'header')
-        return self.template_helper.get_renderer().course_admin.clarification_answer(course, data, None, AccessibleTime, clarificationid, contestid, False)
+        return self.template_helper.get_renderer().course_admin.clarification_answer(course, data, None, AccessibleTime, clarificationid, contestid, False, users)
 
     def POST_AUTH(self, courseid, contestid, clarificationid):  # pylint: disable=arguments-differ
         """ POST request: update the clarification """
@@ -71,6 +83,7 @@ class AnswerClarificationPageAdmin(INGIniousAdminPage):
                 clarification_data = self.database.clarifications.find_one_and_update({"_id" : ObjectId(clarificationid)},
                                                            {"$set": {
                                                                "response": data["response"],
+                                                               "to": data["to"],
                                                                "answered_by": user
                                                            }},return_document=ReturnDocument.AFTER)
                 saved = True
@@ -78,5 +91,15 @@ class AnswerClarificationPageAdmin(INGIniousAdminPage):
                 errors.append("Response cannot be empty")
         else:
             errors.append("This clarification has been previously answered")
-        web.debug(saved)
-        return self.template_helper.get_renderer().course_admin.clarification_answer(course, clarification_data, errors, AccessibleTime, clarificationid, contestid, saved)
+        #web.debug(saved)
+
+        users = sorted(list(
+            self.user_manager.get_users_info(self.user_manager.get_course_registered_users(course, False)).items()),
+                       key=lambda k: k[1][0] if k[1] is not None else "")
+
+        users = OrderedDict(sorted(list(self.user_manager.get_users_info(course.get_staff()).items()),
+                                   key=lambda k: k[1][0] if k[1] is not None else "") + users)
+
+        users = [x for x, y in users.items()]
+
+        return self.template_helper.get_renderer().course_admin.clarification_answer(course, clarification_data, errors, AccessibleTime, clarificationid, contestid, saved, users)

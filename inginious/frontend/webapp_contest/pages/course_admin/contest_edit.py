@@ -96,18 +96,32 @@ class ContestAdmin(INGIniousAdminPage):
             self.contest_manager.delete_contest(courseid, contestid)
             raise web.seeother("/admin/" + courseid + "/contest")
 
-        web.debug(new_data)
+        #web.debug(new_data)
 
-        if "generate" in new_data:
+        if "generate" in new_data and new_data["generate"]=="1":
             data = [value for key, value in self.dict_from_prefix("type", new_data).items()]
             other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
-            web.debug(data)
+            #web.debug(data)
             try:
                 new_problems = self.contest_manager.get_random_contest(data, other_problems)
-                web.debug(new_problems)
+                #web.debug(new_problems)
+                return json.dumps({"status": "ok", "message": str(new_problems)})
+            except Exception as e:
+                return json.dumps({"status": "error", "message": str(e)})
+
+        if "get_problems" in new_data and new_data["get_problems"]=="1":
+            other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
+            try:
+
+                diff = new_data.get("add-difficulty_cloned")
+                if len(diff) == 0:
+                    diff = 1
+                new_problems = len(self.contest_manager.get_problems(new_data["add-technique_cloned"], new_data["add-structure_cloned"], diff, other_problems))
+                #web.debug(new_problems)
                 return json.dumps({"status": "ok", "message": new_problems})
             except Exception as e:
                 return json.dumps({"status": "error", "message": str(e)})
+
         try:
             contest_data['enabled'] = new_data.get('enabled', '0') == '1'
             contest_data['start'] = new_data["start"]

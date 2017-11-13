@@ -46,10 +46,16 @@ $var Navbar: $:NavbarF()
                     $if is_admin:
                         <a href="$get_homepath()/admin/${course.get_id()}/$contestid/contest" class="btn btn-primary btn-xs" title="Edit contest" data-toggle="tooltip"
                            data-placement="bottom"><i class="fa fa-edit"></i></a>
-                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/clarifications" class="btn btn-default btn-xs" title="View clarifications" data-toggle="tooltip"
-                           data-placement="bottom"><i class="fa fa-eye"></i></a>
+                        <a href="$get_homepath()/admin/${course.get_id()}/$contestid/clarifications" class="btn
+                        $if len(list(contest_manager.get_admin_pending_clarifications_by_contest(course.get_id(), contestid)))>0:
+                            btn-warning
+                        $else:
+                            btn-default
+                        btn-xs" title="View clarifications" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-eye"></i></a>
                     <a href="$get_homepath()/contest/${course.get_id()}/$i/scoreboard" class="btn btn-default btn-xs" title="View contest" data-toggle="tooltip"
                        data-placement="bottom"><i class="fa fa-users"></i></a>
+                    <a href="$get_homepath()/admin/${course.get_id()}/$contestid/report" class="btn btn-default btn-xs" title="View report" data-toggle="tooltip"
+                       data-placement="bottom"><i class="fa fa-table"></i></a>
                 </div>
     		</td>
     	</tr>

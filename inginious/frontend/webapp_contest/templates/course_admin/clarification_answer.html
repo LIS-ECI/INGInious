@@ -1,4 +1,4 @@
-$def with (course,clarifications_data,errors,AccessibleTime,clarification_id, contest_id, saved)
+$def with (course,clarifications_data,errors,AccessibleTime,clarification_id, contest_id, saved, users)
 
 $#
 $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
@@ -9,6 +9,7 @@ $var title: $:course.get_name()
 
 $var Column: $:template_helper.call('course_admin_menu',course=course,current='contest')
 $ is_admin = user_manager.has_admin_rights_on_course(course)
+$ time = clarifications_data.get('to',clarifications_data.get('from',''))
 
 $def NavbarF():
     <ol class="nav navbar-nav nav-breadcrumb">
@@ -19,7 +20,7 @@ $def NavbarF():
     </ol>
 $var Navbar: $:NavbarF()
 
-<form method="post">
+<form method="post" class="form-horizontal">
 <h2>
     Clarification details
     <div class="pull-right">
@@ -38,28 +39,40 @@ $var Navbar: $:NavbarF()
         <div class="alert alert-success" role="alert">Clarification answered.</div>
     <br>
     <div class="form-group">
+        <label for="to" class="col-sm-3 control-label">To:</label>
+        <div class="col-sm-9">
+            <select class="form-control" id="to" name="to" placeholder="">
+                <option value="*">ALL</option>
+                $for id in users:
+                    <option value="${id}"
+                        $if id==time:
+                            selected
+                    >${id}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
         <label for="from" class="col-sm-3 control-label">From:</label>
         <div class="col-sm-9">
-            <label class="form-control" id="from" name="from">${clarifications_data.get('from','')}</label>
+            <input class="form-control" disabled id="from" name="from" value="${clarifications_data.get('from','')}"/>
         </div>
     </div>
     <div class="form-group">
         <label for="subject" class="col-sm-3 control-label">Subject:</label>
         <div class="col-sm-9">
-            <label class="form-control" id="subject" name="subject">${clarifications_data.get('subject','')}</label>
+            <input class="form-control" disabled id="subject" name="subject" value="${clarifications_data.get('subject','')}"/>
         </div>
     </div>
     <div class="form-group">
         <label for="time" class="col-sm-3 control-label">Time:</label>
         <div class="col-sm-9">
-            <label class="form-control" id="time" name="time">$clarifications_data["time"].strftime("%d/%m/%Y %H:%M:%S")</label>
+            <input class="form-control" disabled id="time" name="time" value="$clarifications_data['time'].strftime('%d/%m/%Y %H:%M:%S')"/>
         </div>
     </div>
     <div class="form-group">
         <label for="text"  class="col-sm-3 control-label">Text:</label>
         <div class="col-sm-9">
             <textarea class="form-control" rows="2" id="text" name="text" disabled>${clarifications_data.get('text','')}</textarea>
-            <br>
         </div>
     </div>
 

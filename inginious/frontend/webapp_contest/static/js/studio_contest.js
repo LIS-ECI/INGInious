@@ -356,11 +356,16 @@ function studio_add_type_problem()
 }
 
 function studio_generate_new_contest(){
+
+
     var count = document.getElementById("generate_contest").getElementsByTagName("tr").length;
     if(count==1){
         alert("You must have at least one type of problem.");
         return false;
     }
+
+    $("#generate").val("1");
+    $("#get_problems").val("0");
 
     studio_display_contest_submit_message("Saving...", "info", false);
 
@@ -370,6 +375,9 @@ function studio_generate_new_contest(){
     $("#problems_cloned").html($("#accordion").html());
 
     var error = "";
+
+
+
     $('form#generate_contest_form').ajaxSubmit({
         dataType: 'json',
         success: function (data) {
@@ -414,5 +422,41 @@ function studio_generate_new_contest(){
     console.log(types);
 
     */
+
+}
+
+function studio_get_len_problems(){
+
+    $("#generate").val("0");
+    $("#get_problems").val("1");
+
+    $("#problems_cloned").html($("#accordion").html());
+
+    $("#add-technique_cloned").val($("#add-technique").val());
+
+    $("#add-structure_cloned").val($("#add-structure").val());
+
+    $("#add-difficulty_cloned").val($("#add-difficulty").val());
+
+    var error = "";
+
+    $("#add-get-problem").val("Loading...");
+
+    $('form#generate_contest_form').ajaxSubmit({
+        success: function (data) {
+            data = JSON.parse(data);
+            console.log($("#add-get-problem"));
+            $("#add-get-problem").html(data["message"]);
+        },
+        error: function (result) {
+            error += "<li>An internal error occurred</li>";
+        },
+        async: false
+    });
+
+    if(error)
+        $("#add-get-problem").val("Some error(s) occurred when getting the problems: " + error, "danger", true);
+    else
+        $("#add-get-problem").val("Problems generated.", "success", true);
 
 }

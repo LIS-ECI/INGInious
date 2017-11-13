@@ -40,6 +40,7 @@ urls = (
     r'/admin/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.utils.CourseRedirect',
     r'/admin/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contests.ContestsPageAdmin',
     r'/admin/([^/]+)/([^/]+)/clarifications', 'inginious.frontend.webapp_contest.pages.course_admin.clarifications.ContestClarificationsPageAdmin',
+    r'/admin/([^/]+)/([^/]+)/report', 'inginious.frontend.webapp_contest.pages.course_admin.contest_report.ContestReportPage',
     r'/admin/([^/]+)/([^/]+)/clarifications/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.clarifications.AnswerClarificationPageAdmin',
     r'/admin/([^/]+)/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestAdmin',
     r'/admin/([^/]+)/([^/]+)/contest/generate', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestGenerator',
@@ -151,17 +152,20 @@ def get_app(config):
         web.config.smtp_password = smtp_conf.get("password", "")
         web.config.smtp_sendername = smtp_conf.get("sendername", "no-reply@ingnious.org")
 
+    web.config.debug = config.get('web_debug',False)
+
     # Update the database
     update_database(database, gridfs, course_factory, user_manager)
 
     # Add some helpers for the templates
     template_helper.add_to_template_globals("get_homepath", lambda: web.ctx.homepath)
     template_helper.add_to_template_globals("user_manager", user_manager)
+    template_helper.add_to_template_globals("contest_manager", contest_manager)
     template_helper.add_to_template_globals("default_allowed_file_extensions", default_allowed_file_extensions)
     template_helper.add_to_template_globals("default_max_file_size", default_max_file_size)
     template_helper.add_other("course_admin_menu",
                               lambda course, current: course_admin_utils.get_menu(course, current, template_helper.get_renderer(False),
-                                                                                  plugin_manager, user_manager))
+                                                                                  plugin_manager, user_manager, contest_manager))
 
     # Not found page
     appli.notfound = lambda: web.notfound(template_helper.get_renderer().notfound('Page not found'))

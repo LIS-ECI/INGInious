@@ -30,27 +30,24 @@ $var Column: $:ColumnF()
         </div>
     </div>
 </h2>
-
+<form  class="form-horizontal">
     <br>
     <div class="form-group">
         <label for="subject" class="col-sm-3 control-label">Subject:</label>
         <div class="col-sm-9">
             <label class="form-control" id="subject" name="subject">${clarifications_data.get('subject','')}</label>
-            <br>
         </div>
     </div>
     <div class="form-group">
         <label for="time" class="col-sm-3 control-label">Time:</label>
         <div class="col-sm-9">
             <label class="form-control" id="time" name="time">$clarifications_data["time"].strftime("%d/%m/%Y %H:%M:%S")</label>
-            <br>
         </div>
     </div>
     <div class="form-group">
         <label for="text"  class="col-sm-3 control-label">Question:</label>
         <div class="col-sm-9">
             <textarea class="form-control" rows="2" id="text" name="text" disabled>${clarifications_data.get('text','')}</textarea>
-            <br>
         </div>
     </div>
 
@@ -66,25 +63,4 @@ $var Column: $:ColumnF()
         <div class="col-sm-12"><a href="javascript:studio_create_new_contest();" class="btn btn-primary btn-large btn-block">Create new contest</a></div>
     </div>
 </div-->
-
-<script type="text/javascript">
-$$('.sorted_table').sortable({
-    containerSelector: 'table',
-    itemPath: '> tbody',
-    itemSelector: 'tr',
-    placeholder: '<tr class="placeholder"/>'
-});
-
-$$('.sorted_table').sortable("disable");
-
-$$("#switch").click(function  (e) {
-    if($$(this).hasClass("active")) {
-        $$(this).removeClass("active");
-        $$(".sorted_table tr").removeAttr("style");
-    } else {
-        $$(this).addClass("active");
-        $$(".sorted_table tr").attr("style", "cursor: pointer;");
-    }
-    $$('.sorted_table').sortable($$(this).hasClass("active") ? "enable" : "disable");
-});
-</script>
+</form>

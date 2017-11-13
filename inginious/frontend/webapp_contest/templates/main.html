@@ -19,7 +19,7 @@ $# Start content
         $ username = user_manager.session_username()
         $for courseid, course in open_courses.items():
             $if courseid == bank_name and user_manager.user_is_superadmin()==False:
-                pass
+                $ s=1
             <a href="$get_homepath()/course/$courseid" class="list-group-item row $('list-group-item-warning' if not course.is_open_to_non_staff() else '')">
                 <div class="col-xs-12 col-md-8">
                     $course.get_name()

@@ -15,3 +15,20 @@ $#
             active
         ">$:name</a>
 </div>
+
+$ pending_clarifications = list(contest_manager.get_admin_pending_clarifications(course.get_id()))
+
+$if len(pending_clarifications)>0:
+    <script>
+        var url_inginious = [location.protocol, '//', location.host].join('');
+        console.log(url_inginious)
+        $$.notify({
+            title: '<strong>Pending clarifications</strong><br>',
+            message: 'There are pending clarifications to review.',
+            url: url_inginious+'/admin/${course.get_id()}/contest',
+	        target: '_blank'
+        },{
+            type: 'warning',
+            delay: 2000
+        });
+    </script>

@@ -24,14 +24,30 @@ $#
 	            <td class="contest_score_task">$data['score'][0]</td>
 	            <td class="contest_score_time">$int(data['score'][1])</td>
 	            $for taskid in tasks:
+                    $ link = "http://localhost:8090/admin/"+course.get_id()+"/student/"+data['realname']+"/"+taskid if user_manager.has_staff_rights_on_course(course) else ""
 	                $if data['tasks'][taskid]['status'] == 'ACF':
-	                    <td class="contest_task contest_ac_first">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
+                            <td class="contest_task contest_ac_first">
+                                    $if len(link)>0:
+                                        <a href="$link" target="_blank">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</a>
+                                    $else:
+                                        ${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])
+                            </td>
 	                $elif data['tasks'][taskid]['status'] == 'AC':
-	                    <td class="contest_task contest_ac">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</td>
+                            <td class="contest_task contest_ac">
+                                    $if len(link)>0:
+                                        <a href="$link" target="_blank">${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])</a>
+                                    $else:
+                                        ${data['tasks'][taskid]['tries']}/$int(data['tasks'][taskid]['score'])
+                            </td>
 	                $elif data['tasks'][taskid]['status'] != 'NA':
-	                    <td class="contest_task contest_wa_tle">$data['tasks'][taskid]['tries']</td>
+                            <td class="contest_task contest_wa_tle">
+                                    $if len(link)>0:
+                                        <a href="$link" target="_blank">$data['tasks'][taskid]['tries']</a>
+                                    $else:
+                                        $data['tasks'][taskid]['tries']
+                            </td>
 	                $else:
-	                    <td class="contest_task contest_na">0</td>
+	                        <td class="contest_task contest_na">0</td>
 	        </tr>
 	</table>
     <script>

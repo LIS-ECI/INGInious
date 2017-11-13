@@ -42,15 +42,20 @@ class ContestManager():
         data = self.get_contest_data(course, contestid)
         return data["enabled"]==True
 
-    def get_random_problems(self, quantity, technique, structure, difficulty, other_problems):
+    def get_problems(self, technique, structure, difficulty, other_problems):
         problems = [(self.task_factory.get_task(self.course_factory.get_course(self.bank_name), x),
                      self.task_factory.get_task_descriptor_content(self.bank_name, x)) for x in
                     self.course_factory.get_course(self.bank_name).get_tasks()]
+        difficulty = int(difficulty)
         problems = [x for x in problems if x[0].get_id() not in other_problems]
-        problems = [x for x in problems if x[1].get("difficulty") == difficulty]
-        problems = [x for x in problems if x[1].get("structure") == structure]
-        problems = [x for x in problems if x[1].get("category") == technique]
-        problems = [x[0].get_id() for x in problems]
+        problems = [x for x in problems if
+                    x[1].get("difficulty") == difficulty and x[1].get("structure") == structure and x[1].get(
+                        "category") == technique]
+        web.debug(problems)
+        return [x[0].get_id() for x in problems]
+
+    def get_random_problems(self, quantity, technique, structure, difficulty, other_problems):
+        problems = self.get_problems(self, technique, structure, difficulty, other_problems)
         if len(problems) < quantity:
             raise Exception("Inconsistent information: There are not enough problems for this type: "
                             "Technique:"+technique+
@@ -98,6 +103,14 @@ class ContestManager():
         if specific_contest is None:
             specific_contest = {}
         return specific_contest
+
+    def get_admin_pending_clarifications(self, courseid):
+        return self.database.clarifications.find(
+            ({"course": courseid, "answered_by" : -1}))
+
+    def get_admin_pending_clarifications_by_contest(self, courseid, contestid):
+        return self.database.clarifications.find(
+            ({"course": courseid, "answered_by" : -1, "contest": contestid}))
 
     def get_last_contest_id(self, courseid):
         course = self.course_factory.get_course(courseid)
@@ -155,6 +168,7 @@ class ContestManager():
                 if status["status"] == "AC" or status["status"] == "ACF":
                     continue
                 else:
+                    status["time"] = submission['submitted_on']
                     if submission['result'] == "success":
                         if not task_succeeded[submission['taskid']]:
                             status["status"] = "ACF"
