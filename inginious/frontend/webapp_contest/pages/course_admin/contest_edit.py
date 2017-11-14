@@ -101,7 +101,6 @@ class ContestAdmin(INGIniousAdminPage):
         if "generate" in new_data and new_data["generate"]=="1":
             data = [value for key, value in self.dict_from_prefix("type", new_data).items()]
             other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
-            #web.debug(data)
             try:
                 new_problems = self.contest_manager.get_random_contest(data, other_problems)
                 #web.debug(new_problems)

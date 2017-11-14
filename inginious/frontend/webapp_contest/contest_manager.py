@@ -26,15 +26,19 @@ class ContestManager():
         return ret
 
     def get_all_techniques(self, courseid):
-        problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("category","") for x in
-                    self.course_factory.get_course(courseid).get_tasks()]
-        retval = set([x for x in problems if len(x)>0])
+        #problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("category","") for x in
+        #            self.course_factory.get_course(courseid).get_tasks()]
+        #retval = set([x for x in problems if len(x)>0])
+
+        retval = ["Ad hoc", "Programación dinámica", "Greedy", "Dividir y conquistar", "Recursión", "Ordenamiento"]
         return retval
 
     def get_all_structures(self, courseid):
-        problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("structure","") for x in
-                    self.course_factory.get_course(courseid).get_tasks()]
-        retval = set([x for x in problems if len(x) > 0])
+        #problems = [self.task_factory.get_task_descriptor_content(courseid, x).get("structure","") for x in
+        #            self.course_factory.get_course(courseid).get_tasks()]
+        #retval = set([x for x in problems if len(x) > 0])
+
+        retval = ["Lista 1D", "Pila", "Cola", "Grafo", "Diccionario", "Cola de prioridad", "Árbol binario", "Lista encadenada", "Ninguna", "Lista 2D", "Conjuntos"]
         return retval
 
     def contest_is_enabled(self, courseid, contestid):
@@ -47,15 +51,15 @@ class ContestManager():
                      self.task_factory.get_task_descriptor_content(self.bank_name, x)) for x in
                     self.course_factory.get_course(self.bank_name).get_tasks()]
         difficulty = int(difficulty)
+        other_problems = [x["name"] for x in other_problems]
         problems = [x for x in problems if x[0].get_id() not in other_problems]
         problems = [x for x in problems if
                     x[1].get("difficulty") == difficulty and x[1].get("structure") == structure and x[1].get(
                         "category") == technique]
-        web.debug(problems)
         return [x[0].get_id() for x in problems]
 
     def get_random_problems(self, quantity, technique, structure, difficulty, other_problems):
-        problems = self.get_problems(self, technique, structure, difficulty, other_problems)
+        problems = self.get_problems(technique, structure, difficulty, other_problems)
         if len(problems) < quantity:
             raise Exception("Inconsistent information: There are not enough problems for this type: "
                             "Technique:"+technique+
@@ -65,7 +69,6 @@ class ContestManager():
 
     def get_random_contest(self, random_types, other_problems):
         problems = []
-        other_problems = [x["name"] for x in other_problems]
         for random_type in random_types:
             quantity = int(random_type["quantity"])
             technique = random_type["technique"]
