@@ -103,3 +103,56 @@ class AnswerClarificationPageAdmin(INGIniousAdminPage):
         users = [x for x, y in users.items()]
 
         return self.template_helper.get_renderer().course_admin.clarification_answer(course, clarification_data, errors, AccessibleTime, clarificationid, contestid, saved, users)
+
+class ClarificationRequestAdminPage(INGIniousAdminPage):
+    """ Clarification request for a contest """
+
+    def GET_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
+        """ GET request: simply display the form """
+        username = self.user_manager.session_username()
+        course, _ = self.get_course_and_check_rights(courseid)
+        if not self.contest_manager.exists_contest(courseid, contestid):
+            return self.template_helper.get_renderer().contest_unavailable()
+        elif not self.user_manager.course_is_open_to_user(course):
+            return self.template_helper.get_renderer().contest_unavailable()
+        else:
+            self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/studio_contest.js', 'header')
+            course, start, end, blackout, tasks, results, activity, contestid, contest_name = self.contest_manager.get_data(
+                courseid, contestid, False)
+            users = sorted(list(
+                self.user_manager.get_users_info(self.user_manager.get_course_registered_users(course, False)).items()),
+                key=lambda k: k[1][0] if k[1] is not None else "")
+
+            users = OrderedDict(sorted(list(self.user_manager.get_users_info(course.get_staff()).items()),
+                                       key=lambda k: k[1][0] if k[1] is not None else "") + users)
+
+            users = [x for x, y in users.items()]
+            return self.template_helper.get_renderer().course_admin.clarifications_new(course, tasks, None, AccessibleTime,
+                                                                          contestid, contest_name, users)
+
+    def POST_AUTH(self, courseid, contestid):  # pylint: disable=arguments-differ
+        """ POST request: update the settings """
+        course = self.course_factory.get_course(courseid)
+        if not self.contest_manager.exists_contest(courseid, contestid):
+            return self.template_helper.get_renderer().contest_unavailable()
+        elif not self.user_manager.course_is_open_to_user(course):
+            return self.template_helper.get_renderer().contest_unavailable()
+        else:
+            data = web.input()
+            username = self.user_manager.session_username()
+            if len(data["text"]) <= 200 and len(data["subject"]) <= 200:
+                new_clarification = {
+                    "time": datetime.now(),
+                    "from": username,
+                    "to": data["to"],
+                    "subject": data["subject"],
+                    "text": data["text"],
+                    "contest": contestid,
+                    "course": course.get_id(),
+                    "response": data["text"],
+                    "answered_by": username
+                }
+                self.database.clarifications.insert(new_clarification)
+                raise web.seeother(web.ctx.homepath+ "/admin/" + courseid + "/" + contestid + "/clarifications")
+            else:
+                raise web.notfound()

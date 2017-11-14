@@ -1,0 +1,72 @@
+$def with (course,problems,errors,AccessibleTime,contest_id,cname, users)
+
+$#
+$# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
+$# more information about the licensing of this file.
+$#
+
+$var title: $cname - Clarifications
+
+$ is_admin = user_manager.has_admin_rights_on_course(course)
+
+$def NavbarF():
+    <ol class="nav navbar-nav nav-breadcrumb">
+        <li><a href="$get_homepath()/contest/$course.get_id()/$contest_id/overview">$cname</a></li>
+        <li class="active"><a href="#"><i class="fa fa-cog"></i> Overview <span class="sr-only">(current)</span></a></li>
+    </ol>
+$var Navbar: $:NavbarF()
+
+
+$# Left column content
+$def ColumnF():
+    $:include.contest_menu(course, contest_id, "clarification_request", False)
+    $:template_helper.call('main_menu', template_helper=template_helper)
+$var Column: $:ColumnF()
+
+<form method="post" class="form-horizontal">
+<h2>
+    New clarification
+    <div class="pull-right">
+        <div class="btn-group">
+            <a id="switch" class="btn-sm btn btn-info" href="$get_homepath()/contest/$course.get_id()/$contest_id/clarifications"><i class="fa fa-arrow-left"></i> Go to clarifications</a>
+        </div>
+    </div>
+</h2>
+
+    <br>
+    <div class="form-group">
+        <label for="to" class="col-sm-3 control-label">To:</label>
+        <div class="col-sm-9">
+            <select class="form-control" id="to" name="to" placeholder="">
+                <option value="*">ALL</option>
+                $for id in users:
+                    <option value="${id}">${id}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="subject" class="col-sm-3 control-label">Subject:</label>
+        <div class="col-sm-9">
+            <select class="form-control" id="subject" name="subject" placeholder="Select a problem...">
+                <option value="general">General</option>
+                $for id,problem in problems.items():
+                    <option value="${id}">${id} - ${problem['name']}</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="text"  class="col-sm-3 control-label">Question (max. 200 characters):</label>
+        <div class="col-sm-9">
+            <textarea class="form-control" rows="4" id="text" name="text" maxlength="200"></textarea>
+            <br>
+        </div>
+    </div>
+        <div class="form-group">
+        <label for="text"  class="col-sm-3 control-label"></label>
+        <div class="col-sm-9">
+            <button class="btn btn-primary btn-success btn-block task_edit_submit_button" type="submit"><i class="fa fa-save"></i> Send clarification</button>
+            <br>
+        </div>
+    </div>
+
+</form>

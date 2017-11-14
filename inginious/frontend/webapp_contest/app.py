@@ -40,6 +40,7 @@ urls = (
     r'/admin/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.utils.CourseRedirect',
     r'/admin/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contests.ContestsPageAdmin',
     r'/admin/([^/]+)/([^/]+)/clarifications', 'inginious.frontend.webapp_contest.pages.course_admin.clarifications.ContestClarificationsPageAdmin',
+    r'/admin/([^/]+)/([^/]+)/clarifications_new', 'inginious.frontend.webapp_contest.pages.course_admin.clarifications.ClarificationRequestAdminPage',
     r'/admin/([^/]+)/([^/]+)/report', 'inginious.frontend.webapp_contest.pages.course_admin.contest_report.ContestReportPage',
     r'/admin/([^/]+)/([^/]+)/clarifications/([^/]+)', 'inginious.frontend.webapp_contest.pages.course_admin.clarifications.AnswerClarificationPageAdmin',
     r'/admin/([^/]+)/([^/]+)/contest', 'inginious.frontend.webapp_contest.pages.course_admin.contest_edit.ContestAdmin',
