@@ -353,6 +353,11 @@ function studio_add_type_problem()
             )
     );
     $('#modal_file_upload').modal('hide');
+    $('#add-difficulty').val("");
+    $('#add-technique').val("");
+    $('#add-structure').val("");
+    $('#add-quantity').val("");
+    $("#add-get-problem").html("");
 }
 
 function studio_generate_new_contest(){
@@ -376,19 +381,21 @@ function studio_generate_new_contest(){
 
     var error = "";
 
-
-
     $('form#generate_contest_form').ajaxSubmit({
         dataType: 'json',
         success: function (data) {
             if ("status" in data && data["status"] == "ok"){
                 error += "";
+                console.log(data);
+                //data = JSON.parse(data);
                 var problems = data["message"];
                 console.log(problems);
 
                 $.each(problems, function( index, value ) {
                   studio_create_new_contest_problem(value);
                 });
+
+
 
             }else if ("message" in data)
                 error += "<li>" + data["message"] + "</li>";

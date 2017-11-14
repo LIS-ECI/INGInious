@@ -100,16 +100,25 @@ class ContestAdmin(INGIniousAdminPage):
 
         if "generate" in new_data and new_data["generate"]=="1":
             data = [value for key, value in self.dict_from_prefix("type", new_data).items()]
-            other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
+            other_problems = self.dict_from_prefix("problem", new_data)
+            if other_problems is not None:
+                other_problems = [value for key, value in other_problems.items()]
+            else:
+                other_problems = []
             try:
                 new_problems = self.contest_manager.get_random_contest(data, other_problems)
                 #web.debug(new_problems)
-                return json.dumps({"status": "ok", "message": str(new_problems)})
+
+                return json.dumps({"status": "ok", "message": new_problems})
             except Exception as e:
                 return json.dumps({"status": "error", "message": str(e)})
 
         if "get_problems" in new_data and new_data["get_problems"]=="1":
-            other_problems = [value for key, value in self.dict_from_prefix("problem", new_data).items()]
+            other_problems = self.dict_from_prefix("problem", new_data)
+            if other_problems is not None:
+                other_problems = [value for key, value in other_problems.items()]
+            else:
+                other_problems = []
             try:
 
                 diff = new_data.get("add-difficulty_cloned")
