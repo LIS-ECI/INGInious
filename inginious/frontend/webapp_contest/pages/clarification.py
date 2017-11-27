@@ -64,6 +64,12 @@ class ClarificationDetailPage(INGIniousAuthPage):
                     ({"contest": contestid, "course": courseid, "_id": ObjectId(clarificationid)}))
                 if data["response"] == "":
                     data["response"] = "Not answered yet."
+                if data["answered_by"]!=-1 and username not in data.get("seen_by",[]):
+                    if "seen_by" not in data:
+                        data["seen_by"] = []
+                    data["seen_by"].append(username)
+                    self.database.clarifications.find_one_and_update({"contest": contestid, "course": courseid, "_id": ObjectId(clarificationid)},
+                                                             {"$push": {"seen_by": {"$each": data["seen_by"]}}})
 
             except:
                 raise web.notfound()
@@ -116,7 +122,8 @@ class ClarificationRequestPage(INGIniousAuthPage):
                     "contest": contestid,
                     "course": course.get_id(),
                     "response": "",
-                    "answered_by": -1
+                    "answered_by": -1,
+                    "seen_by": []
                 }
                 self.database.clarifications.insert(new_clarification)
                 raise web.seeother("/contest/" + courseid + "/" + contestid + "/clarifications")

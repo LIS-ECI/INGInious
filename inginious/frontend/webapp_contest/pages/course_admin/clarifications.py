@@ -150,7 +150,8 @@ class ClarificationRequestAdminPage(INGIniousAdminPage):
                     "contest": contestid,
                     "course": course.get_id(),
                     "response": data["text"],
-                    "answered_by": username
+                    "answered_by": username,
+                    "seen_by": []
                 }
                 self.database.clarifications.insert(new_clarification)
                 raise web.seeother(web.ctx.homepath+ "/admin/" + courseid + "/" + contestid + "/clarifications")

@@ -293,7 +293,18 @@ function studio_add_type_problem()
         return;
     }
 
+    var max_cant = parseInt($("#add-get-problem").html());
+
     var isValid = true;
+
+    console.log(quantity+" "+max_cant);
+
+    if(quantity > max_cant){
+        alert("'Quantity' field is greater than the maximum number of problems that match with selected difficulty, technique and structure");
+        isValid = false;
+        return;
+    }
+
     var cont = 0;
 
     $("tr.type").each(function(i, tr) {
@@ -303,11 +314,13 @@ function studio_add_type_problem()
       var item_structure = $("td.structure", tr).html();
       var item_difficulty = $("td.difficulty", tr).html();
 
-      if(isValid && difficulty==item_difficulty && (technique == item_technique)){
-        alert("Already exists a type of problem with the same difficulty and the same technique.");
+      if(isValid && difficulty==item_difficulty && (technique == item_technique) && (structure == item_structure)){
+        alert("Already exists a type of problem with the same difficulty and the same technique and the same structure.");
         isValid = false;
       }
     });
+
+
 
     if(!isValid){
         return;

@@ -17,29 +17,38 @@ $# Start content
 <div class="list-group list-group-progress" style="margin-left: 16px; margin-right: 16px;">
 	$if len(open_contests) != 0:
         <a class="list-group-item row">
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <label>Contest name</label>
             </div>
             <div class="col-sm-3">
                 <label>Description</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <label>Start date</label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <label>End date</label>
+            </div>
+            <div class="col-sm-3">
+                <label>Additional observations</label>
             </div>
         </a>
         $ username = user_manager.session_username()
         $for courseid, scoreboard in open_contests.items():
             $for sid, val in scoreboard.items():
                 <a href="$get_homepath()/contest/$courseid/$sid/overview" class="list-group-item row">
-                    <div class="col-sm-3">
+                    <div class="col-sm-2">
                         <label>$val["name"]</label>
                     </div>
                     <div class="col-sm-3">$val.get('description','')</div>
-                    <div class="col-sm-3">$val["start"]</div>
-                    <div class="col-sm-3">$val["end"]</div>
+                    <div class="col-sm-2">$val["start"]</div>
+                    <div class="col-sm-2">$val["end"]</div>
+                    <div class="col-sm-3">
+                        $if len(list(contest_manager.get_contestant_pending_clarifications_by_contest(courseid, sid)))>0:
+                            <b>There are pending answered clarifications to review!</b>
+                        $else:
+                            None
+                    </div>
                 </a>
     $else:
         <a class="list-group-item row disabled">You are not registered to any contest.</a>

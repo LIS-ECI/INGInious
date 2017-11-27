@@ -113,7 +113,25 @@ class ContestManager():
 
     def get_admin_pending_clarifications_by_contest(self, courseid, contestid):
         return self.database.clarifications.find(
-            ({"course": courseid, "answered_by" : -1, "contest": contestid}))
+            ({"course": courseid, "answered_by" : -1, "contest": str(contestid)}))
+
+    def get_contestant_pending_clarifications_by_contest(self, courseid, contestid):
+        username = self.user_manager.session_username()
+        web.debug(courseid, contestid)
+        result = self.database.clarifications.find(
+            ({
+                "$or":  [
+                            {"to": username},
+                            {"to": "*"},
+                            {"from": username}
+                        ],
+                "course": courseid,
+                "answered_by" : {"$ne": -1},
+                "contest": str(contestid)
+            }))
+        result = list([x for x in result if username not in x.get('seen_by',[])])
+        web.debug(list(result))
+        return result
 
     def get_last_contest_id(self, courseid):
         course = self.course_factory.get_course(courseid)

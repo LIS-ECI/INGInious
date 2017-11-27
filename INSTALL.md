@@ -52,18 +52,58 @@ pip3 install --upgrade git+https://github.com/LIS-ECI/INGInious.git
 
 ## Configuring ECINGInious
 
-First, you need to install the ECINGInious frontend:
+First, you need to install the ECINGInious frontend (read the **Note** section below):
 
 ```
 inginious-install webapp-contest
 ```
-This will help you create the configuration file in the current directory
+This will help you create the configuration file in the current directory.
+
+**Note: please don't use minified javascript by the moment.**
+
+### Installing required grading container
+
+This container is really important because it judges submissions from students.
+
+/##/ TODO: Write this chapter
+
+### Enabling plugins (optional)
+
+#### Plagiarism check plugin
+
+Edit your configuration file and add the following lines in the *plugins* section:
+
+```
+-   name: Plagiarism Checker
+    plugin_module: inginious.frontend.webapp_contest.plugins.plagiarism
+```
+
+Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **plagiarism** folder into it.
+
+#### ECI authentication method plugin
+
+Edit your configuration file and add the following lines in the *plugins* section:
+
+```
+-   name: DB Auth
+    plugin_module: inginious.frontend.webapp_contest.plugins.auth.eci_auth
+```
+
+### Configuring additional parameters (optional)
+
+#### web_debug
+
+Enable or disable the web.py developer debugger (for non-production servers only).
+
+```
+web_debug: True
+```
 
 ## Running ECINGInious
 
 To run the frontend, please use:
 
 ```
-inginious-webapp --conf CONF_FILE_PATH --host HOST --port PORT
+inginious-webapp-contest --conf CONF_FILE_PATH --host HOST --port PORT
 ```
 This will open a small Python web server and display the url on which it is bind in the console.

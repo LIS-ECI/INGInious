@@ -55,8 +55,12 @@ $var Column: $:ColumnF()
                 $else:
                     <td>$data["answered_by"]</td>
     		<td style="min-width:120px">
-                <a href="$get_homepath()/contest/$course.get_id()/$contestid/$data['_id']/clarification" class="btn btn-primary btn-xs" title="View clarification" data-toggle="tooltip"
-                   data-placement="bottom"><i class="fa fa-eye"></i></a>
+                <a href="$get_homepath()/contest/$course.get_id()/$contestid/$data['_id']/clarification" class="btn
+                        $if user_manager.session_username() not in data.get('seen_by',[]) and data['answered_by']!=-1:
+                            btn-warning
+                        $else:
+                            btn-primary
+                        btn-xs" title="View clarification" data-toggle="tooltip" data-placement="bottom"><i class="fa fa-eye"></i></a>
     		</td>
     	</tr>
         $ i = i + 1

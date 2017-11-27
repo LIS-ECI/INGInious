@@ -111,10 +111,6 @@ $elif saved:
                 <div class="modal-body">
                     <input type="hidden" name="action" value="upload"/>
                     <div class="form-group">
-                        <label for="add-quantity" class="control-label"># of problems to be added:</label>
-                        <input type="number" class="form-control" id="add-quantity" name="add-quantity" min="1" placeholder="1"/>
-                    </div>
-                    <div class="form-group">
                         <label for="add-technique" class="control-label">Technique:</label>
                         <select id="add-technique" class="form-control" name="add-technique" onclick="studio_get_len_problems()">
                             $for category in techniques:
@@ -130,12 +126,16 @@ $elif saved:
                     </div>
                     <div class="form-group">
                         <label for="add-difficulty" class="control-label">Difficulty (1-5):</label>
-                        <input type="number" class="form-control" id="add-difficulty" name="add-difficulty" value="" min="1" max="5" placeholder="1" onchange="studio_get_len_problems()"/>
+                        <input type="number" class="form-control" id="add-difficulty" name="add-difficulty" value="1" min="1" max="5" placeholder="1" onchange="studio_get_len_problems()"/>
                     </div>
 
                     <div class="form-group">
                         <label for="add-get-problem" class="control-label">Maximum number of problems:</label>
                         <p id="add-get-problem" name="add-get-problem"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-quantity" class="control-label"># of problems to be added:</label>
+                        <input type="number" class="form-control" id="add-quantity" name="add-quantity" min="1" placeholder="1"/>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -204,7 +204,7 @@ $elif saved:
 
                         <tr>
                             <th colspan="9" style="text-align:right">
-                                <a href="#" onclick="$$('#modal_file_upload').modal('show'); return false;" class="btn btn-sm btn-primary">Add a new type</a>
+                                <a href="#" onclick="$$('#modal_file_upload').modal('show'); studio_get_len_problems();return false;" class="btn btn-sm btn-primary">Add a new type</a>
                                 <a onclick="studio_generate_new_contest();" class="btn btn-sm btn-primary contest_generate_submit_button" data-dismiss="modal">Generate!</a>
                             </th>
                         </tr>
