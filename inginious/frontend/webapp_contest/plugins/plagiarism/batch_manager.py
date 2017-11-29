@@ -97,7 +97,13 @@ class BatchManager(object):
 
         inputdata["submissions"] = self._get_submissions_data(course, tasks, 'taskid/username', "1")
 
-        obj = {"courseid": course.get_id(), 'container_name': "JPlag", "submitted_on": datetime.now()}
+        obj = {
+            "courseid": course.get_id(),
+            'container_name': inputdata["real_title"],
+            "submitted_on": datetime.now(),
+            "group_name": inputdata.get("group_name",''),
+            "group_hash": inputdata.get("group_hash", '')
+        }
 
         batch_job_id = self._database.batch_jobs.insert(obj)
 
@@ -204,7 +210,38 @@ administration.""")
             - {"retval":-1, "stderr": "the error message"}
                 if the container failed to start
         """
-        return list(self._database.batch_jobs.find({"courseid": course_id}))
+        return list(self._database.batch_jobs.find({"courseid": course_id, "group_name": ""}))
+
+    def get_all_grouped_batch_jobs_for_course(self, course_id):
+        """ Returns all the batch jobs for the course course id. Batch jobs are dicts in the form
+            {"courseid": "...", "container_name": "...", "submitted_on":"..."} if the job is still ongoing, and
+            {"courseid": "...", "container_name": "...", "submitted_on":"...", "results": {}} if the job is done.
+            the dict result can be either:
+
+            - {"retval":0, "stdout": "...", "stderr":"...", "file":"..."}
+                if everything went well. (file is an gridfs id to a tgz file)
+            - {"retval":"...", "stdout": "...", "stderr":"..."}
+                if the container crashed (retval is an int != 0) (can also contain file, but not mandatory)
+            - {"retval":-1, "stderr": "the error message"}
+                if the container failed to start
+        """
+        return list(self._database.batch_jobs.find({"courseid": course_id, "group_name": {"$ne": ""}}))
+
+
+    def get_all_grouped_batch_jobs_for_course_and_hash(self, course_id, group_hash):
+        """ Returns all the batch jobs for the course course id. Batch jobs are dicts in the form
+            {"courseid": "...", "container_name": "...", "submitted_on":"..."} if the job is still ongoing, and
+            {"courseid": "...", "container_name": "...", "submitted_on":"...", "results": {}} if the job is done.
+            the dict result can be either:
+
+            - {"retval":0, "stdout": "...", "stderr":"...", "file":"..."}
+                if everything went well. (file is an gridfs id to a tgz file)
+            - {"retval":"...", "stdout": "...", "stderr":"..."}
+                if the container crashed (retval is an int != 0) (can also contain file, but not mandatory)
+            - {"retval":-1, "stderr": "the error message"}
+                if the container failed to start
+        """
+        return list(self._database.batch_jobs.find({"courseid": course_id, "group_hash": group_hash}))
 
     def drop_batch_job(self, batch_job_id):
         """ Delete a **finished** batch job from the database """
@@ -214,3 +251,9 @@ administration.""")
         self._database.batch_jobs.remove({"_id": ObjectId(batch_job_id)})
         if "file" in job["result"]:
             self._gridfs.delete(job["result"]["file"])
+
+
+    def drop_grouped_batch_job(self, group_hash_id):
+        """ Delete a **finished** batch job from the database """
+        self._database.batch_jobs.remove({"group_hash": group_hash_id})
+

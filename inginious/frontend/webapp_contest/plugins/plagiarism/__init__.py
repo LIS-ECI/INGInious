@@ -2,13 +2,14 @@
 #
 # This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 # more information about the licensing of this file.
-
+import hashlib
 import tarfile
 import mimetypes
 import urllib.request, urllib.parse, urllib.error
 import tempfile
 import copy
 import web
+from datetime import datetime
 
 from inginious.frontend.webapp_contest.accessible_time import AccessibleTime
 from inginious.frontend.common.parsable_text import ParsableText
@@ -75,6 +76,12 @@ class CourseBatchOperations(INGIniousAdminPage):
             except:
                 pass
 
+        if "grouped_drop" in web_input:  # delete an old batch job
+            try:
+                self.batch_manager.drop_grouped_batch_job(web_input["grouped_drop"])
+            except Exception as e:
+                pass
+
         operations = []
         for entry in list(self.batch_manager.get_all_batch_jobs_for_course(courseid)):
             ne = {"container_name": entry["container_name"],
@@ -86,9 +93,54 @@ class CourseBatchOperations(INGIniousAdminPage):
                 ne["status"] = "waiting"
             operations.append(ne)
         operations = sorted(operations, key=(lambda o: o["submitted_on"]), reverse=True)
-        renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
-        return renderer.batch(course, operations)
 
+
+        operations_grouped = []
+
+        grouped_entries = self.batch_manager.get_all_grouped_batch_jobs_for_course(courseid)
+        grouped_entries = set((x.get("group_name",""),x.get("group_hash",'')) for x in grouped_entries if x.get("group_name","")!="")
+        for name,hash in grouped_entries:
+            ne = {"name": name,
+                  "hash": hash}
+            operations_grouped.append(ne)
+        renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
+        return renderer.batch(course, operations, operations_grouped)
+
+
+class GroupedListPage(INGIniousAdminPage):
+    """ Batch operation management """
+
+    @property
+    def batch_manager(self) -> BatchManager:
+        """ Returns the batch manager singleton """
+        return self.app.batch_manager
+
+    def GET_AUTH(self, courseid, hash):  # pylint: disable=arguments-differ
+        """ GET request """
+
+        course, _ = self.get_course_and_check_rights(courseid)
+
+        web_input = web.input()
+        if "drop" in web_input:  # delete an old batch job
+            try:
+                self.batch_manager.drop_batch_job(web_input["drop"])
+            except:
+                pass
+
+        operations = []
+        for entry in list(self.batch_manager.get_all_grouped_batch_jobs_for_course_and_hash(courseid, hash)):
+            ne = {"container_name": entry["container_name"],
+                  "bid": str(entry["_id"]),
+                  "submitted_on": entry["submitted_on"]}
+            if "result" in entry:
+                ne["status"] = "ok" if entry["result"]["retval"] == 0 else "ko"
+            else:
+                ne["status"] = "waiting"
+            operations.append(ne)
+        operations = sorted(operations, key=(lambda o: o["submitted_on"]), reverse=True)
+
+        renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
+        return renderer.grouped_batch(course, operations)
 
 class CourseBatchJobCreate(INGIniousAdminPage):
     """ Creates new batch jobs """
@@ -100,30 +152,52 @@ class CourseBatchJobCreate(INGIniousAdminPage):
 
     def GET_AUTH(self, courseid):  # pylint: disable=arguments-differ
         """ GET request """
-        course, container_title, container_description, container_args = self.get_basic_info(courseid)
-        return self.page(course, container_title, container_description, container_args)
+        course, container_title, container_description, container_args, container_contest_args = self.get_basic_info(courseid)
+        return self.page(course, container_title, container_description, container_args, container_contest_args)
 
     def POST_AUTH(self, courseid):  # pylint: disable=arguments-differ
         """ POST request """
-        course, container_title, container_description, container_args = self.get_basic_info(courseid)
+        course, container_title, container_description, container_args, container_contest_args = self.get_basic_info(courseid)
         errors = []
 
         # Verify that we have the right keys
         try:
-            file_args = {key: {} for key in container_args if key != "submissions" and key != "course" and container_args[key]["type"] == "file"}
+            container_all = container_args.copy()
+            container_all.update(container_contest_args)
+            file_args = {key: {} for key in container_all if key != "submissions" and key != "course" and container_all[key]["type"] == "file"}
+
             batch_input = web.input(**file_args)
-            for key in container_args:
-                if (key != "submissions" and key != "course") or container_args[key]["type"] != "file":
-                    if key not in batch_input:
-                        raise Exception("It lacks a field")
-                    if container_args[key]["type"] == "file":
+            #web.debug(batch_input)
+            is_single = "single_problem" in batch_input
+            for key in container_all:
+                if (key != "submissions" and key != "course") or container_all[key]["type"] != "file":
+                    if container_all[key]["type"] == "file":
                         batch_input[key] = batch_input[key].file.read()
-        except:
+        except Exception as e:
+            #web.debug(e)
             errors.append("Please fill all the fields.")
 
         if len(errors) == 0:
             #try:
+            if "single_problem" in batch_input:
+                batch_input["real_title"] = batch_input["task"] + " - " + self.task_factory.get_task(course, batch_input["task"]).get_name()
+                #web.debug(batch_input)
+                #web.debug()
                 self.batch_manager.add_batch_job(course, batch_input,
+                                                 self.user_manager.session_username(),
+                                                 self.user_manager.session_email())
+            elif "tab_contest" in batch_input:
+                contest_data = self.contest_manager.get_contest_data(course, batch_input["contest"])
+                batch_input["group_name"] = contest_data["name"] + " - " + str(datetime.now())
+
+                batch_input["group_hash"] = hashlib.md5(batch_input["group_name"].encode("utf-8")).hexdigest()
+                # web.debug(batch_input)
+                # web.debug()
+                for problem in contest_data["content"]:
+                    #web.debug(contest_data)
+                    batch_input["task"] = problem
+                    batch_input["real_title"] = contest_data["name"] + " - " + problem
+                    self.batch_manager.add_batch_job(course, batch_input,
                                                  self.user_manager.session_username(),
                                                  self.user_manager.session_email())
             #except Exception as e:
@@ -134,7 +208,7 @@ class CourseBatchJobCreate(INGIniousAdminPage):
         if len(errors) == 0:
             raise web.seeother('/admin/{}/plagiarism'.format(courseid))
         else:
-            return self.page(course, container_title, container_description, container_args, errors)
+            return self.page(course, container_title, container_description, container_args, container_contest_args, errors)
 
     def get_basic_info(self, courseid):
         course, _ = self.get_course_and_check_rights(courseid, allow_all_staff=False)
@@ -143,27 +217,40 @@ class CourseBatchJobCreate(INGIniousAdminPage):
         container_description = ParsableText("Plagiarism tool".encode('utf-8').decode("unicode_escape"), 'rst')
 
         container_args = {
-            "task" : {
-                "type" : "text",
-                "name" : "Problem to check",
-                "path" : "task.txt",
-                "description" : "Id of the problem you want to check."
+            "task": {
+                "type": "text",
+                "name": "Problem to check",
+                "path": "task.txt",
+                "description": "Id of the problem you want to check."
             },
-            "language" : {
-                "type" : "text",
-                "name" : "Language",
-                "path" : "lang.txt",
-                "description": "Language used in the submissions. Can be 'python3' (default), 'java17', 'java15', 'java15dm', 'java12', \
-'java11', 'c/c++', 'c#-1.2', 'char', 'text' or 'scheme'."
+            "language": {
+                "type": "text",
+                "name": "Language",
+                "path": "lang.txt",
+                "choices": ['python3', 'java17', 'java15', 'java15dm', 'java12', 'java11', 'c/c++', 'c#-1.2', 'char',
+                            'text', 'scheme'],
+                "description": "Language used in the submissions."
             },
         }
+
+        container_contest_args = container_args.copy()
+
+        container_contest_args["contest"] = {
+            "type": "text",
+            "name": "Contests",
+            "description": "The contest you want to check",
+            "choices": {x:y["name"] for x,y in self.contest_manager.get_all_contest_data(course).items()}
+        }
+
+        del container_contest_args["task"]
+
         for val in container_args.values():
             if "description" in val:
                 val['description'] = ParsableText(val['description'].encode('utf-8').decode("unicode_escape"), 'rst').parse()
 
-        return course, container_title, container_description, container_args
+        return course, container_title, container_description, container_args, container_contest_args
 
-    def page(self, course, container_title, container_description, container_args, error=None, container_name="JPlag"):
+    def page(self, course, container_title, container_description, container_args, container_contest_args, error=None, container_name="JPlag"):
 
         if "submissions" in container_args and container_args["submissions"]["type"] == "file":
             del container_args["submissions"]
@@ -174,7 +261,7 @@ class CourseBatchJobCreate(INGIniousAdminPage):
         self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
         renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
         return renderer.batch_create(course, container_name, container_title, container_description,
-                                                                             container_args, problems, error)
+                                                                             container_args, problems, error, container_contest_args)
 
 
 class CourseBatchJobDownload(INGIniousAdminPage):
@@ -318,6 +405,7 @@ def init(plugin_manager, _, client, conf):
     plugin_manager.add_page(r'/admin/([^/]+)/plagiarism', CourseBatchOperations)
     plugin_manager.add_page(r'/admin/([^/]+)/plagiarism/create', CourseBatchJobCreate)
     plugin_manager.add_page(r'/admin/([^/]+)/plagiarism/summary/([^/]+)', CourseBatchJobSummary)
+    plugin_manager.add_page(r'/admin/([^/]+)/plagiarism/grouped_summary/([^/]+)', GroupedListPage)
     plugin_manager.add_page(r'/admin/([^/]+)/plagiarism/download/([^/]+)', CourseBatchJobDownload)
     plugin_manager.add_page(r'/admin/([^/]+)/plagiarism/download/([^/]+)(/.*)', CourseBatchJobDownload)
 

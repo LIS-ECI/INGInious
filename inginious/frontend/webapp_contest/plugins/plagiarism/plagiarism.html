@@ -67,9 +67,20 @@ $elif saved:
     <div class="form-group">
         <label for="lang" class="col-sm-2 control-label">Language</label>
         <div class="col-sm-10">
-            <input type="text" class="form-control" id="lang" name="lang" placeholder=""  value="python3">
-            <small class="form-text text-muted">Language used in the submissions. Can be 'python3' (default), 'java17', 'java15', 'java15dm', 'java12', \
-'java11', 'c/c++', 'c#-1.2', 'char', 'text' or 'scheme'..</small>
+            <select class="form-control" id="lang" name="lang" placeholder="Select a language...">
+                <option value="python3" selected>python3</option>
+                <option value="java17">java17</option>
+                <option value="java15">java15</option>
+                <option value="java15dm">java15dm</option>
+                <option value="java12">java12</option>
+                <option value="java11">java11</option>
+                <option value="c/c++">c/c++</option>
+                <option value="c#-1.2">c#-1.2</option>
+                <option value="char">char</option>
+                <option value="text">text</option>
+                <option value="scheme">scheme</option>
+            </select>
+            <small class="form-text text-muted">Language used in the submissions.</small>
         </div>
     </div>
     <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-check"></i> Start check</button>
