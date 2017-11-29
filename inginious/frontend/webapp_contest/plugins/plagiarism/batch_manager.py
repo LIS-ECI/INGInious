@@ -131,8 +131,12 @@ class BatchManager(object):
                 file.write(inputdata["task"])
             os.chmod(script, 777)
             retval = subprocess.call(shlex.split("/bin/bash " + script+" "+tmpdirname+" "+plagiarism))
-            stdout = open(os.path.join(out, "jplag_stdout.txt"), "r").read()
-            stderr = open(os.path.join(out, "jplag_stderr.txt"), "r").read()
+            try:
+                stdout = open(os.path.join(out, "jplag_stdout.txt"), "r").read()
+                stderr = open(os.path.join(out, "jplag_stderr.txt"), "r").read()
+            except:
+                stdout = "No output"
+                stderr = "No output"
             with tempfile.TemporaryFile() as file:
 
                 tar = tarfile.open(fileobj=file, mode='w:gz')
