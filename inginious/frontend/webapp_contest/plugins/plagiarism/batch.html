@@ -20,7 +20,7 @@ $var Navbar: $:NavbarF()
 
 <h2>Plagiarism operations</h2>
 
-<h3>Plagiarism checks</h3>
+<h3>Plagiarism checks by problem</h3>
 <table class="table table-bordered table-condensed table-hover" id="batch_table">
     <tr>
         <th>Plagiarism check name</th>
@@ -38,8 +38,10 @@ $var Navbar: $:NavbarF()
                 </td>
                 <td>
                     <div class="btn-group">
-                        <a href="$get_homepath()/admin/$course.get_id()/plagiarism/summary/$op['bid']" class="btn btn-success btn-xs" title="View results"
+                        <a href="$get_homepath()/admin/$course.get_id()/plagiarism/download/$op['bid']/index.html" class="btn btn-success btn-xs" title="View results"
                            data-toggle="tooltip" data-placement="bottom"><i class="fa fa-search fa-fw"></i></a>
+                        <a href="$get_homepath()/admin/$course.get_id()/plagiarism/summary/$op['bid']" class="btn btn-primary btn-xs" title="Browse other files"
+                           data-toggle="tooltip" data-placement="bottom"><i class="fa fa-file fa-fw"></i></a>
                         <a href="$get_homepath()/admin/$course.get_id()/plagiarism/download/$op['bid']" class="btn btn-info btn-xs" title="Download results"
                            data-toggle="tooltip" data-placement="bottom"><i class="fa fa-download fa-fw"></i></a>
                         <a href="$get_homepath()/admin/$course.get_id()/plagiarism?drop=$op['bid']" class="btn btn-danger btn-xs" title="Delete"

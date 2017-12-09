@@ -46,6 +46,7 @@ class CourseEditTask(INGIniousAdminPage):
             task_data = {}
 
         environments = self.containers
+        web.debug("Environments: "+str(environments))
 
         current_filetype = None
         try:

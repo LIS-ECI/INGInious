@@ -96,7 +96,7 @@ $else:
             $:submission["text"]
 </div>
 
-$if submission["custom"].get("diff2",-1)!=-1:
+$if submission["custom"].get("diff2",-1)!=-1 and submission["custom"].get("diff1",-1)!=-1:
     <div style="display:none;">
         <textarea id="orig1">$submission["custom"].get("diff1","")</textarea>
         <textarea id="orig2">$submission["custom"].get("diff2","")</textarea>
@@ -132,7 +132,17 @@ $elif submission["custom"].get("diff1",-1)!=-1:
 
 
         <div class="panel-body">
-
+            Testcase name: $submission["custom"].get("case_name","Not avaliable for this submission")
             <textarea  class="form-control" readonly rows="10" id="diff">$submission["custom"].get("diff1","")</textarea>
+        </div>
+    </div>
+
+$elif submission["custom"].get("case_name",-1)!=-1:
+    <div class="panel panel-default">
+
+
+
+        <div class="panel-body">
+            Testcase name: $submission["custom"].get("case_name","Not avaliable for this submission")
         </div>
     </div>

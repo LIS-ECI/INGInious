@@ -1,0 +1,72 @@
+#! /bin/bash
+
+# This line parses the template and put the result in studentcode.py
+getinput 1 > student/studentcode.py
+
+EXT=in
+TIMEFORMAT=%R
+mkdir student/output/
+cont=0
+tiempo=REPLACEWITHTIME
+# Verify the output of the code...
+for i in *; do
+    if [ "${i}" != "${i%.${EXT}}" ];then
+        out_diff="${i%%.*}.out"
+        out_new="student/output/${i%%.*}.out"
+        #output=$(run_student python3 student/studentcode.py < $i > $out_new)
+        output=$((time sh -c 'python3 student/studentcode.py < '"$i"' > '"$out_new") &> com_time)
+	result=$?
+        if [[ $result -ne 0 ]]; then
+            feedback-result failed
+            feedback_file="${i%%.*}.fb"
+            out_1=$(cat -E com_time)
+            feedback-custom diff1 "$out_1"
+            feedback-custom case_name "${i%%.*}"
+            feed=$(cat $feedback_file)
+            feedback-msg -m "Runtime Error: $feed"
+            cont=1
+            break
+        else
+        output=$(cat com_time)
+        tiempo=$(awk '{print $1-$2}' <<< "$tiempo $output")
+        echo $tiempo
+        if [[ $(echo "$tiempo < 0" | bc) -ne 0 ]]; then
+            feedback-result timeout
+            feedback-msg -m "Time Limit Exceed"
+            feedback-custom case_name "${i%%.*}"
+            cont=1
+            break
+        fi
+
+        dif=$(diff --strip-trailing-cr $out_new $out_diff)
+        if [ "$dif" != "" ]; then
+            # The student failed
+            feedback_file="${i%%.*}.fb"
+            feed=$(cat $feedback_file)
+	    cont=1
+            feedback-result failed
+            out_1=$(cat -E $out_new)
+            out_2=$(cat -E $out_diff)
+            feedback-custom diff1 "$out_1"
+            feedback-custom diff2 "$out_2"
+            feedback-custom case_name "${i%%.*}"
+            feedback-msg -m "Wrong answer: $feed"
+            break
+        fi
+        fi
+    fi
+done
+if [[ $cont -eq 0 ]]; then
+	feedback-result success
+	feedback-msg -m "Accepted"
+	#feedback-grade $score
+fi
+#STATICpylint student/studentcode.py > student/temp.txt
+#STATICcat student/temp.txt | base64 > encoded.txt
+#STATICencoded=$(cat encoded.txt)
+#STATICecho " " | feedback-msg -a
+#STATICrate=$(pylint student/studentcode.py | awk '$0 ~ /Your code/ || $0 ~ /Global/ {print}')
+
+#STATICecho "   .. raw:: html
+#STATIC
+#STATIC      <hr><b><p>Static code analysis</p></b><br><p>"$rate"</p>You can obtain a detailed report clicking <b><a style='color: #ffffff; !important' href='data:text/plain;base64,"$encoded"' download='analysis.txt'>here!</a></b>" | feedback-msg -a

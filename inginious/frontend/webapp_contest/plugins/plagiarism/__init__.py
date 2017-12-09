@@ -50,6 +50,8 @@ class PlagiarismPage(INGIniousAdminPage):
         """ Get all data and display the page """
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/selectize.min.js', "header")
         self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
+        self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/pace.min.js', "header")
+        self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/pace-theme-center-radar.css')
         problems = [self.task_factory.get_task(course, x) for x in
                     course.get_tasks()]
         renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
@@ -98,11 +100,22 @@ class CourseBatchOperations(INGIniousAdminPage):
         operations_grouped = []
 
         grouped_entries = self.batch_manager.get_all_grouped_batch_jobs_for_course(courseid)
-        grouped_entries = set((x.get("group_name",""),x.get("group_hash",'')) for x in grouped_entries if x.get("group_name","")!="")
-        for name,hash in grouped_entries:
+        grouped_set_entries = list(
+            (x.get("group_name", ""), x.get("group_hash", ''), x["submitted_on"]) for x in grouped_entries if
+            x.get("group_name", "") != "")
+        names = []
+        grouped_entries = []
+        for entry in grouped_set_entries:
+            if entry[0] not in names:
+                names.append(entry[0])
+                grouped_entries.append(entry)
+
+        for name,hash,subm in grouped_entries:
             ne = {"name": name,
-                  "hash": hash}
+                  "hash": hash,
+                  "submitted_on":subm}
             operations_grouped.append(ne)
+        operations_grouped = sorted(operations_grouped, key=(lambda o: o["submitted_on"]), reverse=True)
         renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
         return renderer.batch(course, operations, operations_grouped)
 
@@ -259,6 +272,8 @@ class CourseBatchJobCreate(INGIniousAdminPage):
         problems = [self.task_factory.get_task(course, x) for x in course.get_tasks()]
         self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/selectize.min.js', "header")
         self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/selectize.bootstrap3.css')
+        self.template_helper.add_javascript(web.ctx.homepath + '/static/webapp/js/HoldOn.min.js', "header")
+        self.template_helper.add_css(web.ctx.homepath + '/static/webapp/css/HoldOn.min.css')
         renderer = self.template_helper.get_custom_renderer('frontend/webapp_contest/plugins/plagiarism')
         return renderer.batch_create(course, container_name, container_title, container_description,
                                                                              container_args, problems, error, container_contest_args)
