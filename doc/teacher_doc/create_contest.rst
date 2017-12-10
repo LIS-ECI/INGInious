@@ -1,9 +1,9 @@
 .. _task:
 
-Creating a new problem
+Creating a new contest
 ===================
 
 .. toctree::
    :maxdepth: 2
 
-   task_tuto
+   container_tuto
