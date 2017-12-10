@@ -1,4 +1,4 @@
-INGInious' documentation
+ECINGInious' documentation
 ========================
 
 .. toctree::
