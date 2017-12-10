@@ -6,4 +6,3 @@ Developer's documentation
 
    dev_doc/understand_inginious
    dev_doc/plugins
-   dev_doc/how_to_extend
