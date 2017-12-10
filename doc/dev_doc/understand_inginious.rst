@@ -1,7 +1,7 @@
-Understand INGInious
-====================
+Understand ECINGInious
+======================
 
-INGInious is made from three different packages:
+ECINGInious is made from three different packages:
 
 - The :doc:`common` which contains basic blocks, like *tasks* and
   *courses*. Derivates from this blocks are created by the frontend and other modules.
@@ -17,25 +17,17 @@ INGInious is made from three different packages:
 - The :doc:`frontend` which is a web interface for the backend. It provides a simple yet powerful interface for students and teachers.
   It is made to be "stateless": all its state is stored in DB, allowing to replicate the frontend horizontally.
 
-Basic architecture of INGInious
+Basic architecture of ECINGInious
 -------------------------------
-The following schema shows the basic architecture of INGInious:
+The following schema shows the basic architecture of ECINGInious (based on INGInious architecture):
 
 .. image:: /dev_doc/inginious_arch.png
     :align: center
 
-Scalability of Docker hosts
----------------------------
-In order to share the work between multiple servers, INGInious can use multiple agents, as shown in the following schema.
-The completely horizontal scalability is (nearly) without additional configuration, and can be made fully automatic with a bit of work.
-
-.. image:: /dev_doc/inginious_arch_docker.png
-    :align: center
-
-Scalability of the INGInious frontend
--------------------------------------
+Scalability of the ECINGInious frontend
+---------------------------------------
 As the backend only store information about *running* submission, and the frontend is stateless, we can use the replication feature of MongoDB to
-scale horizontally the frontends too. The (final) schema below show the most advanced way of configuring INGInious, with multiple frontends
+scale horizontally the frontends too. The (final) schema below show the most advanced way of configuring ECINGInious, with multiple frontends
 replicated and multiple docker hosts.
 
 .. image:: /dev_doc/inginious_arch_full.png
