@@ -7,5 +7,3 @@ Creating a new task
    :maxdepth: 2
 
    task_tuto
-   task_ref
-   
