@@ -8,7 +8,4 @@ Creating a new task
 
    task_tuto
    task_ref
-   share_files
-   system_files
-   testing
-   best_practices
+   
