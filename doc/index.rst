@@ -16,3 +16,4 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+This documentation was based on INGInious documentation <http://inginious.readthedocs.io/en/latest/>`_
