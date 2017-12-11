@@ -5,6 +5,8 @@ $# This file is part of INGInious. See the LICENSE and the COPYRIGHTS files for
 $# more information about the licensing of this file.
 $#
 
+$ is_admin = user_manager.has_admin_rights_on_course(course)
+
 $var title: My contests
 
 $# Left column content
@@ -44,7 +46,10 @@ $# Start content
                     <div class="col-sm-2">$val["start"]</div>
                     <div class="col-sm-2">$val["end"]</div>
                     <div class="col-sm-3">
-                        $if len(list(contest_manager.get_contestant_pending_clarifications_by_contest(courseid, sid)))>0:
+                        $if is_admin and len(list(contest_manager.get_admin_pending_clarifications_by_contest(courseid, sid)))>0:
+                            <b>There are pending answered clarifications to review!</b>
+
+                        $elif not is_admin and len(list(contest_manager.get_contestant_pending_clarifications_by_contest(courseid, sid)))>0:
                             <b>There are pending answered clarifications to review!</b>
                         $else:
                             None
