@@ -315,7 +315,7 @@ class Installer(object, metaclass=abc.ABCMeta):
                     task_directory = None
 
         if os.path.exists(task_directory):
-            self._display_question("Demonstration tasks can be downloaded to let you discover INGInious.")
+            self._display_question("Problems bank can be downloaded.")
             if self._ask_boolean("Would you like to download them ?", True):
                 try:
                     filename, _ = urllib.request.urlretrieve("https://api.github.com/repos/UCL-INGI/INGInious-demo-tasks/tarball")
