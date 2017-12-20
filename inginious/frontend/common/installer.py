@@ -318,7 +318,7 @@ class Installer(object, metaclass=abc.ABCMeta):
             self._display_question("Problems bank can be downloaded.")
             if self._ask_boolean("Would you like to download them ?", True):
                 try:
-                    filename, _ = urllib.request.urlretrieve("https://api.github.com/repos/UCL-INGI/INGInious-demo-tasks/tarball")
+                    filename, _ = urllib.request.urlretrieve("https://api.github.com/repos/LIS-ECI/ECINGInious-problems-bank/tarball")
                     with tarfile.open(filename, mode="r:gz") as thetarfile:
                         members = thetarfile.getmembers()
                         commonpath = os.path.commonpath([tarinfo.name for tarinfo in members])

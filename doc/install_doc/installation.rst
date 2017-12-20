@@ -70,6 +70,7 @@ This will help you create the configuration file in the current directory.
 
 -  Don't use minified javascript by the moment.
 -  Install the **python3pylint** container.
+-  You probably need to add "/home/<user>/.local/bin/" to your PATH environment.
 
 Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **run** folder (resources folder) into it.
 
