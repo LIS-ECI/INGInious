@@ -376,7 +376,7 @@ class Installer(object, metaclass=abc.ABCMeta):
         to_download = []
         for container_name, description in containers:
             if self._ask_boolean("Download %s (%s) ?" % (container_name, description), container_name in default_download):
-                to_download.append("kolmant/inginious-c-%s" % container_name)
+                to_download.append("kolmant/ingi-c-%s" % container_name)
 
         self.download_containers(to_download, current_options)
 
