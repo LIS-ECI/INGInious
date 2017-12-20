@@ -28,10 +28,10 @@ class Installer(inginious.frontend.common.installer.Installer):
 
     def configure_bank_name(self):
         """ Configure bank name """
-        self._display_question("Please choose the name of the course where you will storage the problems (bank of problems). By default, the name is 'bank'")
-        bank_name = self._ask_with_default("Bank name", "bank")
+        #self._display_question("Please choose the name of the course where you will storage the problems (bank of problems). By default, the name is 'bank'")
+        #bank_name = self._ask_with_default("Bank name", "bank")
 
-        return {"bank": bank_name}
+        return {"bank": 'bank'}
 
     def ldap_plugin(self):
         """ Configures the LDAP plugin """

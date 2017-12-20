@@ -364,16 +364,8 @@ class Installer(object, metaclass=abc.ABCMeta):
         """ Configures the container dict """
         containers = [
             ("default", "Default container. For Bash and Python 2 tasks"),
-            ("cpp", "Contains gcc and g++ for compiling C++"),
-            ("java7", "Contains Java 7"),
-            ("java8scala", "Contains Java 8 and Scala"),
-            ("mono", "Contains Mono, which allows to run C#, F# and many other languages"),
-            ("oz", "Contains Mozart 2, an implementation of the Oz multi-paradigm language, made for education"),
-            ("php", "Contains PHP 5"),
-            ("pythia0compat", "Compatibility container for Pythia 0"),
-            ("pythia1compat", "Compatibility container for Pythia 1"),
-            ("r", "Can run R scripts"),
-            ("sekexe", "Can run an user-mode-linux for advanced tasks")
+            ("python3pylint", "Contains Python 3 and Pylint"),
+            ("python3", "Python 3 container")
         ]
 
         default_download = ["default"]
@@ -384,7 +376,7 @@ class Installer(object, metaclass=abc.ABCMeta):
         to_download = []
         for container_name, description in containers:
             if self._ask_boolean("Download %s (%s) ?" % (container_name, description), container_name in default_download):
-                to_download.append("ingi/inginious-c-%s" % container_name)
+                to_download.append("kolmant/inginious-c-%s" % container_name)
 
         self.download_containers(to_download, current_options)
 

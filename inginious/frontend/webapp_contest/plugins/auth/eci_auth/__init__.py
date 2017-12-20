@@ -298,12 +298,11 @@ class AdminRegisterPage(INGIniousAdminPage):
                                     web.ctx.homedomain + '/static/webapp/json/countries.json') as url:
                         flags_data = json.loads(url.read().decode())
                         for d in flags_data:
-                            flags.append(d["Code"])
+                            if self.database.users.find_one({"flag": d["Code"]}) is None:
+                                flags.append(d["Code"])
+                    if len(flags)==0:
+                        flags.append("CO")
                     flag = random.choice(flags)
-                    existing_flag = self.database.users.find_one({"flag": flag})
-                    while existing_flag is not None:
-                        flag = random.choice(flags)
-                        existing_flag = self.database.users.find_one({"flag": flag})
 
                     passwd_hash = hashlib.sha512(data["passwd"].encode("utf-8")).hexdigest()
                     self.database.users.insert({"username": data["username"],

@@ -122,21 +122,21 @@ function registerDiffEditor(div_id, orig1, orig2)
     var target = document.getElementById(div_id);
     orig1 = document.getElementById(orig1).value;
     orig2 = document.getElementById(orig2).value;
-    console.log(orig2);
-    console.log(orig1);
-  dv = CodeMirror.MergeView(target, {
-    value: orig1 ,
-    origLeft: null,
-    orig: orig2,
-    lineNumbers: true,
-    mode: "text/plain",
-    highlightDifferences: true,
-    connect: "align",
-    collapseIdentical: false,
-    readOnly: true
-  });
+    //console.log(orig2);
+    //console.log(orig1);
+    var dv = CodeMirror.MergeView(target, {
+        value: orig1 ,
+        origLeft: null,
+        orig: orig2,
+        lineNumbers: true,
+        mode: "text/plain",
+        highlightDifferences: true,
+        connect: "align",
+        collapseIdentical: false,
+        readOnly: true
+      });
 
-  editor = dv.editor();
+    editor = dv.editor();
     return editor;
 }
 
