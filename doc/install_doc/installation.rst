@@ -106,6 +106,8 @@ Configuring additional parameters (optional)
 smtp
 ^^^^
 
+::
+
     Mails can be sent by plugins.
 
     ``sendername``
