@@ -5,8 +5,10 @@
 
 """ Shared methods for the command line tool that installs the frontends """
 import abc
+import base64
 import os
 import tarfile
+import tempfile
 import urllib.request
 
 import docker
@@ -318,8 +320,25 @@ class Installer(object, metaclass=abc.ABCMeta):
             self._display_question("Problems bank can be downloaded.")
             if self._ask_boolean("Would you like to download them ?", True):
                 try:
-                    filename, _ = urllib.request.urlretrieve("https://api.github.com/repos/LIS-ECI/ECINGInious-problems-bank/tarball")
-                    with tarfile.open(filename, mode="r:gz") as thetarfile:
+                    username = self._ask_with_default("Bitbucket username", "")
+                    password = self._ask_with_default("Bitbucket password", "")
+                    if username=="" or password == "":
+                        self._display_info("Credentials cannot be empty.")
+                        username = self._ask_with_default("Bitbucket username", "")
+                        password = self._ask_with_default("Bitbucket password", "")
+
+                    request = urllib.request.Request(
+                        "https://bitbucket.org/lis-eci/ecinginious-problems-bank/get/HEAD.tar.gz")
+                    username_password = base64.b64encode((username + ":" + password).encode('utf8')).decode('utf8')
+                    request.add_header("Authorization", "Basic %s" % username_password)
+                    result = urllib.request.urlopen(request)
+                    the_page = result.read()
+
+                    temp = tempfile.NamedTemporaryFile(delete=False)
+                    file_object = open(temp.name, 'ab')
+                    file_object.write(the_page)
+                    file_object.close()
+                    with tarfile.open(temp.name, mode="r:gz") as thetarfile:
                         members = thetarfile.getmembers()
                         commonpath = os.path.commonpath([tarinfo.name for tarinfo in members])
 
@@ -328,7 +347,7 @@ class Installer(object, metaclass=abc.ABCMeta):
                             if member.name:
                                 thetarfile.extract(member, task_directory)
 
-                    self._display_info("Successfully downloaded and copied demonstration tasks.")
+                    self._display_info("Successfully downloaded and copied problems bank.")
                 except Exception as e:
                     self._display_error("An error occurred while copying the directory: %s" % str(e))
         else:

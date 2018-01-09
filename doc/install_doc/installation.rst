@@ -72,7 +72,7 @@ This will help you create the configuration file in the current directory.
 -  Install the **python3pylint** container.
 -  You probably need to add "/home/<user>/.local/bin/" to your PATH environment.
 
-Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **run** folder (resources folder) into it.
+Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **run** folder (located in the **resources folder** that you can obtain from the repository) into it.
 
 Enabling plugins (optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -87,7 +87,7 @@ Edit your configuration file and add the following lines in the *plugins* sectio
     -   name: Plagiarism Checker
         plugin_module: inginious.frontend.webapp_contest.plugins.plagiarism
 
-Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **plagiarism** folder (resources folder) into it.
+Then, go to your **storage folder** (previously defined in the configuration wizard) and copy the provided **plagiarism** folder (located in the **resources folder** that you can obtain from the repository) into it.
 
 ECI authentication method plugin
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -102,6 +102,29 @@ Edit your configuration file and add the following lines in the
 
 Configuring additional parameters (optional)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+smtp
+^^^^
+
+    Mails can be sent by plugins.
+
+    ``sendername``
+        Email sender name, e.g. : ``INGInious <no-reply@inginious.org>``
+
+    ``host``
+        SMTP server.
+
+    ``port``
+        SMTP port.
+
+    ``username``
+        SMTP username.
+
+    ``password``
+        SMTP password.
+
+    ``starttls``
+        Set to ``true`` if TLS is needed.
 
 web\_debug
 ^^^^^^^^^^
